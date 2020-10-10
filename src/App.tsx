@@ -20,6 +20,7 @@ function App() {
   const [ethereumProvider, setEthereumProvider] = useState();
   const [wallet, setWallet] = useState();
   const [maticClient, setMatiClient] = useState();
+  const [INRBalance, setINRBalance] = useState('0');
 
   useEffect(() => {
     console.log(wallet);
@@ -77,35 +78,32 @@ function App() {
         });
 
         if (mClient) {
-          setMatiClient(mClient);
-          console.log(await mClient.balanceOfERC20(
-            wallet.address,
-            config.posChildERC20,
-            {}
-          ));
+          const balance = ethers.utils.formatUnits(
+            await mClient.balanceOfERC20(
+              wallet.address,
+              config.posChildERC20,
+              {}
+            ));
+          console.log(balance);
+          setINRBalance(balance);
         }
       }
     })();
   }, [wallet, maticProvider, ethereumProvider]);
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  if ( wallet && maticProvider && ethereumProvider ) {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <p> Address: {wallet.address} </p>
+          <p> magic words: {wallet.mnemonic.phrase} </p>
+          <p> balance: {INRBalance} </p>
+        </header>
+      </div>
+    );
+  } else {
+    return <div> Loading </div>
+  }
 }
 
 export default App;
