@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import Biconomy from "@biconomy/mexa";
 import WalletConnectProvider from "@maticnetwork/walletconnect-provider";
 import * as Matic from "@maticnetwork/maticjs";
 import { Network } from "@maticnetwork/meta/network";
@@ -13,6 +14,7 @@ const MaticPoSClient = Matic.MaticPOSClient;
 const w = window as any;
 
 function App() {
+  const [provider, setProvider] = useState();
   const [loading, setLoading] = useState(true);
   const [maticProvider, setMaticProvider] = useState();
   const [Networkid, setNetworkid] = useState(config.MATIC_CHAINID);
@@ -21,20 +23,25 @@ function App() {
   const [wallet, setWallet] = useState();
   const [maticClient, setMatiClient] = useState();
   const [INRBalance, setINRBalance] = useState('0');
+  const [signer, setSigner] = useState();
 
   useEffect(() => {
     console.log(wallet);
   }, [wallet]);
 
   const loadWallet = async () => {
-    const magicWords = cache.getItem('magicWords');
+    let magicWords = cache.getItem('magicWords');
+    let w;
     if (magicWords) {
-      setWallet(ethers.Wallet.fromMnemonic(JSON.parse(magicWords).phrase)); 
+      w = ethers.Wallet.fromMnemonic(JSON.parse(magicWords).phrase);
     } else {
-      const w = ethers.Wallet.createRandom();
-      cache.setItem('magicWords', JSON.stringify(w.mnemonic));
-      setWallet(w); 
+      w = ethers.Wallet.createRandom();
+      magicWords = JSON.stringify(w.mnemonic);
+      cache.setItem('magicWords', magicWords);
     }
+    setWallet(w); 
+    const sig = new ethers.Wallet(w._signingKey().privateKey );
+    setSigner(sig);
   };
 
   const loadBlockchainData = async () => {
@@ -57,6 +64,32 @@ function App() {
 
     setMaticProvider(mProvider);
     setEthereumProvider(eProvider);
+
+  };
+
+  const send = async () => {
+    if (signer) {
+      console.log("Sending");
+      let txParams = {
+        "from": wallet.address,
+        "gasLimit": ethers.utils.hexlify(210000),
+        "to": "0x0B510F42fF8497254B006C2Ae9c85B3F831f052E",
+        "value": ethers.utils.parseEther("0.01"),
+      };
+      const receipt = await signer.sendTransaction(txParams);
+      console.log(receipt);
+      /*/let receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction, (error, txHash)=>{
+        if(error) {
+            return console.error(error);
+        }
+        console.log(txHash);
+      });
+      */
+
+    } else {
+      window.alert("Wallet is Loading");
+    }
+
 
   };
 
@@ -91,13 +124,23 @@ function App() {
     })();
   }, [wallet, maticProvider, ethereumProvider]);
 
+  useEffect(() => {
+    if (maticProvider) {
+      console.log(process.env.REACT_APP_API_KEY);
+      const biconomy = new Biconomy(maticProvider,{apiKey: process.env.REACT_APP_API_KEY});
+      console.log(biconomy);
+      //setProvider(biconomy);
+    }
+  }, [maticProvider]);
+
   if ( wallet && maticProvider && ethereumProvider ) {
     return (
       <div className="App">
         <header className="App-header">
           <p> Address: {wallet.address} </p>
           <p> magic words: {wallet.mnemonic.phrase} </p>
-          <p> balance: {INRBalance} </p>
+          <p> balance: ₹{INRBalance} </p>
+          <button onClick={() => send()}> Send ₹ 0.01 </button>
         </header>
       </div>
     );
