@@ -6,14 +6,14 @@ import ethers from "ethers";
 
 const cache = window.localStorage;
 
-export const loadBiconomy = async (maticProvider: any, apiKey: string) => {
+const loadBiconomy = async (maticProvider: any, apiKey: string) => {
   if (!(maticProvider && apiKey)) {
     return null;
   }
   return Biconomy( maticProvider, { apiKey });
 };
 
-export const loadEthProvider = async () => {
+const loadEthProvider = async () => {
   return (
     new WalletConnectProvider({
       host: config.ETHEREUM_RPC,
@@ -24,11 +24,12 @@ export const loadEthProvider = async () => {
     }));
 };
 
-export const loadMaticClient = (maticProvider: any, ethProvider: any, address: string) => {
-  if (!(maticProvider && ethProvider && address)) {
-    return null;
-  }
+const loadMaticClient = async (address: string) => {
+  if (!address) { return null; }
 
+  const maticProvider = await loadMaticProvider();
+  const ethProvider = await loadEthProvider();
+  
   return (
     new MaticPOSClient({
       network: config.NETWORK,
@@ -40,7 +41,7 @@ export const loadMaticClient = (maticProvider: any, ethProvider: any, address: s
     }));
 };
 
-export const loadMaticProvider = async () => {
+const loadMaticProvider = async () => {
   return (
     new WalletConnectProvider({
       host: config.MATIC_RPC,
@@ -51,7 +52,7 @@ export const loadMaticProvider = async () => {
     }));
 };
 
-export const loadWallet = () => {
+const loadWallet = () => {
   const magic = cache.getItem('magic');
   if (magic) {
     let obj = JSON.parse(magic);
@@ -63,4 +64,11 @@ export const loadWallet = () => {
   const w = ethers.Wallet.createRandom();
   cache.setItem('magic', JSON.stringify(w.mnemonic));
   return w; 
+};
+
+export const initialize = async () => {
+  const w = loadWallet();
+  const mClient = await loadMaticClient(w.address);
+
+  return [w, mClient];
 };
