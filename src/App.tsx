@@ -29,13 +29,13 @@ function App() {
     console.log("Effect 1");
     (async () => {
       console.log("Loading and Setting Wallet");
-      setWallet(loadWallet());
+      setWallet(await loadWallet());
 
       console.log("Loading and Setting M provider");
-      setMaticProvider(loadMaticProvider);
+      setMaticProvider(await loadMaticProvider());
 
       console.log("Loading and Setting E provider");
-      setEthProvider(loadEthProvider());
+      setEthProvider(await loadEthProvider());
     })();
   }, []);
 
@@ -43,7 +43,7 @@ function App() {
     console.log("Effect 2");
     (async () => {
       console.log("Loading and Setting Biconomy");
-      setBiconomy(loadBiconomy(maticProvider, API_KEY));
+      setBiconomy(await loadBiconomy(maticProvider, API_KEY));
     })();
   }, [maticProvider]);
 
