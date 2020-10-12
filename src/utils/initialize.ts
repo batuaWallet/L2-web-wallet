@@ -1,16 +1,17 @@
 import Biconomy from "@biconomy/mexa";
 import WalletConnectProvider from "@maticnetwork/walletconnect-provider";
-import Matic from "@maticnetwork/maticjs";
+import { MaticPOSClient } from "@maticnetwork/maticjs";
 import { Network } from "@maticnetwork/meta/network";
 import * as config from "../config.json";
 import ethers from "ethers";
 
-console.log(Matic);
-const MaticPoSClient = Matic.MaticPOSClient;
 const cache = window.localStorage;
 
 export const loadBiconomy = async (maticProvider: any, apiKey: string) => {
-  return Biconomy( maticProvider, { apiKey })
+  if (!(maticProvider && apiKey)) {
+    return null;
+  }
+  return Biconomy( maticProvider, { apiKey });
 };
 
 export const loadEthProvider = async () => {
@@ -21,19 +22,23 @@ export const loadEthProvider = async () => {
         onConnect: console.log("mainchain connected"),
         onDisconnect: console.log("mainchain disconnected"),
       },
-    }))
+    }));
 };
 
 export const loadMaticClient = (maticProvider: any, ethProvider: any, address: string) => {
+  if (!(maticProvider && ethProvider && address)) {
+    return null;
+  }
+
   return (
-    new MaticPoSClient({
+    new MaticPOSClient({
       network: config.NETWORK,
       version: config.VERSION,
       maticProvider: maticProvider,
       parentProvider: ethProvider,
       parentDefaultOptions: { from: address },
       maticDefaultOptions: { from: address },
-    }))
+    }));
 };
 
 export const loadMaticProvider = async () => {
@@ -45,7 +50,7 @@ export const loadMaticProvider = async () => {
         onDisconnect: console.log("matic disconnected!"),
       },
     }))
-}
+};
 
 export const loadWallet = () => {
   const magic = cache.getItem('magic');
