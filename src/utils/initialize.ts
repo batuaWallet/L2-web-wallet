@@ -1,7 +1,6 @@
 import Biconomy from "@biconomy/mexa";
 import WalletConnectProvider from "@maticnetwork/walletconnect-provider";
 import { MaticPOSClient } from "@maticnetwork/maticjs";
-import { Network } from "@maticnetwork/meta/network";
 import * as config from "../config.json";
 import ethers from "ethers";
 
@@ -49,7 +48,7 @@ export const loadMaticProvider = async () => {
         onConnect: console.log("matic connected"),
         onDisconnect: console.log("matic disconnected!"),
       },
-    }))
+    }));
 };
 
 export const loadWallet = () => {

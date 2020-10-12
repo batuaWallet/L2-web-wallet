@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import * as config from "./config.json";
-import ethers from "ethers";
 
 import {
   loadMaticClient,
@@ -20,11 +18,7 @@ import {
 const API_KEY = process.env.REACT_APP_API_KEY ? process.env.REACT_APP_API_KEY : "";
 
 function App() {
-  const [provider, setProvider] = useState();
-  const [loading, setLoading] = useState(true);
   const [maticProvider, setMaticProvider] = useState();
-  const [Networkid, setNetworkid] = useState(config.MATIC_CHAINID);
-  const [burnHash, setBurnHash] = useState("");
   const [ethProvider, setEthProvider] = useState();
   const [wallet, setWallet] = useState();
   const [maticClient, setMatiClient] = useState();
@@ -78,7 +72,7 @@ function App() {
         setINRBalance(bal);
       }
     })();
-  }, [maticClient]);
+  }, [maticClient, wallet]);
 
   if ( wallet && INRBalance) {
     return (

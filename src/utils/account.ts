@@ -5,13 +5,10 @@ export const balance = async (address: string, token: string, client: any) => {
     return "0";
   }
   try {
-  let b = await client.balanceOfERC20(address, token, {});
-    return "4";
-    /*
+    let b = await client.balanceOfERC20(address, token, {});
     const bal = ethers.utils.formatUnits(b);
     console.log(balance);
     return bal;
-  */
   } catch (e) {
     console.log(e);
     return "0";
