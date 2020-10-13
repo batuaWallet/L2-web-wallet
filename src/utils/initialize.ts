@@ -62,7 +62,17 @@ const loadWallet = () => {
 };
 
 const loadBiconomy = () => {
-  return new Biconomy(config.MATIC_RPC, { apiKey: API_KEY });
+  const biconomy = new Biconomy(config.MATIC_RPC, { apiKey: API_KEY });
+  biconomy
+    .onEvent(
+      biconomy.READY, () => {
+        console.log("Mexa is Ready");
+      })
+    .onEvent(
+      biconomy.ERROR, (error: Error, message: string) => {
+        console.log(error, message);
+      });
+  return biconomy;
 };
 
 const loadBiconomyProvider = (biconomy: any) => {
