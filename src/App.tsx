@@ -9,8 +9,6 @@ import {
   send,
 }from "./utils/account";
 
-const API_KEY = process.env.REACT_APP_API_KEY ? process.env.REACT_APP_API_KEY : "";
-
 function App() {
   const [wallet, setWallet] = useState();
   const [maticClient, setMatiClient] = useState();
@@ -19,19 +17,11 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const [w, mClient] = await initialize();
+      const [w, mClient, biconomy, biconomyProvider] = await initialize();
       setWallet(w);
       setMatiClient(mClient);
     })();
   }, []);
-
-  /*
-  useEffect(() => {
-    (async () => {
-      setBiconomy(await loadBiconomy(maticProvider, API_KEY));
-    })();
-  }, [maticProvider]);
-  */
 
   useEffect(() => {
     (async () => {

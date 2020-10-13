@@ -4,14 +4,9 @@ import { MaticPOSClient } from "@maticnetwork/maticjs";
 import * as config from "../config.json";
 import ethers from "ethers";
 
-const cache = window.localStorage;
+const API_KEY = process.env.REACT_APP_API_KEY ? process.env.REACT_APP_API_KEY : "";
 
-const loadBiconomy = async (maticProvider: any, apiKey: string) => {
-  if (!(maticProvider && apiKey)) {
-    return null;
-  }
-  return Biconomy( maticProvider, { apiKey });
-};
+const cache = window.localStorage;
 
 const loadEthProvider = async () => {
   return (
@@ -66,9 +61,19 @@ const loadWallet = () => {
   return w; 
 };
 
+const loadBiconomy = () => {
+  return new Biconomy(config.MATIC_RPC, { apiKey: API_KEY });
+};
+
+const loadBiconomyProvider = (biconomy: any) => {
+  return new ethers.providers.Web3Provider(biconomy);
+};
+
 export const initialize = async () => {
   const w = loadWallet();
   const mClient = await loadMaticClient(w.address);
+  const biconomy = loadBiconomy();
+  const biconomyProvider = loadBiconomyProvider(biconomy);
 
-  return [w, mClient];
+  return [w, mClient, biconomy, biconomyProvider];
 };
