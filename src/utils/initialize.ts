@@ -5,7 +5,6 @@ import * as config from "../config.json";
 import ethers from "ethers";
 
 const API_KEY = process.env.REACT_APP_API_KEY ? process.env.REACT_APP_API_KEY : "";
-
 const cache = window.localStorage;
 
 const loadEthProvider = async () => {
@@ -16,23 +15,6 @@ const loadEthProvider = async () => {
         onConnect: console.log("mainchain connected"),
         onDisconnect: console.log("mainchain disconnected"),
       },
-    }));
-};
-
-const loadMaticClient = async (address: string) => {
-  if (!address) { return null; }
-
-  const maticProvider = await loadMaticProvider();
-  const ethProvider = await loadEthProvider();
-  
-  return (
-    new MaticPOSClient({
-      network: config.NETWORK,
-      version: config.VERSION,
-      maticProvider: maticProvider,
-      parentProvider: ethProvider,
-      parentDefaultOptions: { from: address },
-      maticDefaultOptions: { from: address },
     }));
 };
 
@@ -72,6 +54,7 @@ const loadBiconomy = () => {
       biconomy.ERROR, (error: Error, message: string) => {
         console.log(error, message);
       });
+  console.log(biconomy);
   return biconomy;
 };
 
@@ -79,11 +62,28 @@ const loadBiconomyProvider = (biconomy: any) => {
   return new ethers.providers.Web3Provider(biconomy);
 };
 
+const loadMaticClient = (address: string, maticProvider: any, ethProvider: any) => {
+  if (!(address && maticProvider && ethProvider)) { return null; }
+
+  return (
+    new MaticPOSClient({
+      network: config.NETWORK,
+      version: config.VERSION,
+      maticProvider: maticProvider,
+      parentProvider: ethProvider,
+      parentDefaultOptions: { from: address },
+      maticDefaultOptions: { from: address },
+    }));
+};
+
 export const initialize = async () => {
   const w = loadWallet();
-  const mClient = await loadMaticClient(w.address);
+  const mProvider = await loadMaticProvider();
+  const eProvier = await loadEthProvider();
+
+  const mClient = loadMaticClient(w.address, mProvider, eProvier);
   const biconomy = loadBiconomy();
   const biconomyProvider = loadBiconomyProvider(biconomy);
 
-  return [w, mClient, biconomy, biconomyProvider];
+  return [w, mClient, biconomy, w.connect(biconomyProvider)];
 };
