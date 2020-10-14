@@ -1,11 +1,13 @@
 import { Wallet, utils, Contract, BigNumber } from 'ethers';
+import * as sigUtil from 'eth-sig-util';
 
 import * as config from '../config.json';
-import { domainData, domainType, metaTransactionType } from '../types';
+import { typedData, domainData, domainType, metaTransactionType } from '../types';
 
 const abi = require('../contracts/Rocket.json').abi;
 const IRocketContract = new utils.Interface(abi);
 
+console.log(sigUtil);
 export const balance = async (address: string, token: string, client: any) => {
   if (!(address && token && client)) {
     return '0';
@@ -26,7 +28,7 @@ export const send = async (wallet: Wallet, biconomyProvider: any) => {
   console.log(`Set function sig: ${functionSignature}`);
 
   console.log(`Fetching nonce`);
-  const nonce = await RocketContract.getNonce(wallet.address);
+  const nonce = (await RocketContract.getNonce(wallet.address)).toNumber();
   console.log(`Got nonce: ${nonce}`);
 
   const message = {
@@ -35,26 +37,30 @@ export const send = async (wallet: Wallet, biconomyProvider: any) => {
     functionSignature
   };
 
-  const dataToSign = JSON.stringify({
+  const dataToSign = {
     types: {
         EIP712Domain: domainType,
         MetaTransaction: metaTransactionType
       },
     domain: domainData,
-    primaryType: "MetaTransaction",
+    primaryType: 'MetaTransaction' as const,
     message: message
-  });
+  };
 
-  const signedMsg = await wallet.signMessage(dataToSign);
-  console.log(signedMsg);
+  const signedMsg = sigUtil.signTypedData_v4(Buffer.from(wallet.privateKey.slice(2,66), 'hex'), { data: dataToSign});
 
 
   const sigParams = utils.splitSignature(signedMsg);
   console.log(sigParams.r,sigParams.s,sigParams.v);
 
-  console.log(RocketContract.provider);
-  console.log(RocketContract.signer);
-  console.log('Sending');
+  directSend(wallet, signedMsg, sigParams);
+
+  const recovered = sigUtil.recoverTypedSignature_v4({
+    data: dataToSign,
+    sig: signedMsg
+  });
+  console.log(`Recovered = ${recovered}`);
+
   /*
   const receipt = await RocketContract.executeMetaTransaction(
     wallet.address,
