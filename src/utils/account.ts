@@ -7,7 +7,6 @@ import { typedData, domainData, domainType, metaTransactionType } from '../types
 const abi = require('../contracts/Rocket.json').abi;
 const IRocketContract = new utils.Interface(abi);
 
-console.log(sigUtil);
 export const balance = async (address: string, token: string, client: any) => {
   if (!(address && token && client)) {
     return '0';
@@ -23,8 +22,8 @@ export const balance = async (address: string, token: string, client: any) => {
 export const send = async (wallet: Wallet, biconomyProvider: any) => {
   if (!(wallet && biconomyProvider)) return Error;
 
-  const RocketContract = new Contract(config.posChildERC20, abi, biconomyProvider);
-  const functionSignature = IRocketContract.encodeFunctionData('transfer', ['0x0B510F42fF8497254B006C2Ae9c85B3F831f052E', BigNumber.from('1')]);
+  const RocketContract = new Contract('0x7Fd5132572e6Ee53cd925E8B97Cd6B6d4cb5c022', abi, biconomyProvider);
+  const functionSignature = IRocketContract.encodeFunctionData('transfer', ['0x0B510F42fF8497254B006C2Ae9c85B3F831f052E', BigNumber.from('1000')]);
   console.log(`Set function sig: ${functionSignature}`);
 
   console.log(`Fetching nonce`);
@@ -53,33 +52,19 @@ export const send = async (wallet: Wallet, biconomyProvider: any) => {
   const sigParams = utils.splitSignature(signedMsg);
   console.log(sigParams.r,sigParams.s,sigParams.v);
 
-  directSend(wallet, signedMsg, sigParams);
-
   const recovered = sigUtil.recoverTypedSignature_v4({
     data: dataToSign,
     sig: signedMsg
   });
   console.log(`Recovered = ${recovered}`);
 
-  /*
-  const receipt = await RocketContract.executeMetaTransaction(
-    wallet.address,
-    signedMsg,
-    sigParams.r,
-    sigParams.s,
-    sigParams.v,
-    {
-      from: wallet.address
-    }
-  )
-
-  console.log(receipt);
-  */
+  console.log(utils.keccak256(utils.toUtf8Bytes(JSON.stringify(dataToSign))));
+  directSend(wallet, functionSignature, sigParams);
 };
 
 
 
-const directSend = (wallet: Wallet, signedMsg: string, sigParams: any) => {
+const directSend = (wallet: Wallet, functionSignature: string, sigParams: any) => {
   try {
           fetch(`https://api.biconomy.io/api/v2/meta-tx/native`, {
             method: "POST",
@@ -88,10 +73,10 @@ const directSend = (wallet: Wallet, signedMsg: string, sigParams: any) => {
               'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify({
-              "to": "0xabc7eb97bae5fea8b789e0609713830e086ff36e",
-              "apiId": "bd52ca61-704c-4430-bb1f-77e149eafae0",
+              "to": "0x7Fd5132572e6Ee53cd925E8B97Cd6B6d4cb5c022",
+              "apiId": "ca603f21-1286-40f0-b8a7-61b54fe0dccf",
               "params": [
-                wallet.address, signedMsg, sigParams.r, sigParams.s, sigParams.v
+                wallet.address, functionSignature, sigParams.r, sigParams.s, sigParams.v
               ],
               "from": wallet.address
             })
