@@ -3,12 +3,12 @@ import * as sigUtil from 'eth-sig-util';
 
 import * as config from '../config.json';
 import { domainData, domainType, metaTransactionType } from '../types';
+import { dummyTo, API_ID, API_KEY, BICONOMY_API_URI } from './constants';
 
 const abi = require('../contracts/Rocket.json').abi;
 const IRocketContract = new utils.Interface(abi);
 const provider = new providers.JsonRpcProvider(config.MATIC_RPC);
 const RocketContract = new Contract(config.posChildERC20, abi, provider);
-const dummyTo = "0x0B510F42fF8497254B006C2Ae9c85B3F831f052E";
 
 export const balance = async (address: string, token: string, client: any) => {
   if (!(address && token && client)) {
@@ -61,36 +61,30 @@ export const send = async (wallet: Wallet) => {
   });
   console.log(`Recovered = ${recovered}`);
 
-  directSend(wallet, functionSignature, sigParams);
+  postToBcnmy(wallet, functionSignature, sigParams);
 };
 
-
-
-const directSend = (wallet: Wallet, functionSignature: string, sigParams: any) => {
+const postToBcnmy = async (wallet: Wallet, functionSignature: string, sigParams: any) => {
   try {
-          fetch(`https://api.biconomy.io/api/v2/meta-tx/native`, {
-            method: "POST",
-            headers: {
-              "x-api-key" : "PHObqJvg2.478df731-9031-4d8a-84a9-620c09d87c9f",
-              'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify({
-              "to": config.posChildERC20,
-              "apiId": "ca603f21-1286-40f0-b8a7-61b54fe0dccf",
-              "params": [
-                wallet.address, functionSignature, sigParams.r, sigParams.s, sigParams.v
-              ],
-              "from": wallet.address
-            })
-          })
-          .then(console.log)
-          .then(function(result) {
-            console.log(result);
-          })
-          .catch(function(error) {
-            console.log(error)
-          });
-        } catch (error) {
-          console.log(error);
-        }
+    const result = await fetch(BICONOMY_API_URI, {
+      method: "POST",
+      headers: {
+        "x-api-key" : API_KEY,
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      body: JSON.stringify({
+        "to": config.posChildERC20,
+        "apiId": API_ID,
+        "params": [
+          wallet.address, functionSignature, sigParams.r, sigParams.s, sigParams.v
+        ],
+        "from": wallet.address
+      })
+    });
+
+    if (result.status !== 200)
+        console.log(result)
+  } catch (error) {
+    console.log(error);
+  }
 }

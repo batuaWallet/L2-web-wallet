@@ -1,10 +1,10 @@
-import Biconomy from "@biconomy/mexa";
-import WalletConnectProvider from "@maticnetwork/walletconnect-provider";
-import { MaticPOSClient } from "@maticnetwork/maticjs";
-import * as config from "../config.json";
-import ethers from "ethers";
+import Biconomy from '@biconomy/mexa';
+import WalletConnectProvider from '@maticnetwork/walletconnect-provider';
+import { MaticPOSClient } from '@maticnetwork/maticjs';
+import * as config from '../config.json';
+import ethers from 'ethers';
+import { API_KEY } from './constants';
 
-const API_KEY = process.env.REACT_APP_API_KEY ? process.env.REACT_APP_API_KEY : "";
 const cache = window.localStorage;
 
 const loadEthProvider = async () => {
@@ -12,8 +12,8 @@ const loadEthProvider = async () => {
     new WalletConnectProvider({
       host: config.ETHEREUM_RPC,
       callbacks: {
-        onConnect: console.log("mainchain connected"),
-        onDisconnect: console.log("mainchain disconnected"),
+        onConnect: console.log('mainchain connected'),
+        onDisconnect: console.log('mainchain disconnected'),
       },
     }));
 };
@@ -23,8 +23,8 @@ const loadMaticProvider = async () => {
     new WalletConnectProvider({
       host: config.MATIC_RPC,
       callbacks: {
-        onConnect: console.log("matic connected"),
-        onDisconnect: console.log("matic disconnected!"),
+        onConnect: console.log('matic connected'),
+        onDisconnect: console.log('matic disconnected!'),
       },
     }));
 };
@@ -48,7 +48,7 @@ const loadBiconomy = () => {
   biconomy
     .onEvent(
       biconomy.READY, () => {
-        console.log("Mexa is Ready");
+        console.log('Mexa is Ready');
       })
     .onEvent(
       biconomy.ERROR, (error: Error, message: string) => {
