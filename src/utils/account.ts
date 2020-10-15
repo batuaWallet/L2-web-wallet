@@ -2,7 +2,7 @@ import { Wallet, utils, Contract, BigNumber } from 'ethers';
 import * as sigUtil from 'eth-sig-util';
 
 import * as config from '../config.json';
-import { typedData, domainData, domainType, metaTransactionType } from '../types';
+import { domainData, domainType, metaTransactionType } from '../types';
 
 const abi = require('../contracts/Rocket.json').abi;
 const IRocketContract = new utils.Interface(abi);
@@ -22,8 +22,8 @@ export const balance = async (address: string, token: string, client: any) => {
 export const send = async (wallet: Wallet, biconomyProvider: any) => {
   if (!(wallet && biconomyProvider)) return Error;
 
-  const RocketContract = new Contract('0x7Fd5132572e6Ee53cd925E8B97Cd6B6d4cb5c022', abi, biconomyProvider);
-  const functionSignature = IRocketContract.encodeFunctionData('transfer', ['0x0B510F42fF8497254B006C2Ae9c85B3F831f052E', BigNumber.from('1000')]);
+  const RocketContract = new Contract(config.posChildERC20, abi, biconomyProvider);
+  const functionSignature = IRocketContract.encodeFunctionData('transfer', ['0x0B510F42fF8497254B006C2Ae9c85B3F831f052E', BigNumber.from('1')]);
   console.log(`Set function sig: ${functionSignature}`);
 
   console.log(`Fetching nonce`);
@@ -73,7 +73,7 @@ const directSend = (wallet: Wallet, functionSignature: string, sigParams: any) =
               'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify({
-              "to": "0x7Fd5132572e6Ee53cd925E8B97Cd6B6d4cb5c022",
+              "to": config.posChildERC20,
               "apiId": "ca603f21-1286-40f0-b8a7-61b54fe0dccf",
               "params": [
                 wallet.address, functionSignature, sigParams.r, sigParams.s, sigParams.v
