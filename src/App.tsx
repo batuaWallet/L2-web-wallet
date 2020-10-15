@@ -14,15 +14,13 @@ function App() {
   const [maticClient, setMatiClient] = useState();
   const [INRBalance, setINRBalance] = useState('0');
   const [biconomy, setBiconomy] = useState();
-  const [biconomyProvider, setBiconomyProvider] = useState();
 
   useEffect(() => {
     (async () => {
-      const [w, mClient, biconomy, biconomyProvider] = await initialize();
+      const [w, mClient, biconomy] = await initialize();
       setWallet(w);
       setMatiClient(mClient);
       setBiconomy(biconomy);
-      setBiconomyProvider(biconomyProvider);
     })();
   }, []);
 
@@ -46,7 +44,7 @@ function App() {
           <p> Address: {wallet.address} </p>
           <p> magic words: {wallet.mnemonic.phrase} </p>
           <p> balance: ₹{INRBalance} </p>
-          <button onClick={() => send(wallet, biconomyProvider)}> Send ₹ 0.01 </button>
+          <button onClick={() => send(wallet)}> Send ₹ 0.01 </button>
         </header>
       </div>
     );

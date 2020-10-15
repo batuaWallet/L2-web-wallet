@@ -62,8 +62,11 @@ const loadBiconomyProvider = (biconomy: any) => {
   return new ethers.providers.Web3Provider(biconomy);
 };
 
-const loadMaticClient = (address: string, maticProvider: any, ethProvider: any) => {
-  if (!(address && maticProvider && ethProvider)) { return null; }
+const loadMaticClient = async (address: string) => {
+  if (!(address)) { return null; }
+
+  const maticProvider = await loadMaticProvider();
+  const ethProvider = await loadEthProvider();
 
   return (
     new MaticPOSClient({
@@ -78,12 +81,8 @@ const loadMaticClient = (address: string, maticProvider: any, ethProvider: any) 
 
 export const initialize = async () => {
   const w = loadWallet();
-  const mProvider = await loadMaticProvider();
-  const eProvier = await loadEthProvider();
-
-  const mClient = loadMaticClient(w.address, mProvider, eProvier);
   const biconomy = loadBiconomy();
-  const biconomyProvider = loadBiconomyProvider(biconomy);
+  const mClient = await loadMaticClient(w.address);
 
-  return [w, mClient, biconomy, w.connect(biconomyProvider)];
+  return [w, mClient, biconomy];
 };

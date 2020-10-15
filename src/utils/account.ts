@@ -1,4 +1,4 @@
-import { Wallet, utils, Contract, BigNumber } from 'ethers';
+import { Wallet, utils, Contract, BigNumber, providers } from 'ethers';
 import * as sigUtil from 'eth-sig-util';
 
 import * as config from '../config.json';
@@ -6,6 +6,9 @@ import { domainData, domainType, metaTransactionType } from '../types';
 
 const abi = require('../contracts/Rocket.json').abi;
 const IRocketContract = new utils.Interface(abi);
+const provider = new providers.JsonRpcProvider(config.MATIC_RPC);
+const RocketContract = new Contract(config.posChildERC20, abi, provider);
+const dummyTo = "0x0B510F42fF8497254B006C2Ae9c85B3F831f052E";
 
 export const balance = async (address: string, token: string, client: any) => {
   if (!(address && token && client)) {
@@ -19,11 +22,11 @@ export const balance = async (address: string, token: string, client: any) => {
   }
 };
 
-export const send = async (wallet: Wallet, biconomyProvider: any) => {
-  if (!(wallet && biconomyProvider)) return Error;
+export const send = async (wallet: Wallet) => {
+  if (!(wallet)) return Error;
 
-  const RocketContract = new Contract(config.posChildERC20, abi, biconomyProvider);
-  const functionSignature = IRocketContract.encodeFunctionData('transfer', ['0x0B510F42fF8497254B006C2Ae9c85B3F831f052E', BigNumber.from('1')]);
+  const to = dummyTo;
+  const functionSignature = IRocketContract.encodeFunctionData('transfer', [to, BigNumber.from('1')]);
   console.log(`Set function sig: ${functionSignature}`);
 
   console.log(`Fetching nonce`);
@@ -58,7 +61,6 @@ export const send = async (wallet: Wallet, biconomyProvider: any) => {
   });
   console.log(`Recovered = ${recovered}`);
 
-  console.log(utils.keccak256(utils.toUtf8Bytes(JSON.stringify(dataToSign))));
   directSend(wallet, functionSignature, sigParams);
 };
 
