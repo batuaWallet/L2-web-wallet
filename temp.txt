@@ -1,0 +1,38 @@
+ERROR: "biconomy_error"
+​
+LOGIN_CONFIRMATION: "login_confirmation"
+​
+READY: "biconomy_ready"
+​
+apiKey: "\"PHObqJvg2.478df731-9031-4d8a-84a9-620c09d87c9f\";"
+​
+catch: function catch()
+​
+constructor: function Promise()
+​
+dappAPIMap: Object {  }
+​
+finally: function finally()
+​
+isBiconomy: true
+​
+isLogin: false
+​
+pendingLoginTransactions: Object {  }
+​
+providerId: 0
+​
+readViaContract: false
+​
+send: function send(payload, cb)​
+sendAsync: function send(payload, cb)
+​
+status: "init"
+​
+strictMode: false
+​
+then: function then()
+​
+<prototype>: Object { getLoginMessageToSign: getLoginMessageToSign(signer), getUserMessageToSign: getUserMessageToSign(rawTransaction, cb), onEvent: onEvent(type, callback)
+, … }
+initialize.ts:75
