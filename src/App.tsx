@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import './App.css';
-import { Route, Switch } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import { Route, Switch } from "react-router-dom";
 import {
   CssBaseline,
   ThemeProvider,
-} from '@material-ui/core';
+} from "@material-ui/core";
 
-import { TabsBar } from './components/TabsBar';
-import { NewWallet } from './components/NewWallet';
+import { WalletContext } from "./utils/walletContext";
+import { TabsBar } from "./components/TabsBar";
+import { NewWallet } from "./components/NewWallet";
 
-import * as Themes from './utils/theme';
+import * as Themes from "./utils/theme";
 import { loadSecret, loadAddress, loadWallet } from "./utils/initialize";
 
  
@@ -20,11 +21,13 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      { secret
-        ? <TabsBar secret={secret} />
-        : <NewWallet />
-      }
+      <WalletContext.Provider value={{wallet, setWallet: () => setWallet}}>
+        <CssBaseline />
+        { secret
+          ? <TabsBar />
+          : <NewWallet />
+        }
+      </WalletContext.Provider>
     </ThemeProvider>
   );
 }

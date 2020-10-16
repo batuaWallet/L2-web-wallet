@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   AppBar,
   Tab,
@@ -14,7 +14,7 @@ import {
 } from "@material-ui/icons";
 import { TabContext, TabPanel } from "@material-ui/lab";
 
-
+import { WalletContext } from "../utils/walletContext";
 import { Wallet } from './Wallet';
 import { Account } from './Account';
 
@@ -49,6 +49,8 @@ export const TabsBar = (props: any) => {
   };
   console.log(tab)
 
+  const wallet = useContext(WalletContext).wallet;
+
   return (
     <>
       <TabContext value={tab}>
@@ -64,7 +66,9 @@ export const TabsBar = (props: any) => {
           </Tabs>
         </AppBar>
 
-        <TabPanel value="account" className={classes.panel}> <Account address={"0xbatua-address"} /> </TabPanel>
+        <TabPanel value="account" className={classes.panel}>
+          <Account address={wallet ? wallet.address: ""} />
+        </TabPanel>
         <TabPanel value="menu" className={classes.panel}> Menu </TabPanel>
         <TabPanel value="txns" className={classes.panel}> Txns </TabPanel>
         <TabPanel value="wallet" className={classes.panel}> <Wallet /> </TabPanel>
