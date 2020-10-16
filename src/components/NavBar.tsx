@@ -5,8 +5,11 @@ import {
   Tabs,
   makeStyles,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import {
-  Menu as MenuIcon,
+  AccountBalanceWallet as WalletIcon,
+  AccountCircle as AccountIcon,
+  Receipt as TransactionIcon,
 } from "@material-ui/icons";
 
 const useStyles = makeStyles( theme => ({
@@ -23,11 +26,12 @@ const useStyles = makeStyles( theme => ({
 
 export const NavBar = (props: any) => {
   const classes = useStyles();
-  const [tab, setTab] = useState("Account");
+  const [tab, setTab] = useState(1);
 
-  const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: string) => {
+  const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: number) => {
     setTab(selectedTab);
   };
+  console.log(tab)
 
   return (
     <>
@@ -35,13 +39,14 @@ export const NavBar = (props: any) => {
         <Tabs
           value={tab}
           onChange={updateSelection}
-          indicatorColor="primar"
-          textColor="primary"
+          indicatorColor="secondary"
+          textColor="secondary"
           variant="fullWidth"
         >
-          <Tab label="Wallet" />
+          <Tab icon={<WalletIcon />} aria-label="wallet" />
+          <Tab icon={<AccountIcon />} aria-label="Account" />
+          <Tab icon={<TransactionIcon />} aria-label="Txns" />
         </Tabs>
-        <MenuIcon />
       </AppBar>
     </>
   )
