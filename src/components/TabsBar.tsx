@@ -26,19 +26,21 @@ const useStyles = makeStyles( theme => ({
   appbarTop: {
     flex: 1,
   },
-  root: {
-    padding: "64px",
+  panel: {
+    marginTop: theme.spacing(8),
   },
   menu: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(65),
   },
   notification: {
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(65),
   },
 }));
 
 export const TabsBar = (props: any) => {
   const classes = useStyles();
+  console.log(classes.menu);
+  console.log(classes.notification);
   const [tab, setTab] = useState("account");
 
   const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: string) => {
@@ -61,9 +63,9 @@ export const TabsBar = (props: any) => {
           </Tabs>
         </AppBar>
 
-        <TabPanel value="account" className={classes.root}> Account </TabPanel>
-        <TabPanel value="menu" className={classes.root}> Menu </TabPanel>
-        <TabPanel value="txns" className={classes.root}> Txns </TabPanel>
+        <TabPanel value="account" className={classes.panel}> Account </TabPanel>
+        <TabPanel value="menu" className={classes.panel}> Menu </TabPanel>
+        <TabPanel value="txns" className={classes.panel}> Txns </TabPanel>
         <TabPanel value="wallet"> <Wallet /> </TabPanel>
 
         <AppBar position="fixed" className={classes.appbar}>

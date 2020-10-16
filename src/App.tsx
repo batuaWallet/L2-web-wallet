@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core';
 
 
-import { NavBar } from './components/NavBar';
 import { TabsBar } from './components/TabsBar';
 import * as Themes from './utils/theme';
  
