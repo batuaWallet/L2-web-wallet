@@ -1,56 +1,46 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-
-import * as config from "./config.json";
-
-import { initialize, } from "./utils/initialize";
+import { Route, Switch } from 'react-router-dom';
 import {
-  balance,
-  send,
-}from "./utils/account";
+  CssBaseline,
+  ThemeProvider,
+} from '@material-ui/core';
 
+
+import { NavBar } from './components/NavBar';
+import { Wallet } from './components/Wallet';
+import * as Themes from './utils/theme';
+ 
 function App() {
-  const [wallet, setWallet] = useState();
-  const [maticClient, setMatiClient] = useState();
-  const [INRBalance, setINRBalance] = useState('0');
-  const [biconomy, setBiconomy] = useState();
+  const [theme, setTheme] = useState(Themes.dark);
 
-  useEffect(() => {
-    (async () => {
-      const [w, mClient, biconomy] = await initialize();
-      setWallet(w);
-      setMatiClient(mClient);
-      setBiconomy(biconomy);
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      if (maticClient && wallet) {
-        const bal = await balance(
-          wallet.address,
-          config.dummyERC20,
-          maticClient
-        );
-        setINRBalance(bal);
-      }
-    })();
-  }, [maticClient, wallet]);
-
-  if ( wallet && INRBalance) {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <p> Address: {wallet.address} </p>
-          <p> magic words: {wallet.mnemonic.phrase} </p>
-          <p> balance: ₹{INRBalance} </p>
-          <button onClick={() => send(wallet)}> Send ₹ 0.01 </button>
-        </header>
-      </div>
-    );
-  } else {
-    return <div> Loading </div>
-  }
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <NavBar setTheme={setTheme} />
+      <main>
+        <Switch>
+          <Route exact
+            path="/"
+            render={() => {
+              return (
+                <> Home </>
+              );
+            }}
+          />
+            
+          <Route exact
+            path="/Wallet"
+            render={() => {
+              return (
+                <Wallet />
+              );
+            }}
+          />
+        </Switch>
+      </main>
+    </ThemeProvider>
+  );
 }
 
 export default App;

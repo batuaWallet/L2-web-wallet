@@ -10,12 +10,12 @@ const IRocketContract = new utils.Interface(abi);
 const provider = new providers.JsonRpcProvider(config.MATIC_RPC);
 const RocketContract = new Contract(config.dummyERC20, abi, provider);
 
-export const balance = async (address: string, token: string, client: any) => {
-  if (!(address && token && client)) {
+export const balance = async (address: string, client: any) => {
+  if (!(address && client)) {
     return '0';
   }
   try {
-    return (utils.formatUnits(await client.balanceOfERC20(address, token, {}), 1))
+    return (utils.formatUnits(await client.balanceOfERC20(address, config.dummyERC20, {}), 1))
   } catch (e) {
     console.log(e);
     return '0';
@@ -26,7 +26,7 @@ export const send = async (wallet: Wallet) => {
   if (!(wallet)) return Error;
 
   const to = dummyTo;
-  const functionSignature = IRocketContract.encodeFunctionData('transfer', [to, BigNumber.from('1')]);
+  const functionSignature = IRocketContract.encodeFunctionData('transfer', [to, BigNumber.from('10000')]);
   console.log(`Set function sig: ${functionSignature}`);
 
   console.log(`Fetching nonce`);

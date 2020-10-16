@@ -84,5 +84,5 @@ export const initialize = async () => {
   const biconomy = loadBiconomy();
   const mClient = await loadMaticClient(w.address);
 
-  return [w, mClient, biconomy];
+  return { w, mClient, biconomy };
 };
