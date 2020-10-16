@@ -6,17 +6,24 @@ import {
   ThemeProvider,
 } from '@material-ui/core';
 
-
 import { TabsBar } from './components/TabsBar';
+import { NewWallet } from './components/NewWallet';
+
 import * as Themes from './utils/theme';
+import { loadSecret } from "./utils/initialize";
+
  
 function App() {
   const [theme, setTheme] = useState(Themes.dark);
+  const [secret, setSecret] = useState(loadSecret());
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <TabsBar setTheme={setTheme} />
+      { secret
+        ? <TabsBar secret={secret} />
+        : <NewWallet />
+      }
     </ThemeProvider>
   );
 }
