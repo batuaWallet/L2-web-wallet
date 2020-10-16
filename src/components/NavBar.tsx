@@ -19,6 +19,8 @@ import { Wallet } from './Wallet';
 const useStyles = makeStyles( theme => ({
   appbar: {
     flex: 1,
+    bottom: 0,
+    top: 'auto',
   },
   wallet: {
     marginRight: theme.spacing(2),
@@ -40,7 +42,9 @@ export const NavBar = (props: any) => {
   return (
     <>
       <TabContext value={tab}>
-        <AppBar position="fixed">
+        <TabPanel value="wallet"> <Wallet /> </TabPanel>
+        <TabPanel value="account"> Account </TabPanel>
+        <AppBar position="fixed" className={classes.appbar}>
           <Tabs
             value={tab}
             onChange={updateSelection}
@@ -54,8 +58,6 @@ export const NavBar = (props: any) => {
 
           </Tabs>
         </AppBar>
-        <TabPanel value="wallet"> <Wallet /> </TabPanel>
-        <TabPanel value="account"> Account </TabPanel>
       </TabContext>
     </>
   )

@@ -16,7 +16,6 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <NavBar setTheme={setTheme} />
       <main>
         <Switch>
           <Route exact
@@ -38,6 +37,7 @@ function App() {
           />
         </Switch>
       </main>
+      <NavBar setTheme={setTheme} />
     </ThemeProvider>
   );
 }
