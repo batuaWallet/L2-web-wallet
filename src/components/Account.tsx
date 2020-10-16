@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-
 import { Loading } from "./Loading";
+
+const QRCode = require('qrcode.react');
 
 export const Account = (props: { address: string }) => {
 
@@ -10,6 +11,7 @@ export const Account = (props: { address: string }) => {
     return (
       <div>
         {address}
+        <QRCode value={address} />
       </div>
     )
   } else {
