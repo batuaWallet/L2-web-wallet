@@ -8,7 +8,7 @@ import { dummyTo, API_ID, API_KEY, BICONOMY_API_URI } from './constants';
 const abi = require('../contracts/Rocket.json').abi;
 const IRocketContract = new utils.Interface(abi);
 const provider = new providers.JsonRpcProvider(config.MATIC_RPC);
-const RocketContract = new Contract(config.posChildERC20, abi, provider);
+const RocketContract = new Contract(config.dummyERC20, abi, provider);
 
 export const balance = async (address: string, token: string, client: any) => {
   if (!(address && token && client)) {
@@ -73,7 +73,7 @@ const postToBcnmy = async (wallet: Wallet, functionSignature: string, sigParams:
         'Content-Type': 'application/json;charset=utf-8'
       },
       body: JSON.stringify({
-        "to": config.posChildERC20,
+        "to": config.dummyERC20,
         "apiId": API_ID,
         "params": [
           wallet.address, functionSignature, sigParams.r, sigParams.s, sigParams.v

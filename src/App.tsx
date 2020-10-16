@@ -29,7 +29,7 @@ function App() {
       if (maticClient && wallet) {
         const bal = await balance(
           wallet.address,
-          config.posChildERC20,
+          config.dummyERC20,
           maticClient
         );
         setINRBalance(bal);
