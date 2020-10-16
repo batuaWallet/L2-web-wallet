@@ -9,6 +9,10 @@ import { API_KEY } from "./constants";
 const cache = window.localStorage;
 let secret: string;
 
+export const loadAddress = () => {
+  return "0x";
+};
+
 export const saveSecret = (secret: Mnemonic) => {
   if (secret) {
     cache.setItem("magic", JSON.stringify(secret));
@@ -53,11 +57,11 @@ const loadMaticProvider = async () => {
 
 const createWallet = () => {
   const wallet = ethers.Wallet.createRandom();
-  cache.setItem("magic", JSON.stringify(wallet.mnemonic));
+  saveSecret(wallet.mnemonic);
   return wallet; 
 };
 
-const loadWallet = (secret? : string | null) => {
+export const loadWallet = (secret? : string | null) => {
   if (secret) {
     return ethers.Wallet.fromMnemonic(secret);
   } else {

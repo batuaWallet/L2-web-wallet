@@ -10,12 +10,13 @@ import { TabsBar } from './components/TabsBar';
 import { NewWallet } from './components/NewWallet';
 
 import * as Themes from './utils/theme';
-import { loadSecret } from "./utils/initialize";
+import { loadSecret, loadAddress, loadWallet } from "./utils/initialize";
 
  
 function App() {
   const [theme, setTheme] = useState(Themes.dark);
   const [secret, setSecret] = useState(loadSecret());
+  const [wallet, setWallet] = useState(loadWallet());
 
   return (
     <ThemeProvider theme={theme}>
