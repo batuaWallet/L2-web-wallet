@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import {
+  Menu as MenuIcon,
   AccountBalanceWallet as WalletIcon,
   AccountCircle as AccountIcon,
   Receipt as TransactionIcon,
@@ -22,15 +23,21 @@ const useStyles = makeStyles( theme => ({
     bottom: 0,
     top: 'auto',
   },
-  wallet: {
+  appbarTop: {
+    flex: 1,
+  },
+  root: {
+    padding: "64px",
+  },
+  menu: {
     marginRight: theme.spacing(2),
   },
-  tx: {
+  notification: {
     marginLeft: theme.spacing(2),
   },
 }));
 
-export const NavBar = (props: any) => {
+export const TabsBar = (props: any) => {
   const classes = useStyles();
   const [tab, setTab] = useState("account");
 
@@ -42,8 +49,23 @@ export const NavBar = (props: any) => {
   return (
     <>
       <TabContext value={tab}>
+        <AppBar position="fixed" className={classes.appbarTop}>
+          <Tabs
+            value={tab}
+            onChange={updateSelection}
+            indicatorColor="secondary"
+            textColor="secondary"
+            variant="fullWidth"
+          >
+            <Tab className={classes.menu} value="menu" icon={<MenuIcon />} aria-label="menu" />
+          </Tabs>
+        </AppBar>
+
+        <TabPanel value="account" className={classes.root}> Account </TabPanel>
+        <TabPanel value="menu" className={classes.root}> Menu </TabPanel>
+        <TabPanel value="txns" className={classes.root}> Txns </TabPanel>
         <TabPanel value="wallet"> <Wallet /> </TabPanel>
-        <TabPanel value="account"> Account </TabPanel>
+
         <AppBar position="fixed" className={classes.appbar}>
           <Tabs
             value={tab}
@@ -62,3 +84,4 @@ export const NavBar = (props: any) => {
     </>
   )
 };
+

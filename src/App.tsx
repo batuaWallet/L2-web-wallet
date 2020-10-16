@@ -8,6 +8,7 @@ import {
 
 
 import { NavBar } from './components/NavBar';
+import { TabsBar } from './components/TabsBar';
 import * as Themes from './utils/theme';
  
 function App() {
@@ -16,28 +17,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <main>
-        <Switch>
-          <Route exact
-            path="/"
-            render={() => {
-              return (
-                <> Home </>
-              );
-            }}
-          />
-            
-          <Route exact
-            path="/Wallet"
-            render={() => {
-              return (
-                <> Wallet </>
-              );
-            }}
-          />
-        </Switch>
-      </main>
-      <NavBar setTheme={setTheme} />
+      <TabsBar setTheme={setTheme} />
     </ThemeProvider>
   );
 }
