@@ -11,6 +11,10 @@ import {
   AccountCircle as AccountIcon,
   Receipt as TransactionIcon,
 } from "@material-ui/icons";
+import { TabContext, TabPanel } from "@material-ui/lab";
+
+
+import { Wallet } from './Wallet';
 
 const useStyles = makeStyles( theme => ({
   appbar: {
@@ -26,28 +30,33 @@ const useStyles = makeStyles( theme => ({
 
 export const NavBar = (props: any) => {
   const classes = useStyles();
-  const [tab, setTab] = useState(1);
+  const [tab, setTab] = useState("account");
 
-  const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: number) => {
+  const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: string) => {
     setTab(selectedTab);
   };
   console.log(tab)
 
   return (
     <>
-      <AppBar position="fixed">
-        <Tabs
-          value={tab}
-          onChange={updateSelection}
-          indicatorColor="secondary"
-          textColor="secondary"
-          variant="fullWidth"
-        >
-          <Tab icon={<WalletIcon />} aria-label="wallet" />
-          <Tab icon={<AccountIcon />} aria-label="Account" />
-          <Tab icon={<TransactionIcon />} aria-label="Txns" />
-        </Tabs>
-      </AppBar>
+      <TabContext value={tab}>
+        <AppBar position="fixed">
+          <Tabs
+            value={tab}
+            onChange={updateSelection}
+            indicatorColor="secondary"
+            textColor="secondary"
+            variant="fullWidth"
+          >
+            <Tab value="wallet" icon={<WalletIcon />} aria-label="wallet" />
+            <Tab value="account" icon={<AccountIcon />} aria-label="account" />
+            <Tab value="txns" icon={<TransactionIcon />} aria-label="txns" />
+
+          </Tabs>
+        </AppBar>
+        <TabPanel value="wallet"> <Wallet /> </TabPanel>
+        <TabPanel value="account"> Account </TabPanel>
+      </TabContext>
     </>
   )
 };

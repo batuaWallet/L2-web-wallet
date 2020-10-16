@@ -8,7 +8,6 @@ import {
 
 
 import { NavBar } from './components/NavBar';
-import { Wallet } from './components/Wallet';
 import * as Themes from './utils/theme';
  
 function App() {
@@ -33,7 +32,7 @@ function App() {
             path="/Wallet"
             render={() => {
               return (
-                <Wallet />
+                <> Wallet </>
               );
             }}
           />
