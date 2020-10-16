@@ -1,4 +1,10 @@
 import React, { useEffect, useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+} from "@material-ui/core";
+
 import { Loading } from "./Loading";
 
 const QRCode = require('qrcode.react');
@@ -10,8 +16,12 @@ export const Account = (props: { address: string }) => {
   if (address) {
     return (
       <div>
-        {address}
-        <QRCode value={address} />
+        <Card>
+          <CardHeader subheader={address} />
+          <CardContent>
+            <QRCode value={address} />
+          </CardContent>
+        </Card>
       </div>
     )
   } else {
