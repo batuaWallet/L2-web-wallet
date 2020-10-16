@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import { Loading } from "./Loading";
 import { initialize } from '../utils/initialize';
 import {
   balance,
@@ -44,7 +45,7 @@ export const Wallet = (props: any) => {
       </div>
     );
   } else {
-    return <div> Loading </div>
+    return <Loading />
   }
 };
 

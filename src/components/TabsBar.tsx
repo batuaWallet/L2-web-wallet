@@ -16,6 +16,7 @@ import { TabContext, TabPanel } from "@material-ui/lab";
 
 
 import { Wallet } from './Wallet';
+import { Account } from './Account';
 
 const useStyles = makeStyles( theme => ({
   appbar: {
@@ -63,10 +64,10 @@ export const TabsBar = (props: any) => {
           </Tabs>
         </AppBar>
 
-        <TabPanel value="account" className={classes.panel}> Account </TabPanel>
+        <TabPanel value="account" className={classes.panel}> <Account address={"0xbatua-address"} /> </TabPanel>
         <TabPanel value="menu" className={classes.panel}> Menu </TabPanel>
         <TabPanel value="txns" className={classes.panel}> Txns </TabPanel>
-        <TabPanel value="wallet"> <Wallet /> </TabPanel>
+        <TabPanel value="wallet" className={classes.panel}> <Wallet /> </TabPanel>
 
         <AppBar position="fixed" className={classes.appbar}>
           <Tabs
