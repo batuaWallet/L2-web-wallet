@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@biconomy/mexa": "^1.5.13",
+    "@material-ui/core": "^4.11.0",
     "@maticnetwork/maticjs": "^2.0.6-beta.0",
     "@maticnetwork/walletconnect-provider": "0.0.1-beta.1",
     "@testing-library/jest-dom": "^4.2.4",
