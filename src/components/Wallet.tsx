@@ -24,6 +24,9 @@ import {
 const assetsPath = "../assets";
 
 const useStyles = makeStyles( theme => ({
+  button: {
+    marginTop: theme.spacing(30),
+  },
   root: {
     position: "relative",
     minHeight: "534px",
@@ -37,10 +40,10 @@ const useStyles = makeStyles( theme => ({
     align: "center",
   },
   logo: {
-    height: 48,
-    width: 48,
-    marginTop: 28,
-    marginBottom: 28,
+    height: theme.spacing(6),
+    width: theme.spacing(6),
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4),
   },
 }));
 
@@ -82,18 +85,17 @@ export const Wallet = (props: any) => {
             <CardHeader subheader={"Current Balance"} /> 
             <CardMedia image={logo} className={classes.logo} />
             <CardContent className={classes.content}>
-              <Typography variant="h4"> {RSABalance}&nbsp;₹SA </Typography>
+              <Typography variant="h4" gutterBottom={true}> {RSABalance}&nbsp;₹SA </Typography>
               <Typography
                 align="center"
                 display="block"
                 variant="caption"
                 color="textSecondary"
-                gutterBottom={true}
               >
                 {INRBalance}&nbsp;₹
               </Typography>
             </CardContent>
-            <CardActions>
+            <CardActions className={classes.button}>
               <IconButton onClick={() => send(wallet)}> <SendIcon /> </IconButton>
             </CardActions>
           </div>
