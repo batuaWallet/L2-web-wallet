@@ -42,22 +42,21 @@ export const TabsBar = (props: any) => {
   const classes = useStyles();
   console.log(classes.menu);
   console.log(classes.notification);
-  const [bottomTab, setBottomTab] = useState("wallet");
-  const [topTab, setTopTab] = useState("wallet");
+  const [tab, setTab] = useState("wallet");
 
   const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: string) => {
-    setBottomTab(selectedTab);
+    setTab(selectedTab);
   };
-  console.log(topTab)
+  console.log(tab)
 
   const wallet = useContext(WalletContext).wallet;
 
   return (
     <>
-      <TabContext value={topTab}>
+      <TabContext value={tab}>
         <AppBar position="fixed" className={classes.appbarTop}>
           <Tabs
-            value={false}
+            value={tab}
             onChange={updateSelection}
             indicatorColor="secondary"
             textColor="secondary"
@@ -72,13 +71,11 @@ export const TabsBar = (props: any) => {
         </TabPanel>
         <TabPanel value="menu" className={classes.panel}> Menu </TabPanel>
         <TabPanel value="txns" className={classes.panel}> Txns </TabPanel>
-        <TabPanel value="wallet" className={classes.panel}>
-          <Wallet setTab={updateSelection} />
-        </TabPanel>
+        <TabPanel value="wallet" className={classes.panel}> <Wallet /> </TabPanel>
 
         <AppBar position="fixed" className={classes.appbar}>
           <Tabs
-            value={topTab}
+            value={tab}
             onChange={updateSelection}
             indicatorColor="secondary"
             textColor="secondary"

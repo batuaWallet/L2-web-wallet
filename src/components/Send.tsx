@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import {
   AppBar,
   Tab,
@@ -8,6 +9,7 @@ import {
 } from "@material-ui/core";
 import { TabContext, TabPanel } from "@material-ui/lab";
 import {
+  ArrowBackIos as BackIcon,
   CropFree as ScanIcon,
   ImportContacts as ContactsIcon,
 } from "@material-ui/icons";
@@ -41,7 +43,14 @@ export const Send = (props: any) => {
     setAddressOpt(selectedTab);
   };
   const handleScan = (data: any) => {
-    setScan(data);
+    if (data) {
+      const address = data.match(/0x[a-fA-F0-9]{40}/g)[1];
+      if (address) {
+        console.log(address);
+      }
+      else console.log(data);
+      setScan(data);
+    }
   };
 
   return (
@@ -55,6 +64,7 @@ export const Send = (props: any) => {
             textColor="secondary"
             variant="fullWidth"
           >
+            <Tab value="back" icon={<BackIcon />} component={Link} to={"/"} />
             <Tab value="qrCode" icon={<ScanIcon />} />
             <Tab value="contacts" icon={<ContactsIcon />} />
           </Tabs>
