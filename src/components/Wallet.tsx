@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
 import {
   Paper,
   CardMedia,
@@ -40,6 +41,9 @@ const useStyles = makeStyles( theme => ({
   root: {
     marginBottom: theme.spacing(2),
   },
+  send: {
+    display: "flex",
+  },
 }));
 
 export const Wallet = (props: any) => {
@@ -71,29 +75,31 @@ export const Wallet = (props: any) => {
     })();
   }, [maticClient, wallet]);
 
-  if (wallet && INRBalance) {
-    return (
-      <>
-        <Typography className={classes.root} display="block" gutterBottom={true} variant="h5"> Wallet </Typography>
-        <Paper>
-          <div className={classes.card}>
-            <CardHeader subheader={"Current Balance"} /> 
-            <CardMedia image={logo} className={classes.logo} />
-              <Typography variant="h4" gutterBottom={true}> {RSABalance}&nbsp;₹SA </Typography>
-              <Typography
-                align="center"
-                display="block"
-                variant="caption"
-                color="textSecondary"
-              >
-                {INRBalance}&nbsp;₹
-              </Typography>
-              <IconButton className={classes.button} onClick={() => send(wallet)}> <SendIcon /> </IconButton>
-          </div>
-        </Paper>
-      </>
-    );
-  } else {
-    return <Loading />
-  }
+  return (
+    <>
+      <Typography className={classes.root} display="block" gutterBottom={true} variant="h5"> Wallet </Typography>
+      <Paper>
+        <div className={classes.card}>
+          <CardHeader subheader={"Current Balance"} /> 
+          <CardMedia image={logo} className={classes.logo} />
+          <Typography variant="h4" gutterBottom={true}> {RSABalance}&nbsp;₹SA </Typography>
+          <Typography
+            align="center"
+            display="block"
+            variant="caption"
+            color="textSecondary"
+          >
+            {INRBalance}&nbsp;₹
+          </Typography>
+          <IconButton
+            className={classes.button}
+            component={Link}
+            to={"/send"}
+          >
+            <SendIcon />
+          </IconButton>
+        </div>
+      </Paper>
+    </>
+  );
 };

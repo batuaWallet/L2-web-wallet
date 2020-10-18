@@ -56,7 +56,7 @@ export const TabsBar = (props: any) => {
       <TabContext value={tab}>
         <AppBar position="fixed" className={classes.appbarTop}>
           <Tabs
-            value={tab}
+            value={false}
             onChange={updateSelection}
             indicatorColor="secondary"
             textColor="secondary"
@@ -71,7 +71,9 @@ export const TabsBar = (props: any) => {
         </TabPanel>
         <TabPanel value="menu" className={classes.panel}> Menu </TabPanel>
         <TabPanel value="txns" className={classes.panel}> Txns </TabPanel>
-        <TabPanel value="wallet" className={classes.panel}> <Wallet /> </TabPanel>
+        <TabPanel value="wallet" className={classes.panel}>
+          <Wallet setTab={updateSelection} />
+        </TabPanel>
 
         <AppBar position="fixed" className={classes.appbar}>
           <Tabs
