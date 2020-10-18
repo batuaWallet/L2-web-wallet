@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   Paper,
-  CardActions,
-  CardContent,
   CardMedia,
   CardHeader,
   IconButton,
@@ -20,8 +18,6 @@ import {
   balance,
   send,
 }from '../utils/account';
-
-const assetsPath = "../assets";
 
 const useStyles = makeStyles( theme => ({
   button: {
