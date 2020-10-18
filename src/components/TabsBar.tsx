@@ -42,7 +42,7 @@ export const TabsBar = (props: any) => {
   const classes = useStyles();
   console.log(classes.menu);
   console.log(classes.notification);
-  const [tab, setTab] = useState("account");
+  const [tab, setTab] = useState("wallet");
 
   const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: string) => {
     setTab(selectedTab);

@@ -1,4 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  IconButton,
+  Typography,
+  makeStyles,
+} from "@material-ui/core";
+import {
+  Send as SendIcon,
+} from "@material-ui/icons";
+
 
 import { Loading } from "./Loading";
 import { initialize } from '../utils/initialize';
@@ -7,8 +20,19 @@ import {
   send,
 }from '../utils/account';
 
+const useStyles = makeStyles( theme => ({
+  root: {
+    position: "relative",
+    minHeight: "534px",
+  },
+  content: {
+    align: "center",
+  },
+}));
 
 export const Wallet = (props: any) => {
+
+  const classes = useStyles();
   const [wallet, setWallet] = useState();
   const [maticClient, setMatiClient] = useState();
   const [INRBalance, setINRBalance] = useState('0');
@@ -35,14 +59,18 @@ export const Wallet = (props: any) => {
 
   if (wallet && INRBalance) {
     return (
-      <div className='App'>
-        <header className='App-header'>
-          <p> Address: {wallet.address} </p>
-          <p> magic words: {wallet.mnemonic.phrase} </p>
-          <p> balance: ₹{INRBalance} </p>
-          <button onClick={() => send(wallet)}> Send ₹ 0.01 </button>
-        </header>
-      </div>
+      <>
+        <Typography> Wallet </Typography>
+        <Card className={classes.root}>
+          <CardHeader title={"Current Balance"} /> 
+          <CardContent className={classes.content}>
+            <Typography> ₹{INRBalance} </Typography>
+          </CardContent>
+          <CardActions>
+            <IconButton onClick={() => send(wallet)}> <SendIcon /> </IconButton>
+          </CardActions>
+        </Card>
+      </>
     );
   } else {
     return <Loading />
