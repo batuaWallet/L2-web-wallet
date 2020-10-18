@@ -42,18 +42,19 @@ export const TabsBar = (props: any) => {
   const classes = useStyles();
   console.log(classes.menu);
   console.log(classes.notification);
-  const [tab, setTab] = useState("wallet");
+  const [bottomTab, setBottomTab] = useState("wallet");
+  const [topTab, setTopTab] = useState("wallet");
 
   const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: string) => {
-    setTab(selectedTab);
+    setBottomTab(selectedTab);
   };
-  console.log(tab)
+  console.log(topTab)
 
   const wallet = useContext(WalletContext).wallet;
 
   return (
     <>
-      <TabContext value={tab}>
+      <TabContext value={topTab}>
         <AppBar position="fixed" className={classes.appbarTop}>
           <Tabs
             value={false}
@@ -77,7 +78,7 @@ export const TabsBar = (props: any) => {
 
         <AppBar position="fixed" className={classes.appbar}>
           <Tabs
-            value={tab}
+            value={topTab}
             onChange={updateSelection}
             indicatorColor="secondary"
             textColor="secondary"
