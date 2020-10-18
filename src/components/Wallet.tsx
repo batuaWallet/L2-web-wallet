@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Card,
+  Paper,
   CardActions,
   CardContent,
   CardMedia,
@@ -25,25 +25,24 @@ const assetsPath = "../assets";
 
 const useStyles = makeStyles( theme => ({
   button: {
-    marginTop: theme.spacing(30),
-  },
-  root: {
-    position: "relative",
-    minHeight: "534px",
+    marginTop: theme.spacing(26),
+    marginBottom: theme.spacing(3),
   },
   card: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  },
-  content: {
-    align: "center",
+    marginTop: theme.spacing(3),
+    bottom: theme.spacing(2),
   },
   logo: {
     height: theme.spacing(6),
     width: theme.spacing(6),
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4),
+  },
+  root: {
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -79,12 +78,11 @@ export const Wallet = (props: any) => {
   if (wallet && INRBalance) {
     return (
       <>
-        <Typography display="block" gutterBottom={true} variant="h5"> Wallet </Typography>
-        <Card className={classes.root}>
+        <Typography className={classes.root} display="block" gutterBottom={true} variant="h5"> Wallet </Typography>
+        <Paper>
           <div className={classes.card}>
             <CardHeader subheader={"Current Balance"} /> 
             <CardMedia image={logo} className={classes.logo} />
-            <CardContent className={classes.content}>
               <Typography variant="h4" gutterBottom={true}> {RSABalance}&nbsp;₹SA </Typography>
               <Typography
                 align="center"
@@ -94,12 +92,9 @@ export const Wallet = (props: any) => {
               >
                 {INRBalance}&nbsp;₹
               </Typography>
-            </CardContent>
-            <CardActions className={classes.button}>
-              <IconButton onClick={() => send(wallet)}> <SendIcon /> </IconButton>
-            </CardActions>
+              <IconButton className={classes.button} onClick={() => send(wallet)}> <SendIcon /> </IconButton>
           </div>
-        </Card>
+        </Paper>
       </>
     );
   } else {
