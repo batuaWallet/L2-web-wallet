@@ -33,8 +33,7 @@ const useStyles = makeStyles( theme => ({
 export const Send = (props: any) => {
   const classes = useStyles();
   const scanner = {
-    height: 360,
-    width: 522,
+    width: "100%",
   };
   const [scan, setScan] = useState();
   const [addressOpt, setAddressOpt] =useState("qrCode");
