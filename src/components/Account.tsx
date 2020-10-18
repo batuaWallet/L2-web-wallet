@@ -13,11 +13,9 @@ const QRCode = require('qrcode.react');
 const useStyles = makeStyles( theme => ({
   root: {
     position: "relative",
-    minWidth: "308px",
     minHeight: "534px",
   },
   content: {
-    display: "flex",
     align: "center",
   },
 }));

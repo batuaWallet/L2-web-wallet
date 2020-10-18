@@ -11,15 +11,17 @@ const provider = new providers.JsonRpcProvider(config.MATIC_RPC);
 const RocketContract = new Contract(config.dummyERC20, abi, provider);
 
 export const balance = async (address: string, client: any) => {
-  if (!(address && client)) {
-    return '0';
+  if (address && client) {
+    try {
+      return Number(utils.formatUnits(
+        await client.balanceOfERC20(address, config.dummyERC20, {}),
+        1) || 0
+      );
+    } catch (e) {
+      console.log(e);
+    }
   }
-  try {
-    return (utils.formatUnits(await client.balanceOfERC20(address, config.dummyERC20, {}), 1))
-  } catch (e) {
-    console.log(e);
-    return '0';
-  }
+  return 0;
 };
 
 export const send = async (wallet: Wallet) => {
