@@ -10,23 +10,24 @@ const IRocketContract = new utils.Interface(abi);
 const provider = new providers.JsonRpcProvider(config.MATIC_RPC);
 const RocketContract = new Contract(config.dummyERC20, abi, provider);
 
-export const balance = async (address: string, token: string, client: any) => {
-  if (!(address && token && client)) {
-    return '0';
+export const balance = async (address: string, client: any) => {
+  if (address && client) {
+    try {
+      return Number(utils.formatUnits(
+        await client.balanceOfERC20(address, config.dummyERC20, {}),
+        1) || 0
+      );
+    } catch (e) {
+      console.log(e);
+    }
   }
-  try {
-    return (utils.formatUnits(await client.balanceOfERC20(address, token, {}), 1))
-  } catch (e) {
-    console.log(e);
-    return '0';
-  }
+  return 0;
 };
 
-export const send = async (wallet: Wallet) => {
+export const send = async (wallet: Wallet, to: string, amt: string) => {
   if (!(wallet)) return Error;
 
-  const to = dummyTo;
-  const functionSignature = IRocketContract.encodeFunctionData('transfer', [to, BigNumber.from('1')]);
+  const functionSignature = IRocketContract.encodeFunctionData('transfer', [to, BigNumber.from(amt)]);
   console.log(`Set function sig: ${functionSignature}`);
 
   console.log(`Fetching nonce`);
@@ -61,12 +62,12 @@ export const send = async (wallet: Wallet) => {
   });
   console.log(`Recovered = ${recovered}`);
 
-  postToBcnmy(wallet, functionSignature, sigParams);
+  return postToBcnmy(wallet, functionSignature, sigParams);
 };
 
 const postToBcnmy = async (wallet: Wallet, functionSignature: string, sigParams: any) => {
   try {
-    const result = await fetch(BICONOMY_API_URI, {
+    const response = await fetch(BICONOMY_API_URI, {
       method: "POST",
       headers: {
         "x-api-key" : API_KEY,
@@ -82,8 +83,11 @@ const postToBcnmy = async (wallet: Wallet, functionSignature: string, sigParams:
       })
     });
 
-    if (result.status !== 200)
-        console.log(result)
+    if (response.status !== 200) {
+        console.log(response)
+    } else {
+      return (response.json());
+    }
   } catch (error) {
     console.log(error);
   }

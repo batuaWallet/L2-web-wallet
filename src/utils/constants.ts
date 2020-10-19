@@ -1,4 +1,5 @@
-export const dummyTo = "0x0B510F42fF8497254B006C2Ae9c85B3F831f052E";
+export const MUMBAI_EXPLORER = "https://mumbai-explorer.matic.today";
+export const dummyTo = "0xFbc5611149cCdC7d2574Af75a214f33Eb05e9122";
 
 export const BICONOMY_API_URI = 'https://api.biconomy.io/api/v2/meta-tx/native';
 

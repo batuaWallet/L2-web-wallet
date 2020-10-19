@@ -1,56 +1,57 @@
-import React, { useEffect, useState } from 'react';
-import './App.css';
-
-import * as config from "./config.json";
-
-import { initialize, } from "./utils/initialize";
+import React, { useEffect, useState } from "react";
+import { Route, Switch } from "react-router-dom";
+import "./App.css";
 import {
-  balance,
-  send,
-}from "./utils/account";
+  CssBaseline,
+  ThemeProvider,
+} from "@material-ui/core";
 
+import { WalletContext } from "./utils/walletContext";
+import { TabsBar } from "./components/TabsBar";
+import { NewWallet } from "./components/NewWallet";
+import { Send } from "./components/Send";
+import { SendParamConfirm } from "./components/SendParamConfirm";
+
+import * as Themes from "./utils/theme";
+import { loadSecret, loadWallet } from "./utils/initialize";
+ 
 function App() {
-  const [wallet, setWallet] = useState();
-  const [maticClient, setMatiClient] = useState();
-  const [INRBalance, setINRBalance] = useState('0');
-  const [biconomy, setBiconomy] = useState();
+  const [theme, setTheme] = useState(Themes.dark);
+  const [secret, setSecret] = useState(loadSecret());
+  const [wallet, setWallet] = useState(loadWallet());
 
   useEffect(() => {
-    (async () => {
-      const [w, mClient, biconomy] = await initialize();
-      setWallet(w);
-      setMatiClient(mClient);
-      setBiconomy(biconomy);
-    })();
-  }, []);
+    const s = loadSecret();
+    if (s) setSecret(s);
+  }, [wallet]);
 
-  useEffect(() => {
-    (async () => {
-      if (maticClient && wallet) {
-        const bal = await balance(
-          wallet.address,
-          config.dummyERC20,
-          maticClient
-        );
-        setINRBalance(bal);
-      }
-    })();
-  }, [maticClient, wallet]);
-
-  if ( wallet && INRBalance) {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <p> Address: {wallet.address} </p>
-          <p> magic words: {wallet.mnemonic.phrase} </p>
-          <p> balance: ₹{INRBalance} </p>
-          <button onClick={() => send(wallet)}> Send ₹ 0.01 </button>
-        </header>
-      </div>
-    );
-  } else {
-    return <div> Loading </div>
-  }
+  return (
+    <ThemeProvider theme={theme}>
+      <WalletContext.Provider value={{wallet, setWallet: (wallet) => setWallet(wallet)}}>
+        <CssBaseline />
+        { !secret ? <NewWallet /> :
+          <Switch>
+            <Route exact
+              path="/"
+              render={() => <TabsBar />}
+            />
+            <Route exact
+              path="/send"
+              render={() => <Send />}
+            />
+            <Route
+              path="/send/:address/:amount"
+              render={({ match }) => {
+                const add = match.params.address;
+                const amt = match.params.amount;
+                return <SendParamConfirm address={add} amount={amt} />
+              }}
+            />
+          </Switch>
+        }
+      </WalletContext.Provider>
+    </ThemeProvider>
+  );
 }
 
 export default App;
