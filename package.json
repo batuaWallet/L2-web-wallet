@@ -19,6 +19,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.6",
     "eth-sig-util": "^2.5.3",
+    "ethereum-blockies": "^0.1.1",
     "ethers": "^5.0.17",
     "qrcode.react": "^1.0.0",
     "react": "^16.13.1",
