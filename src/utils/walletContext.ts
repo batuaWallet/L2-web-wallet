@@ -3,6 +3,6 @@ import { Wallet } from "ethers";
 
 export const WalletContext = React.createContext({
   wallet: {} as Wallet | null,
-  setWallet: () => {},
+  setWallet: (wallet: Wallet) => {},
 });
 

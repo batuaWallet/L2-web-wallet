@@ -8,9 +8,7 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
-import {
-  Send as SendIcon,
-} from "@material-ui/icons";
+import { Send as SendIcon } from "@material-ui/icons";
 
 import logo from "../assets/logo.png";
 import { Loading } from "./Loading";

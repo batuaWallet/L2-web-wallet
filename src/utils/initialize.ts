@@ -55,7 +55,7 @@ const loadMaticProvider = async () => {
     }));
 };
 
-const createWallet = () => {
+export const createWallet = () => {
   const wallet = ethers.Wallet.createRandom();
   saveSecret(wallet.mnemonic);
   return wallet; 

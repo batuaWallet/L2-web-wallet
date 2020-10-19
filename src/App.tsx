@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
 import {
@@ -20,9 +20,14 @@ function App() {
   const [secret, setSecret] = useState(loadSecret());
   const [wallet, setWallet] = useState(loadWallet());
 
+  useEffect(() => {
+    const s = loadSecret();
+    if (s) setSecret(s);
+  }, [wallet]);
+
   return (
     <ThemeProvider theme={theme}>
-      <WalletContext.Provider value={{wallet, setWallet: () => setWallet}}>
+      <WalletContext.Provider value={{wallet, setWallet: (wallet) => setWallet(wallet)}}>
         <CssBaseline />
         { !secret ? <NewWallet /> :
           <Switch>
