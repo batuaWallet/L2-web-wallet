@@ -10,7 +10,7 @@ import { WalletContext } from "./utils/walletContext";
 import { TabsBar } from "./components/TabsBar";
 import { NewWallet } from "./components/NewWallet";
 import { Send } from "./components/Send";
-import { SendConfirm } from "./components/SendConfirm";
+import { SendParamConfirm } from "./components/SendParamConfirm";
 
 import * as Themes from "./utils/theme";
 import { loadSecret, loadWallet } from "./utils/initialize";
@@ -39,7 +39,7 @@ function App() {
               render={({ match }) => {
                 const add = match.params.address;
                 const amt = match.params.amount;
-                return <SendConfirm address={add} amount={amt} />
+                return <SendParamConfirm address={add} amount={amt} />
               }}
             />
           </Switch>

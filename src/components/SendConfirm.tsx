@@ -29,7 +29,6 @@ export const SendConfirm = (props: {address: string, amount: string}) => {
   const { address, amount} = props;
 
   const handleSendConfirm = () => {
-    
     if (wallet)
       send(wallet, address, amount);
   };

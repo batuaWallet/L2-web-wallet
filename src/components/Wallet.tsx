@@ -77,7 +77,9 @@ export const Wallet = (props: any) => {
 
   return (
     <>
-      <Typography className={classes.root} display="block" gutterBottom={true} variant="h5"> Wallet </Typography>
+      <Typography className={classes.root} display="block" gutterBottom={true} variant="h5">
+        Wallet
+      </Typography>
       <Paper>
         <div className={classes.card}>
           <CardHeader subheader={"Current Balance"} /> 

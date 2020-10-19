@@ -40,13 +40,13 @@ export const Send = (props: any) => {
   const scanner = {
     width: "100%",
   };
-  const [address, setAddress] = useState();
+  const [address, setAddress] = useState("");
   const [open, setOpen] = useState(false);
   const [error, setError] = useState();
   const [addressOpt, setAddressOpt] =useState("qrCode");
 
   const toggleSnackBar = () => { setOpen(!open); };
-  const handleReject = () => { setAddress(null); };
+  const handleReject = () => { setAddress(""); };
   const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: string) => {
     setAddressOpt(selectedTab);
   };
@@ -82,7 +82,7 @@ export const Send = (props: any) => {
         </AppBar>
         <TabPanel value="qrCode" className={classes.panel}>
           { address
-            ? <SendParamConfirm address={address} reject={handleReject} />
+            ? <SendParamConfirm address={address} amount="0" reject={handleReject} />
             : <QrReader
                 delay={100}
                 style={scanner}
