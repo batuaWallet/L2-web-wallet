@@ -89,10 +89,14 @@ Once the details have been completed, you must first click "+ Add" and then "Sav
 - `REACT_APP_API_ID` should be the `Api Id` from step 6 of the section entitled **Configure Biconomy**.
 - `REACT_APP_API_KEY` should be the `Api Key` from step 3 of the section entitled **Configure Biconomy**.
 
-## Run the app
+3. Save the `.env` file and close your text editor.
+
+## Run the app locally
 
 Run the following command from this repo's home directory:
 ```
 npm start
 ```
-This will open a browser tab, and load http://localhost:3000/
+This will open a browser tab, and load http://localhost:3000/ where you can start to interact with the app.
+
+Note: You can request test tokens in the [Batua Telegram group](https://t.me/batuaWallet).
