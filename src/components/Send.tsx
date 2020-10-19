@@ -3,15 +3,17 @@ import { Link } from "react-router-dom";
 import {
   AppBar,
   IconButton,
+  Snackbar,
   Tab,
   Tabs,
   Typography,
   makeStyles,
 } from "@material-ui/core";
-import { TabContext, TabPanel } from "@material-ui/lab";
+import { Alert, TabContext, TabPanel } from "@material-ui/lab";
 import {
   ArrowBackIos as BackIcon,
   Check as ConfirmIcon,
+  Clear as RejectIcon,
   CropFree as ScanIcon,
   ImportContacts as ContactsIcon,
 } from "@material-ui/icons";
@@ -38,9 +40,12 @@ export const Send = (props: any) => {
     width: "100%",
   };
   const [address, setAddress] = useState();
+  const [open, setOpen] = useState(false);
   const [error, setError] = useState();
   const [addressOpt, setAddressOpt] =useState("qrCode");
 
+  const toggleSnackBar = () => { setOpen(!open); };
+  const handleReject = () => { setAddress(null); };
   const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: string) => {
     setAddressOpt(selectedTab);
   };
@@ -51,6 +56,7 @@ export const Send = (props: any) => {
         setAddress(add);
       } else {
         setError("Scanned input is not an Ethereum address, Please check");
+        setOpen(true);
         console.log(data);
       }
     }
@@ -74,24 +80,31 @@ export const Send = (props: any) => {
         </AppBar>
         <TabPanel value="qrCode" className={classes.panel}>
           { address
-            ? (
-              <>
-              <Typography variant="h4"> Scanned: {address} </Typography>
-              <IconButton component={Link} to={`/send/${address}`}> <ConfirmIcon /> </IconButton>
-              </>
-            )
+            ? (<>
+                <Typography variant="h4"> Scanned: {address} </Typography>
+                <IconButton component={Link} to={`/send/${address}`}> <ConfirmIcon /> </IconButton>
+                <IconButton onClick={handleReject}> <RejectIcon /> </IconButton>
+              </>)
             : <QrReader
-              delay={100}
-              style={scanner}
-              onError={(err: any) => console.log(err)}
-              onScan={handleScan}
-            />
+                delay={100}
+                style={scanner}
+                onError={(err: any) => console.log(err)}
+                onScan={handleScan}
+              />
           }
         </TabPanel>
         <TabPanel value="contacts" className={classes.panel}>
           Contacts
         </TabPanel>
       </TabContext>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={open}
+        onClose={toggleSnackBar}
+        autoHideDuration={10000}
+      >
+        <Alert onClose={toggleSnackBar} severity="error"> {error} </Alert>
+      </Snackbar>
     </>
   )
 };
