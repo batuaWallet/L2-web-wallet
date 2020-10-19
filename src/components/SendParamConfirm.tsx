@@ -93,7 +93,10 @@ export const SendParamConfirm = (props: {address: string, amount: string, reject
               variant="outlined"
             />
             <IconButton onClick={handleSendConfirm}> <ConfirmIcon /> </IconButton>
-            <IconButton component={Link} to={`/`}> <RejectIcon /> </IconButton>
+            { reject
+              ? <IconButton onClick={reject}> <RejectIcon /> </IconButton>
+              : <IconButton component={Link} to={`/`}> <RejectIcon /> </IconButton>
+            }
           </div>
         </Paper>
       </>
