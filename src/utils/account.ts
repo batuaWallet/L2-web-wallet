@@ -62,12 +62,12 @@ export const send = async (wallet: Wallet, to: string, amt: string) => {
   });
   console.log(`Recovered = ${recovered}`);
 
-  postToBcnmy(wallet, functionSignature, sigParams);
+  return postToBcnmy(wallet, functionSignature, sigParams);
 };
 
 const postToBcnmy = async (wallet: Wallet, functionSignature: string, sigParams: any) => {
   try {
-    const result = await fetch(BICONOMY_API_URI, {
+    const response = await fetch(BICONOMY_API_URI, {
       method: "POST",
       headers: {
         "x-api-key" : API_KEY,
@@ -83,8 +83,11 @@ const postToBcnmy = async (wallet: Wallet, functionSignature: string, sigParams:
       })
     });
 
-    if (result.status !== 200)
-        console.log(result)
+    if (response.status !== 200) {
+        console.log(response)
+    } else {
+      return (response.json());
+    }
   } catch (error) {
     console.log(error);
   }

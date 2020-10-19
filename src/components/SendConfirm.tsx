@@ -8,9 +8,10 @@ import {
 } from "@material-ui/core";
 import {
   Check as ConfirmIcon,
-  Clear as RejectIcon,
+  Clear as CloseIcon,
 } from "@material-ui/icons";
 
+import { MUMBAI_EXPLORER } from "../utils/constants";
 import { WalletContext } from "../utils/walletContext";
 import { send }from '../utils/account';
 
@@ -24,22 +25,21 @@ const useStyles = makeStyles( theme => ({
   },
 }));
 
-export const SendConfirm = (props: {address: string, amount: string}) => {
-  const wallet = useContext(WalletContext).wallet;
-  const { address, amount} = props;
-
-  const handleSendConfirm = () => {
-    if (wallet)
-      send(wallet, address, amount);
-  };
+export const SendConfirm = (props: {txHash: string, amount: string}) => {
+  const { txHash, amount } = props;
 
   return (
-    <Paper>
-      <Typography variant="h4" gutterBottom={true}>
-        You are about to send {amount} ₹SA to {address}. Please check and confirm.
+    <>
+      <IconButton component={Link} to={`/`}> <CloseIcon /> </IconButton>
+
+      <Typography variant="h6" gutterBottom={true}>
+        You are transaction for {amount} ₹SA is successful!
       </Typography>
-      <IconButton onClick={handleSendConfirm}> <ConfirmIcon /> </IconButton>
-      <IconButton component={Link} to={`/`}> <RejectIcon /> </IconButton>
-    </Paper>
+      
+      <Typography gutterBottom={true}>
+         <a href={`${MUMBAI_EXPLORER}/tx/${txHash}`}>View Transaction</a>
+      </Typography>
+      
+    </>
   );
 };
