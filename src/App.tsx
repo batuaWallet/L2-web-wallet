@@ -35,9 +35,11 @@ function App() {
               render={() => <Send />}
             />
             <Route
-              path="/send/:address"
+              path="/send/:address/:amount"
               render={({ match }) => {
                 const add = match.params.address;
+                const amt = match.params.amount;
+                console.log(add,amt);
                 return <SendAmount address={add} />
               }}
             />

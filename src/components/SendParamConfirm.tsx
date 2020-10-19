@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Avatar,
+  IconButton,
+  TextField,
   Paper,
   Typography,
-  IconButton,
   makeStyles,
 } from "@material-ui/core";
 import {
@@ -32,6 +33,28 @@ const useStyles = makeStyles( theme => ({
 export const SendParamConfirm = (props: {address: string, reject: () => void}) => {
   const classes = useStyles();
   const { address, reject } = props;
+  const [amount, setAmount] = useState("0");
+  const [amountError, setAmountError] = useState({err: true, msg: "Amount (₹SA)"});
+  const [block, setBlock] = useState(true);
+
+  useEffect(() => {
+    // TODO: add balance check
+    if (!amountError.err && address) {
+      setBlock(false);
+    }
+  }, [amountError, address]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(event.target.value);
+
+    let amt = Number(event.target.value);
+    if (!amt || amt === 0) {
+      setAmountError({err: true, msg: "Amount must be a non-zero number"});
+      setBlock(true);
+    } else {
+      setAmountError({err: false, msg: "Amount (₹SA)"});
+    }
+  };
 
   if (address) {
     return (
@@ -45,7 +68,15 @@ export const SendParamConfirm = (props: {address: string, reject: () => void}) =
             }).toDataURL()}
           />
           <Typography variant="caption" gutterBottom={true}> {address} </Typography>
-          <IconButton component={Link} to={`/send/${address}`}> <ConfirmIcon /> </IconButton>
+          <TextField
+            id="amount-input"
+            error={amountError.err}
+            value={amount}
+            onChange={handleChange}
+            helperText={amountError.msg}
+            variant="outlined"
+          />
+          <IconButton disabled={block} component={Link} to={`/send/${address}/${amount}`}> <ConfirmIcon /> </IconButton>
           <IconButton onClick={reject}> <RejectIcon /> </IconButton>
         </div>
       </Paper>
