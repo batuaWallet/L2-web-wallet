@@ -18,6 +18,7 @@ import {
   ImportContacts as ContactsIcon,
 } from "@material-ui/icons";
 import QrReader from "react-qr-scanner";
+import { SendParamConfirm } from "./SendParamConfirm";
 
 const useStyles = makeStyles( theme => ({
   appbar: {
@@ -53,7 +54,8 @@ export const Send = (props: any) => {
     if (data) {
       const add = data.match(/0x[a-fA-F0-9]{40}/g);
       if (add) {
-        setAddress(add);
+        console.log(add[0]);
+        setAddress(add[0]);
       } else {
         setError("Scanned input is not an Ethereum address, Please check");
         setOpen(true);
@@ -80,11 +82,7 @@ export const Send = (props: any) => {
         </AppBar>
         <TabPanel value="qrCode" className={classes.panel}>
           { address
-            ? (<>
-                <Typography variant="h4"> Scanned: {address} </Typography>
-                <IconButton component={Link} to={`/send/${address}`}> <ConfirmIcon /> </IconButton>
-                <IconButton onClick={handleReject}> <RejectIcon /> </IconButton>
-              </>)
+            ? <SendParamConfirm address={address} reject={handleReject} />
             : <QrReader
                 delay={100}
                 style={scanner}
