@@ -1,11 +1,11 @@
 # Overview
 
-This repository contains codebase and instructions for a React application, which serves a web application to an end user.
+This repository contains codebase and instructions for a React application, which serves a Batua web application to an end user.
 
 When loaded, this web application will:
 
-- create an ethereum wallet
-- persist the wallet in local browser storage
+- create an Ethereum wallet
+- store the wallet in local browser storage
 - display wallet information
   - public address - where user can receive Ethereum-based cryptocurrency
   - wallet mnemonic - 24 words used to generate public/private keypair
@@ -99,4 +99,4 @@ npm start
 ```
 This will open a browser tab, and load http://localhost:3000/ where you can start to interact with the app.
 
-Note: You can request test tokens in the [Batua Telegram group](https://t.me/batuaWallet).
+Note: You can request test tokens by posting your request, and your wallet address in the [Batua Telegram group](https://t.me/batuaWallet).
