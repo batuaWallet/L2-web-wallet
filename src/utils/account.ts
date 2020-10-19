@@ -24,11 +24,10 @@ export const balance = async (address: string, client: any) => {
   return 0;
 };
 
-export const send = async (wallet: Wallet) => {
+export const send = async (wallet: Wallet, to: string, amt: string) => {
   if (!(wallet)) return Error;
 
-  const to = dummyTo;
-  const functionSignature = IRocketContract.encodeFunctionData('transfer', [to, BigNumber.from('10000')]);
+  const functionSignature = IRocketContract.encodeFunctionData('transfer', [to, BigNumber.from(amt)]);
   console.log(`Set function sig: ${functionSignature}`);
 
   console.log(`Fetching nonce`);
