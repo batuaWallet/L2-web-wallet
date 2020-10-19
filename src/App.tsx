@@ -9,7 +9,8 @@ import {
 import { WalletContext } from "./utils/walletContext";
 import { TabsBar } from "./components/TabsBar";
 import { NewWallet } from "./components/NewWallet";
-import { Send } from './components/Send';
+import { Send } from "./components/Send";
+import { SendAmount } from "./components/SendAmount";
 
 import * as Themes from "./utils/theme";
 import { loadSecret, loadWallet } from "./utils/initialize";
@@ -23,22 +24,25 @@ function App() {
     <ThemeProvider theme={theme}>
       <WalletContext.Provider value={{wallet, setWallet: () => setWallet}}>
         <CssBaseline />
-        <Switch>
-          <Route exact
-            path="/"
-            render={() => {
-              if (secret) return <TabsBar />
-              return <NewWallet />
-            }}
-          />
-          <Route exact
-            path="/send"
-            render={() => {
-              if (secret) return <Send />
-              return <NewWallet />
-            }}
-          />
-        </Switch>
+        { !secret ? <NewWallet /> :
+          <Switch>
+            <Route exact
+              path="/"
+              render={() => <TabsBar />}
+            />
+            <Route exact
+              path="/send"
+              render={() => <Send />}
+            />
+            <Route
+              path="/send/:address"
+              render={({ match }) => {
+                const add = match.params.address;
+                return <SendAmount address={add} />
+              }}
+            />
+          </Switch>
+        }
       </WalletContext.Provider>
     </ThemeProvider>
   );

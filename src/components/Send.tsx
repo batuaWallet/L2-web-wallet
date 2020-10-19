@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import {
   AppBar,
+  IconButton,
   Tab,
   Tabs,
   Typography,
@@ -10,6 +11,7 @@ import {
 import { TabContext, TabPanel } from "@material-ui/lab";
 import {
   ArrowBackIos as BackIcon,
+  Check as ConfirmIcon,
   CropFree as ScanIcon,
   ImportContacts as ContactsIcon,
 } from "@material-ui/icons";
@@ -35,7 +37,8 @@ export const Send = (props: any) => {
   const scanner = {
     width: "100%",
   };
-  const [scan, setScan] = useState();
+  const [address, setAddress] = useState();
+  const [error, setError] = useState();
   const [addressOpt, setAddressOpt] =useState("qrCode");
 
   const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: string) => {
@@ -43,12 +46,13 @@ export const Send = (props: any) => {
   };
   const handleScan = (data: any) => {
     if (data) {
-      const address = data.match(/0x[a-fA-F0-9]{40}/g)[1];
-      if (address) {
-        console.log(address);
+      const add = data.match(/0x[a-fA-F0-9]{40}/g);
+      if (add) {
+        setAddress(add);
+      } else {
+        setError("Scanned input is not an Ethereum address, Please check");
+        console.log(data);
       }
-      else console.log(data);
-      setScan(data);
     }
   };
 
@@ -69,8 +73,13 @@ export const Send = (props: any) => {
           </Tabs>
         </AppBar>
         <TabPanel value="qrCode" className={classes.panel}>
-          { scan
-            ? <Typography> {scan} </Typography>
+          { address
+            ? (
+              <>
+              <Typography variant="h4"> Scanned: {address} </Typography>
+              <IconButton component={Link} to={`/send/${address}`}> <ConfirmIcon /> </IconButton>
+              </>
+            )
             : <QrReader
               delay={100}
               style={scanner}
@@ -82,7 +91,6 @@ export const Send = (props: any) => {
         <TabPanel value="contacts" className={classes.panel}>
           Contacts
         </TabPanel>
-        <Typography> Sending Payment </Typography>
       </TabContext>
     </>
   )
