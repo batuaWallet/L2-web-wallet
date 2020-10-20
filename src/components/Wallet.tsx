@@ -16,10 +16,10 @@ import { balance }from '../utils/account';
 
 const useStyles = makeStyles( theme => ({
   button: {
-    marginTop: theme.spacing(24),
+    marginTop: theme.spacing(10),
     marginBottom: theme.spacing(3),
   },
-  card: {
+  paper: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -27,10 +27,10 @@ const useStyles = makeStyles( theme => ({
     bottom: theme.spacing(2),
   },
   logo: {
-    height: theme.spacing(6),
-    width: theme.spacing(6),
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
+    height: theme.spacing(7),
+    width: theme.spacing(7),
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
   },
   root: {
     marginBottom: theme.spacing(2),
@@ -71,27 +71,25 @@ export const Wallet = (props: any) => {
       <Typography className={classes.root} display="block" gutterBottom={true} variant="h5">
         Wallet
       </Typography>
-      <Paper>
-        <div className={classes.card}>
-          <CardHeader subheader={"Current Balance"} /> 
-          <CardMedia image={logo} className={classes.logo} />
-          <Typography variant="h4" gutterBottom={true}> {RSABalance}&nbsp;₹SA </Typography>
-          <Typography
-            align="center"
-            display="block"
-            variant="caption"
-            color="textSecondary"
-          >
-            {INRBalance}&nbsp;₹
-          </Typography>
-          <IconButton
-            className={classes.button}
-            component={Link}
-            to={"/send"}
-          >
-            <SendIcon />
-          </IconButton>
-        </div>
+      <Paper className={classes.paper}>
+        <CardHeader subheader={"Current Balance"} /> 
+        <CardMedia image={logo} className={classes.logo} />
+        <Typography variant="h4" gutterBottom={true}> {RSABalance}&nbsp;₹SA </Typography>
+        <Typography
+          align="center"
+          display="block"
+          variant="caption"
+          color="textSecondary"
+        >
+          {INRBalance}&nbsp;₹
+        </Typography>
+        <IconButton
+          className={classes.button}
+          component={Link}
+          to={"/send"}
+        >
+          <SendIcon />
+        </IconButton>
       </Paper>
     </>
   );
