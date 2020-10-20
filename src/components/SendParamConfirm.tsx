@@ -43,20 +43,25 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
   const classes = useStyles();
   const { address, reject } = props;
   const [amount, setAmount] = useState();
-  const [amountError, setAmountError] = useState({err: true, msg: "Amount (₹SA)"});
+  const [amountError, setAmountError] = useState({err: false, msg: "Amount (₹SA)"});
   const [block, setBlock] = useState(true);
   const [txHash, setTxHash] = useState();
 
   useEffect(() => {
     if (Number(props.amount) > 0) {
       setAmount(props.amount);
+    } else {
+      setAmountError({err: true, msg: "Amount must be a non-zero number"});
     }
   }, [props]);
 
   useEffect(() => {
     // TODO: add balance check
+    console.log(amountError.err, address);
     if (!amountError.err && address) {
       setBlock(false);
+    } else {
+      setBlock(true);
     }
   }, [amountError, address]);
 
@@ -109,7 +114,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
                 helperText={amountError.msg}
                 variant="outlined"
               />
-              <IconButton onClick={handleSendConfirm}> <ConfirmIcon /> </IconButton>
+              <IconButton disabled={block} onClick={handleSendConfirm}> <ConfirmIcon /> </IconButton>
               { reject
                 ? <IconButton onClick={reject}> <RejectIcon /> </IconButton>
                 : <IconButton component={Link} to={`/`}> <RejectIcon /> </IconButton>
