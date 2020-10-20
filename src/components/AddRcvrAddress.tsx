@@ -29,6 +29,10 @@ const useStyles = makeStyles( theme => ({
     alignItems: "center",
     marginBottom: theme.spacing(2),
   },
+  textField: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+  },
 }));
 
 export const AddRcvrAddress = () => {
@@ -61,6 +65,7 @@ export const AddRcvrAddress = () => {
       <Paper className={classes.paper}>
         <TextField
           autoFocus={true}
+          className={classes.textField}
           id="rcvr-address"
           label="Add Wallet Address"
           error={address.err}
