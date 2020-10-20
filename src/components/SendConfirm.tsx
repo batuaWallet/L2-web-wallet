@@ -33,7 +33,7 @@ export const SendConfirm = (props: {txHash: string, amount: string}) => {
       <IconButton component={Link} to={`/`}> <CloseIcon /> </IconButton>
 
       <Typography variant="h6" gutterBottom={true}>
-        You are transaction for {amount} ₹SA is successful!
+        Your transaction for {amount} ₹SA is successful!
       </Typography>
       
       <Typography gutterBottom={true}>
