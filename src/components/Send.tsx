@@ -82,7 +82,7 @@ export const Send = (props: any) => {
         </AppBar>
         <TabPanel value="qrCode" className={classes.panel}>
           { address
-            ? <SendParamConfirm address={address} amount="0" reject={handleReject} />
+            ? <SendParamConfirm address={address} reject={handleReject} />
             : <QrReader
                 delay={100}
                 style={{width: "100%"}}

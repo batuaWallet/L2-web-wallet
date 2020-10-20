@@ -38,14 +38,20 @@ const useStyles = makeStyles( theme => ({
   },
 }));
 
-export const SendParamConfirm = (props: {address: string, amount: string, reject?: () => void}) => {
+export const SendParamConfirm = (props: {address: string, amount?: string, reject?: () => void}) => {
   const wallet = useContext(WalletContext).wallet;
   const classes = useStyles();
   const { address, reject } = props;
-  const [amount, setAmount] = useState(props.amount);
+  const [amount, setAmount] = useState();
   const [amountError, setAmountError] = useState({err: true, msg: "Amount (₹SA)"});
   const [block, setBlock] = useState(true);
   const [txHash, setTxHash] = useState();
+
+  useEffect(() => {
+    if (Number(props.amount) > 0) {
+      setAmount(props.amount);
+    }
+  }, [props]);
 
   useEffect(() => {
     // TODO: add balance check
