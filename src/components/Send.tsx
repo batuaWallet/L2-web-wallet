@@ -15,6 +15,7 @@ import {
 } from "@material-ui/icons";
 import QrReader from "react-qr-reader";
 import { SendParamConfirm } from "./SendParamConfirm";
+import { AddRcvrAddress } from "./AddRcvrAddress";
 
 const useStyles = makeStyles( theme => ({
   appbar: {
@@ -39,7 +40,7 @@ export const Send = (props: any) => {
   const [address, setAddress] = useState("");
   const [open, setOpen] = useState(false);
   const [error, setError] = useState();
-  const [addressOpt, setAddressOpt] =useState("qrCode");
+  const [addressOpt, setAddressOpt] = useState("qrCode");
 
   const toggleSnackBar = () => { setOpen(!open); };
   const handleReject = () => { setAddress(""); };
@@ -65,7 +66,7 @@ export const Send = (props: any) => {
       <TabContext value={addressOpt}>
         <AppBar position="fixed" className={classes.appbar}>
           <Tabs
-            value={"qrCode"}
+            value={addressOpt}
             onChange={updateSelection}
             indicatorColor="secondary"
             textColor="secondary"
@@ -88,7 +89,7 @@ export const Send = (props: any) => {
           }
         </TabPanel>
         <TabPanel value="contacts" className={classes.panel}>
-          Contacts
+          <AddRcvrAddress />
         </TabPanel>
       </TabContext>
       <Snackbar
