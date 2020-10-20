@@ -40,7 +40,7 @@ export const Send = (props: any) => {
   const [address, setAddress] = useState("");
   const [open, setOpen] = useState(false);
   const [error, setError] = useState();
-  const [addressOpt, setAddressOpt] = useState("qrCode");
+  const [addressOpt, setAddressOpt] = useState("contacts");
 
   const toggleSnackBar = () => { setOpen(!open); };
   const handleReject = () => { setAddress(""); };
