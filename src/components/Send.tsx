@@ -17,7 +17,7 @@ import {
   CropFree as ScanIcon,
   ImportContacts as ContactsIcon,
 } from "@material-ui/icons";
-import QrReader from "react-qr-scanner";
+import QrReader from "react-qr-reader";
 import { SendParamConfirm } from "./SendParamConfirm";
 
 const useStyles = makeStyles( theme => ({
@@ -85,7 +85,7 @@ export const Send = (props: any) => {
             ? <SendParamConfirm address={address} amount="0" reject={handleReject} />
             : <QrReader
                 delay={100}
-                style={scanner}
+                style={{width: "100%"}}
                 onError={(err: any) => console.log(err)}
                 onScan={handleScan}
               />
