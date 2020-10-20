@@ -95,6 +95,7 @@ export const SendParamConfirm = (props: {address: string, amount: string, reject
               />
               <Typography variant="caption" gutterBottom={true}> {address} </Typography>
               <TextField
+                autoFocus={true}
                 id="amount-input"
                 error={amountError.err}
                 value={amount}
