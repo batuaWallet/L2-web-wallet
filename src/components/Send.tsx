@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AppBar,
+  IconButton,
   Tab,
   Tabs,
   makeStyles,
@@ -18,15 +19,21 @@ import { ScanRcvrAddress } from "./ScanRcvrAddress";
 const useStyles = makeStyles( theme => ({
   appbar: {
     flex: 1,
+    bottom: 0,
+    top: 'auto',
   },
-  panel: {
-    marginTop: theme.spacing(8),
+  back: {
+    marginRight: theme.spacing(2),
   },
   qrCode: {
-    marginRight: theme.spacing(65),
+    marginTop: theme.spacing(8),
   },
   contacts: {
-    marginLeft: theme.spacing(65),
+    marginTop: theme.spacing(8),
+  },
+  root: {
+    display: "flex",
+    justifyContent: "center",
   },
 }));
 
@@ -39,26 +46,24 @@ export const Send = (props: any) => {
   };
 
   return (
-    <TabContext value={addressOpt}>
+    <>
       <AppBar position="fixed" className={classes.appbar}>
-        <Tabs
-          value={addressOpt}
-          onChange={updateSelection}
-          indicatorColor="secondary"
-          textColor="secondary"
-          variant="fullWidth"
-        >
-          <Tab value="back" icon={<BackIcon />} component={Link} to={"/"} />
-          <Tab value="qrCode" icon={<ScanIcon />} />
-          <Tab value="contacts" icon={<ContactsIcon />} />
-        </Tabs>
+          <IconButton className={classes.back} component={Link} to={"/"}>
+            <BackIcon />
+          </IconButton>
       </AppBar>
-      <TabPanel value="qrCode" className={classes.panel}>
-        <ScanRcvrAddress />
-      </TabPanel>
-      <TabPanel value="contacts" className={classes.panel}>
-        <AddRcvrAddress />
-      </TabPanel>
-    </TabContext>
+      <div className={classes.root}>
+        <IconButton color="secondary" onClick={() => setAddressOpt("qrcode")} className={classes.qrCode}>
+          <ScanIcon />
+        </IconButton>
+        <IconButton color="secondary" onClick={() => setAddressOpt("contacts")} className={classes.contacts}>
+          <ContactsIcon />
+        </IconButton>
+      </div>
+      { addressOpt === "qrcode"
+        ?<ScanRcvrAddress />
+        : <AddRcvrAddress />
+      }
+    </>
   )
 };
