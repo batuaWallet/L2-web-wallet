@@ -10,6 +10,7 @@ import { WalletContext } from "./utils/walletContext";
 import { TabsBar } from "./components/TabsBar";
 import { NewWallet } from "./components/NewWallet";
 import { Send } from "./components/Send";
+import { HamburgerMenu } from "./components/HamburgerMenu";
 import { SendParamConfirm } from "./components/SendParamConfirm";
 
 import * as Themes from "./utils/theme";
@@ -29,6 +30,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <WalletContext.Provider value={{wallet, setWallet: (wallet) => setWallet(wallet)}}>
         <CssBaseline />
+        <HamburgerMenu setTheme={setTheme} />
         { !secret ? <NewWallet /> :
           <Switch>
             <Route exact

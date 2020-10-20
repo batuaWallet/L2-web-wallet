@@ -3,24 +3,34 @@ import { createMuiTheme } from '@material-ui/core';
 const dark = createMuiTheme({
   palette: {
     primary: {
-      main: "#004d40",
+      main: "#FF779B",
     },
     secondary: {
-      main: "#e699a6",
+      main: "#1BC2C4",
     },
     type: "dark",
+    background: {
+      default: "#343961",
+      paper: "#3E4768",
+    },
+  },
+  typography: {
+    fontFamily: "Open Sans",
   },
 });
 
 const light = createMuiTheme({
   palette: {
     primary: {
-      main: "#deaa56",
+      main: "#55C8D0",
     },
     secondary: {
-      main: "#e699a6",
+      main: "#FF779B",
     },
-    type: "dark",
+    type: "light",
+  },
+  typography: {
+    fontFamily: "Open Sans",
   },
 });
 
