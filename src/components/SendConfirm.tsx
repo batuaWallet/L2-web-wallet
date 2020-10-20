@@ -1,19 +1,15 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   IconButton,
-  Paper,
   Typography,
   makeStyles,
 } from "@material-ui/core";
 import {
-  Check as ConfirmIcon,
   Clear as CloseIcon,
 } from "@material-ui/icons";
 
 import { MUMBAI_EXPLORER } from "../utils/constants";
-import { WalletContext } from "../utils/walletContext";
-import { send }from '../utils/account';
 
 const useStyles = makeStyles( theme => ({
   root: {

@@ -3,7 +3,7 @@ import * as sigUtil from 'eth-sig-util';
 
 import * as config from '../config.json';
 import { domainData, domainType, metaTransactionType } from '../types';
-import { dummyTo, API_ID, API_KEY, BICONOMY_API_URI } from './constants';
+import { API_ID, API_KEY, BICONOMY_API_URI } from './constants';
 
 const abi = require('../contracts/Rocket.json').abi;
 const IRocketContract = new utils.Interface(abi);

@@ -1,10 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import {
   Paper,
   CardMedia,
-  CardHeader,
   IconButton,
-  Typography,
   makeStyles,
 } from "@material-ui/core";
 

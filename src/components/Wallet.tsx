@@ -11,16 +11,12 @@ import {
 import { Send as SendIcon } from "@material-ui/icons";
 
 import logo from "../assets/logo.png";
-import { Loading } from "./Loading";
 import { initialize } from '../utils/initialize';
-import {
-  balance,
-  send,
-}from '../utils/account';
+import { balance }from '../utils/account';
 
 const useStyles = makeStyles( theme => ({
   button: {
-    marginTop: theme.spacing(26),
+    marginTop: theme.spacing(24),
     marginBottom: theme.spacing(3),
   },
   card: {
@@ -38,9 +34,6 @@ const useStyles = makeStyles( theme => ({
   },
   root: {
     marginBottom: theme.spacing(2),
-  },
-  send: {
-    display: "flex",
   },
 }));
 

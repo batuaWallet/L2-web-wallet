@@ -88,10 +88,6 @@ const loadBiconomy = () => {
   return biconomy;
 };
 
-const loadBiconomyProvider = (biconomy: any) => {
-  return new ethers.providers.Web3Provider(biconomy);
-};
-
 const loadMaticClient = async (address: string) => {
   if (!(address)) { return null; }
 

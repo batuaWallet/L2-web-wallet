@@ -1,19 +1,15 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AppBar,
-  IconButton,
   Snackbar,
   Tab,
   Tabs,
-  Typography,
   makeStyles,
 } from "@material-ui/core";
 import { Alert, TabContext, TabPanel } from "@material-ui/lab";
 import {
   ArrowBackIos as BackIcon,
-  Check as ConfirmIcon,
-  Clear as RejectIcon,
   CropFree as ScanIcon,
   ImportContacts as ContactsIcon,
 } from "@material-ui/icons";
@@ -85,7 +81,7 @@ export const Send = (props: any) => {
             ? <SendParamConfirm address={address} reject={handleReject} />
             : <QrReader
                 delay={100}
-                style={{width: "100%"}}
+                style={scanner}
                 onError={(err: any) => console.log(err)}
                 onScan={handleScan}
               />
