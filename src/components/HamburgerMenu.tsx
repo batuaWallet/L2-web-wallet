@@ -1,13 +1,21 @@
 import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import {
   AppBar,
+  Paper,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   Toolbar,
   IconButton,
-  SwipeableDrawer,
+  Drawer,
   makeStyles,
 } from "@material-ui/core";
 import {
+  CloseOutlined as CloseIcon,
   Menu as MenuIcon,
+  Backup as BackupIcon,
 } from "@material-ui/icons";
 
 const useStyles = makeStyles( theme => ({
@@ -38,14 +46,23 @@ export const HamburgerMenu = (props: any) => {
         </Toolbar>
       </AppBar>
 
-      <SwipeableDrawer
+      <Drawer
         anchor="left"
         open={open}
         onClose={toggleDrawer}
-        onOpen={toggleDrawer}
       >
-        Import Wallet
-      </SwipeableDrawer>
+        <Paper onClick={toggleDrawer} onKeyDown={toggleDrawer}>
+          <IconButton onClick={toggleDrawer}>
+            <CloseIcon />
+          </IconButton>
+          <List>
+            <ListItem button component={Link} to={"/backup"} key="import-seed">
+              <ListItemIcon> <BackupIcon /> </ListItemIcon>
+              <ListItemText primary={"Backup"} />
+            </ListItem>
+          </List>
+        </Paper>
+      </Drawer>
     </>
   );
 }

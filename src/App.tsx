@@ -10,6 +10,7 @@ import { WalletContext } from "./utils/walletContext";
 import { TabsBar } from "./components/TabsBar";
 import { NewWallet } from "./components/NewWallet";
 import { Send } from "./components/Send";
+import { BackupSeed } from "./components/BackupSeed";
 import { HamburgerMenu } from "./components/HamburgerMenu";
 import { SendParamConfirm } from "./components/SendParamConfirm";
 
@@ -20,6 +21,7 @@ function App() {
   const [theme, setTheme] = useState(Themes.dark);
   const [secret, setSecret] = useState(loadSecret());
   const [wallet, setWallet] = useState(loadWallet());
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     const s = loadSecret();
@@ -30,7 +32,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <WalletContext.Provider value={{wallet, setWallet: (wallet) => setWallet(wallet)}}>
         <CssBaseline />
-        <HamburgerMenu setTheme={setTheme} />
+        <HamburgerMenu setTheme={setTheme} title={title} />
         { !secret ? <NewWallet /> :
           <Switch>
             <Route exact
@@ -40,6 +42,10 @@ function App() {
             <Route exact
               path="/send"
               render={() => <Send />}
+            />
+            <Route exact
+              path="/backup"
+              render={() => <BackupSeed />}
             />
             <Route
               path="/send/:address/:amount?"
