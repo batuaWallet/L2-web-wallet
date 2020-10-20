@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Paper,
   TextField,
@@ -36,7 +35,6 @@ const useStyles = makeStyles( theme => ({
 export const AddRcvrAddress = () => {
   const classes = useStyles();
 
-  //const [error, setError] = useState({ err: false, msg: "" });
   const [address, setAddress] = useState({ err: false, value: "", msg: "" });
   const [forward, setForward] = useState(false);
 
@@ -51,8 +49,7 @@ export const AddRcvrAddress = () => {
 
   const handleAddresConfirm = () => {
     if(!(/^0x[a-fA-F0-9]{40}$/.test(address.value))) {
-      console.log("Setting error");
-      setAddress({...address, err: true, msg: "invalid"})
+      setAddress({...address, err: true, msg: "Invalid ethereum address, Please verify"})
     } else {
       setForward(true);
     }
@@ -75,7 +72,6 @@ export const AddRcvrAddress = () => {
         />
 
         <IconButton onClick={handleAddresConfirm}> <ConfirmIcon /> </IconButton>
-        <IconButton component={Link} to={`/send`}> <RejectIcon /> </IconButton>
       </Paper>
     );
   }
