@@ -7,7 +7,6 @@ import {
 } from "@material-ui/core";
 import {
   Check as ConfirmIcon,
-  Clear as RejectIcon,
 } from "@material-ui/icons";
 
 import { SendParamConfirm } from "./SendParamConfirm";
