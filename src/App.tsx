@@ -40,7 +40,7 @@ function App() {
               render={() => <Send />}
             />
             <Route
-              path="/send/:address/:amount"
+              path="/send/:address/:amount?"
               render={({ match }) => {
                 const add = match.params.address;
                 const amt = match.params.amount;
