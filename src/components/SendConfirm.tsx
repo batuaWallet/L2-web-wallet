@@ -1,9 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
+  Paper,
   IconButton,
   Typography,
   makeStyles,
+  Link as MaterialLink
 } from "@material-ui/core";
 import {
   Clear as CloseIcon,
@@ -15,27 +17,36 @@ const useStyles = makeStyles( theme => ({
   root: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(8),
     bottom: theme.spacing(3),
+  },
+  typography: {
+    marginLeft: theme.spacing(5),
+    marginRight: theme.spacing(5),
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
   },
 }));
 
 export const SendConfirm = (props: {txHash: string, amount: string}) => {
+  const classes = useStyles();
+  const preventDefault = (event: React.SyntheticEvent) => event.preventDefault();
   const { txHash, amount } = props;
 
   return (
-    <>
+    <Paper>
       <IconButton component={Link} to={`/`}> <CloseIcon /> </IconButton>
 
-      <Typography variant="h6" gutterBottom={true}>
+      <Typography className={classes.typography} variant="h6" gutterBottom={true}>
         Your transaction for {amount} ₹SA is successful!
       </Typography>
       
-      <Typography gutterBottom={true}>
-         <a href={`${MUMBAI_EXPLORER}/tx/${txHash}`}>View Transaction</a>
+      <Typography className={classes.typography} gutterBottom={true}>
+        <MaterialLink href={`${MUMBAI_EXPLORER}/tx/${txHash}`}>
+            View Transaction
+        </MaterialLink>
       </Typography>
       
-    </>
+    </Paper>
   );
 };
