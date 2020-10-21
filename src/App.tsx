@@ -18,7 +18,7 @@ import * as Themes from "./utils/theme";
 import { loadSecret, loadWallet } from "./utils/initialize";
  
 function App() {
-  const [theme, setTheme] = useState(Themes.dark);
+  const [theme, setTheme] = useState(Themes.light);
   const [secret, setSecret] = useState(loadSecret());
   const [wallet, setWallet] = useState(loadWallet());
   const [title, setTitle] = useState("");
