@@ -74,7 +74,7 @@ export const Wallet = (props: any) => {
         Wallet
       </Typography>
       <Paper className={classes.paper}>
-        <CardHeader subheader={"Current Balance"} /> 
+        <CardHeader subheader={"CURRENT BALANCE"} /> 
         <CardMedia image={logo} className={classes.logo} />
         <Typography variant="h4" gutterBottom={true}> {RSABalance}&nbsp;₹SA </Typography>
         <Typography
@@ -83,7 +83,7 @@ export const Wallet = (props: any) => {
           variant="caption"
           color="textSecondary"
         >
-          {INRBalance}&nbsp;₹
+          ₹&nbsp;{INRBalance}
         </Typography>
         <IconButton
           className={classes.button}

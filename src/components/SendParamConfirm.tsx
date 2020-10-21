@@ -90,7 +90,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
           setTxHash(res.txHash);
         }
       } else {
-        setAmountError({err: true, msg: "Insufficien balance! Please load up more."});
+        setAmountError({err: true, msg: "Insufficient balance! Please load up more."});
       }
     }
   };
