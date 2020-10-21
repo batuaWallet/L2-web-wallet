@@ -81,7 +81,7 @@ export const Wallet = (props: any) => {
           align="center"
           display="block"
           variant="caption"
-          color="textSecondary"Capitalised "Current Balance" to fit Aditi's designs
+          color="textSecondary"
         >
           {INRBalance}&nbsp;₹
         </Typography>
