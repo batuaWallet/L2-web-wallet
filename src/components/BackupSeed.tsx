@@ -40,7 +40,10 @@ const useStyles = makeStyles( theme => ({
     flexDirection: "column",
     alignItems: "center",
     marginTop: theme.spacing(10),
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(4),
+  },
+  textBox: {
+    width: "80%",
   },
   typography: {
     marginLeft: theme.spacing(5),
@@ -74,12 +77,13 @@ export const BackupSeed = (props: any) => {
         <TextField
           disabled
           id="secret-key"
+          className={classes.textBox}
           inputProps={{style: { textAlign: "center" }}}
           InputProps={{style: { letterSpacing: "2px" }}}
           defaultValue={secret}
+          margin="normal"
           multiline
           rows={4}
-          margin="normal"
           variant="filled"
         />
         
