@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "start": "react-scripts start",
+    "start-prod": "bash ops/start.sh",
     "build": "react-scripts build",
     "build-image": "docker build --file ops/Dockerfile --tag batua_wallet_webserver .",
     "test": "react-scripts test",
