@@ -55,7 +55,7 @@ export const Account = (props: { address: string }) => {
           Account
         </Typography>
         <Paper className={classes.paper}>
-          <CardHeader subheader={"Wallet Addresss"} /> 
+          <CardHeader subheader={"WALLET ADDRESS"} /> 
           <Typography variant="caption" gutterBottom={true}> {address} </Typography>
           <QRCode
             value={`ethereum:${address}`}
