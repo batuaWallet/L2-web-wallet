@@ -83,8 +83,9 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
         maticClient
       );
 
+      console.log(bal, amount);
       if (amount <= bal) {
-        const res = await send(wallet, address, amount)
+        const res = await send(wallet, address, (amount*100).toFixed(0))
         if (res && res.txHash) {
           setTxHash(res.txHash);
         }

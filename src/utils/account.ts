@@ -15,7 +15,7 @@ export const balance = async (address: string, client: any) => {
     try {
       return Number(utils.formatUnits(
         await client.balanceOfERC20(address, config.dummyERC20, {}),
-        1) || 0
+        2) || 0
       );
     } catch (e) {
       console.log(e);
