@@ -16,8 +16,8 @@ import { TabContext, TabPanel } from "@material-ui/lab";
 import {
   ArrowBackIos as BackIcon,
   VpnKey as KeyIcon,
-  VpnLock as LockIcon,
-  SaveAlt as SaveIcon,
+  EnhancedEncryption as LockIcon,
+  Note as SaveIcon,
   CropFree as ScanIcon,
   ImportContacts as ContactsIcon,
 } from "@material-ui/icons";
@@ -39,7 +39,7 @@ const useStyles = makeStyles( theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    marginTop: theme.spacing(10),
+    marginTop: theme.spacing(7),
     marginBottom: theme.spacing(4),
   },
   textBox: {
