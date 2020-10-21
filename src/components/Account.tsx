@@ -5,6 +5,7 @@ import {
   Typography,
   CardHeader,
   makeStyles,
+  useTheme,
 } from "@material-ui/core";
 import { Share as ShareIcon } from "@material-ui/icons";
 
@@ -43,10 +44,11 @@ const useStyles = makeStyles( theme => ({
 
 export const Account = (props: { address: string }) => {
 
+  const theme = useTheme();
   const classes = useStyles();
   const { address } = props;
 
-  if (address) {
+  if (address && theme) {
     return (
       <>
         <Typography className={classes.root} display="block" gutterBottom={true} variant="h5">
@@ -55,7 +57,11 @@ export const Account = (props: { address: string }) => {
         <Paper className={classes.paper}>
           <CardHeader subheader={"Wallet Addresss"} /> 
           <Typography variant="caption" gutterBottom={true}> {address} </Typography>
-          <QRCode value={`ethereum:${address}`} className={classes.qrcode} />
+          <QRCode
+            value={`ethereum:${address}`}
+            className={classes.qrcode}
+            fgColor={theme.palette.primary.dark}
+          />
           <Typography
             align="center"
             variant="caption"

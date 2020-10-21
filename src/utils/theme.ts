@@ -9,10 +9,6 @@ const dark = createMuiTheme({
       main: "#1BC2C4",
     },
     type: "dark",
-    background: {
-      default: "#343961",
-      paper: "#3E4768",
-    },
   },
   typography: {
     fontFamily: "Open Sans",
