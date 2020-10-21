@@ -89,41 +89,36 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
 
   if (address) {
     return (
-      <>
-        <Typography className={classes.root} display="block" gutterBottom={true} variant="h5">
-          Send ₹SA
-        </Typography>
-        <Paper>
-          <div className={classes.card}>
-          { txHash ? <SendConfirm txHash={txHash} amount={amount} />
-            : <> 
-              <Avatar
-                alt={address}
-                className={classes.avatar}
-                src={blockies.create({
-                  seed: address,
-                }).toDataURL()}
-              />
-              <Typography variant="caption" gutterBottom={true}> {address} </Typography>
-              <TextField
-                autoFocus={true}
-                id="amount-input"
-                error={amountError.err}
-                value={amount}
-                onChange={handleChange}
-                helperText={amountError.msg}
-                variant="outlined"
-              />
-              <IconButton disabled={block} onClick={handleSendConfirm}> <ConfirmIcon /> </IconButton>
-              { reject
-                ? <IconButton onClick={reject}> <RejectIcon /> </IconButton>
-                : <IconButton component={Link} to={`/`}> <RejectIcon /> </IconButton>
-              }
-              </>
-          }
-          </div>
-        </Paper>
-      </>
+      <Paper>
+        <div className={classes.card}>
+        { txHash ? <SendConfirm txHash={txHash} amount={amount} />
+          : <> 
+            <Avatar
+              alt={address}
+              className={classes.avatar}
+              src={blockies.create({
+                seed: address,
+              }).toDataURL()}
+            />
+            <Typography variant="caption" gutterBottom={true}> {address} </Typography>
+            <TextField
+              autoFocus={true}
+              id="amount-input"
+              error={amountError.err}
+              value={amount}
+              onChange={handleChange}
+              helperText={amountError.msg}
+              variant="outlined"
+            />
+            <IconButton disabled={block} onClick={handleSendConfirm}> <ConfirmIcon /> </IconButton>
+            { reject
+              ? <IconButton onClick={reject}> <RejectIcon /> </IconButton>
+              : <IconButton component={Link} to={`/`}> <RejectIcon /> </IconButton>
+            }
+            </>
+        }
+        </div>
+      </Paper>
     );
   } else return <div> Loading </div>
 }

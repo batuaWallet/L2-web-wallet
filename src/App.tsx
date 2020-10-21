@@ -37,19 +37,29 @@ function App() {
           <Switch>
             <Route exact
               path="/"
-              render={() => <TabsBar />}
+              render={() => {
+                setTitle("");
+                return <TabsBar />
+              }}
             />
             <Route exact
               path="/send"
-              render={() => <Send />}
+              render={() => {
+                setTitle("Send ₹SA");
+                return <Send />
+              }}
             />
             <Route exact
               path="/backup"
-              render={() => <BackupSeed />}
+              render={() => {
+                setTitle("Wallet Backup");
+                return <BackupSeed />
+              }}
             />
             <Route
               path="/send/:address/:amount?"
               render={({ match }) => {
+                setTitle("Send ₹SA");
                 const add = match.params.address;
                 const amt = match.params.amount;
                 return <SendParamConfirm address={add} amount={amt} />

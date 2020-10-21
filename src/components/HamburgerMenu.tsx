@@ -9,6 +9,7 @@ import {
   ListItemText,
   Toolbar,
   IconButton,
+  Typography,
   Drawer,
   makeStyles,
 } from "@material-ui/core";
@@ -29,7 +30,7 @@ const useStyles = makeStyles( theme => ({
 
 export const HamburgerMenu = (props: any) => {
   const classes = useStyles();
-  const { setTheme } = props;
+  const { setTheme, title } = props;
 
   const [open, setOpen] = useState(false);
   const toggleDrawer = (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -43,6 +44,16 @@ export const HamburgerMenu = (props: any) => {
           <IconButton onClick={toggleDrawer} edge="start" className={classes.menu} color="inherit">
             <MenuIcon />
           </IconButton>
+          {title
+            ?  <Typography
+                  variant="h5"
+                  align={"center"}
+                  noWrap
+                >
+                  {title}
+                </Typography>
+            : null
+          }
         </Toolbar>
       </AppBar>
 
