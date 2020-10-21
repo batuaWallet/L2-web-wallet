@@ -74,14 +74,14 @@ export const Wallet = (props: any) => {
         Wallet
       </Typography>
       <Paper className={classes.paper}>
-        <CardHeader subheader={"Current Balance"} /> 
+        <CardHeader subheader={"CURRENT BALANCE"} /> 
         <CardMedia image={logo} className={classes.logo} />
         <Typography variant="h4" gutterBottom={true}> {RSABalance}&nbsp;₹SA </Typography>
         <Typography
           align="center"
           display="block"
           variant="caption"
-          color="textSecondary"
+          color="textSecondary"Capitalised "Current Balance" to fit Aditi's designs
         >
           {INRBalance}&nbsp;₹
         </Typography>
