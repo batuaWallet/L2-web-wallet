@@ -83,7 +83,7 @@ export const Wallet = (props: any) => {
           variant="caption"
           color="textSecondary"
         >
-          {INRBalance}&nbsp;₹
+          ₹&nbsp;{INRBalance}
         </Typography>
         <IconButton
           className={classes.button}
