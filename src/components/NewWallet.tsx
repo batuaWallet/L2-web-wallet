@@ -14,15 +14,21 @@ import { AddCircle as CreateIcon } from "@material-ui/icons";
 import { createWallet } from "../utils/initialize";
 
 const useStyles = makeStyles( theme => ({
-  typography: {
-    marginLeft: theme.spacing(5),
-    marginRight: theme.spacing(5),
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
+  brand: {
+    height: theme.spacing(4),
+    width: theme.spacing(8),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   button: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(3),
+  },
+  onboarding: {
+    height: theme.spacing(30),
+    width: theme.spacing(30),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   root: {
     display: "flex",
@@ -31,17 +37,11 @@ const useStyles = makeStyles( theme => ({
     marginTop: theme.spacing(10),
     marginBottom: theme.spacing(2),
   },
-  onboarding: {
-    height: theme.spacing(30),
-    width: theme.spacing(30),
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-  brand: {
-    height: theme.spacing(4),
-    width: theme.spacing(8),
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
+  typography: {
+    marginLeft: theme.spacing(5),
+    marginRight: theme.spacing(5),
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
   },
 }));
 
@@ -51,7 +51,6 @@ export const NewWallet = () => {
   const setWallet = useContext(WalletContext).setWallet;
   const handleCreate = () => {
     const w = createWallet();
-    console.log(w);
 
     if (w) {
       setWallet(w);
