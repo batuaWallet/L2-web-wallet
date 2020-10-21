@@ -16,7 +16,8 @@ import blockies from "ethereum-blockies";
 
 import { SendConfirm } from "./SendConfirm";
 import { WalletContext } from "../utils/walletContext";
-import { send }from '../utils/account';
+import { send, balance }from '../utils/account';
+import { loadMaticClient } from '../utils/initialize';
 
 const useStyles = makeStyles( theme => ({
   avatar: {
@@ -38,28 +39,58 @@ const useStyles = makeStyles( theme => ({
   },
 }));
 
-export const SendParamConfirm = (props: {address: string, amount: string, reject?: () => void}) => {
+export const SendParamConfirm = (props: {address: string, amount?: string, reject?: () => void}) => {
   const wallet = useContext(WalletContext).wallet;
   const classes = useStyles();
   const { address, reject } = props;
-  const [amount, setAmount] = useState(props.amount);
-  const [amountError, setAmountError] = useState({err: true, msg: "Amount (₹SA)"});
+  const [amount, setAmount] = useState();
+  const [amountError, setAmountError] = useState({err: false, msg: "Amount (₹SA)"});
   const [block, setBlock] = useState(true);
   const [txHash, setTxHash] = useState();
+  const [maticClient, setMatiClient] = useState();
+
+  useEffect(() => {
+    (async () => {
+      if (wallet) {
+        const mClient = await loadMaticClient(wallet.address);
+        setMatiClient(mClient);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (Number(props.amount) > 0) {
+      setAmount(props.amount);
+    } else {
+      setAmountError({err: true, msg: "Amount must be a non-zero number"});
+    }
+  }, [props]);
 
   useEffect(() => {
     // TODO: add balance check
+    console.log(amountError.err, address);
     if (!amountError.err && address) {
       setBlock(false);
+    } else {
+      setBlock(true);
     }
   }, [amountError, address]);
 
   const handleSendConfirm = async () => {
-    if (wallet) {
-      const res = await send(wallet, address, amount)
-      console.log(res)
-      if (res && res.txHash) {
-        setTxHash(res.txHash);
+    if (wallet && maticClient) {
+      const bal = await balance(
+        wallet.address,
+        maticClient
+      );
+
+      console.log(bal, amount);
+      if (amount <= bal) {
+        const res = await send(wallet, address, (amount*100).toFixed(0))
+        if (res && res.txHash) {
+          setTxHash(res.txHash);
+        }
+      } else {
+        setAmountError({err: true, msg: "Insufficien balance! Please load up more."});
       }
     }
   };
@@ -78,40 +109,36 @@ export const SendParamConfirm = (props: {address: string, amount: string, reject
 
   if (address) {
     return (
-      <>
-        <Typography className={classes.root} display="block" gutterBottom={true} variant="h5">
-          Send ₹SA
-        </Typography>
-        <Paper>
-          <div className={classes.card}>
-          { txHash ? <SendConfirm txHash={txHash} amount={amount} />
-            : <> 
-              <Avatar
-                alt={address}
-                className={classes.avatar}
-                src={blockies.create({
-                  seed: address,
-                }).toDataURL()}
-              />
-              <Typography variant="caption" gutterBottom={true}> {address} </Typography>
-              <TextField
-                id="amount-input"
-                error={amountError.err}
-                value={amount}
-                onChange={handleChange}
-                helperText={amountError.msg}
-                variant="outlined"
-              />
-              <IconButton onClick={handleSendConfirm}> <ConfirmIcon /> </IconButton>
-              { reject
-                ? <IconButton onClick={reject}> <RejectIcon /> </IconButton>
-                : <IconButton component={Link} to={`/`}> <RejectIcon /> </IconButton>
-              }
-              </>
-          }
-          </div>
-        </Paper>
-      </>
+      <Paper>
+        <div className={classes.card}>
+        { txHash ? <SendConfirm txHash={txHash} amount={amount} />
+          : <> 
+            <Avatar
+              alt={address}
+              className={classes.avatar}
+              src={blockies.create({
+                seed: address,
+              }).toDataURL()}
+            />
+            <Typography variant="caption" gutterBottom={true}> {address} </Typography>
+            <TextField
+              autoFocus={true}
+              id="amount-input"
+              error={amountError.err}
+              value={amount}
+              onChange={handleChange}
+              helperText={amountError.msg}
+              variant="outlined"
+            />
+            <IconButton disabled={block} onClick={handleSendConfirm}> <ConfirmIcon /> </IconButton>
+            { reject
+              ? <IconButton onClick={reject}> <RejectIcon /> </IconButton>
+              : <IconButton component={Link} to={`/`}> <RejectIcon /> </IconButton>
+            }
+            </>
+        }
+        </div>
+      </Paper>
     );
   } else return <div> Loading </div>
 }

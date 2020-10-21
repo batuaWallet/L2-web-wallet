@@ -3,7 +3,7 @@ import * as sigUtil from 'eth-sig-util';
 
 import * as config from '../config.json';
 import { domainData, domainType, metaTransactionType } from '../types';
-import { dummyTo, API_ID, API_KEY, BICONOMY_API_URI } from './constants';
+import { API_ID, API_KEY, BICONOMY_API_URI } from './constants';
 
 const abi = require('../contracts/Rocket.json').abi;
 const IRocketContract = new utils.Interface(abi);
@@ -15,7 +15,7 @@ export const balance = async (address: string, client: any) => {
     try {
       return Number(utils.formatUnits(
         await client.balanceOfERC20(address, config.dummyERC20, {}),
-        1) || 0
+        2) || 0
       );
     } catch (e) {
       console.log(e);

@@ -10,6 +10,8 @@ import { WalletContext } from "./utils/walletContext";
 import { TabsBar } from "./components/TabsBar";
 import { NewWallet } from "./components/NewWallet";
 import { Send } from "./components/Send";
+import { BackupSeed } from "./components/BackupSeed";
+import { HamburgerMenu } from "./components/HamburgerMenu";
 import { SendParamConfirm } from "./components/SendParamConfirm";
 
 import * as Themes from "./utils/theme";
@@ -19,6 +21,7 @@ function App() {
   const [theme, setTheme] = useState(Themes.dark);
   const [secret, setSecret] = useState(loadSecret());
   const [wallet, setWallet] = useState(loadWallet());
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     const s = loadSecret();
@@ -29,19 +32,34 @@ function App() {
     <ThemeProvider theme={theme}>
       <WalletContext.Provider value={{wallet, setWallet: (wallet) => setWallet(wallet)}}>
         <CssBaseline />
+        <HamburgerMenu setTheme={setTheme} title={title} />
         { !secret ? <NewWallet /> :
           <Switch>
             <Route exact
               path="/"
-              render={() => <TabsBar />}
+              render={() => {
+                setTitle("");
+                return <TabsBar />
+              }}
             />
             <Route exact
               path="/send"
-              render={() => <Send />}
+              render={() => {
+                setTitle("Send ₹SA");
+                return <Send />
+              }}
+            />
+            <Route exact
+              path="/backup"
+              render={() => {
+                setTitle("Wallet Backup");
+                return <BackupSeed />
+              }}
             />
             <Route
-              path="/send/:address/:amount"
+              path="/send/:address/:amount?"
               render={({ match }) => {
+                setTitle("Send ₹SA");
                 const add = match.params.address;
                 const amt = match.params.amount;
                 return <SendParamConfirm address={add} amount={amt} />
