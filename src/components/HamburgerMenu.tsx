@@ -2,15 +2,15 @@ import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import {
   AppBar,
-  Paper,
+  Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
+  Paper,
   Toolbar,
-  IconButton,
   Typography,
-  Drawer,
   makeStyles,
 } from "@material-ui/core";
 import {
