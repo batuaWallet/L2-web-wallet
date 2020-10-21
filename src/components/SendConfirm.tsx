@@ -42,7 +42,7 @@ export const SendConfirm = (props: {txHash: string, amount: string}) => {
       </Typography>
       
       <Typography className={classes.typography} gutterBottom={true}>
-        <MaterialLink href={`${MUMBAI_EXPLORER}/tx/${txHash}`}>
+        <MaterialLink onClick={preventDefault} href={`${MUMBAI_EXPLORER}/tx/${txHash}`}>
             View Transaction
         </MaterialLink>
       </Typography>

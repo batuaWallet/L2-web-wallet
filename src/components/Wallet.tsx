@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import {
   Paper,
@@ -11,8 +11,9 @@ import {
 import { Send as SendIcon } from "@material-ui/icons";
 
 import logo from "../assets/logo.png";
-import { initialize } from '../utils/initialize';
+import { loadMaticClient } from '../utils/initialize';
 import { balance }from '../utils/account';
+import { WalletContext } from "../utils/walletContext";
 
 const useStyles = makeStyles( theme => ({
   button: {
@@ -39,17 +40,18 @@ const useStyles = makeStyles( theme => ({
 
 export const Wallet = (props: any) => {
 
+  const wallet = useContext(WalletContext).wallet;
   const classes = useStyles();
-  const [wallet, setWallet] = useState();
   const [maticClient, setMatiClient] = useState();
   const [INRBalance, setINRBalance] = useState(0);
   const [RSABalance, setRSABalance] = useState(0);
 
   useEffect(() => {
     (async () => {
-      const { w, mClient } = await initialize();
-      setWallet(w);
-      setMatiClient(mClient);
+      if (wallet) {
+        const mClient = await loadMaticClient(wallet.address);
+        setMatiClient(mClient);
+      }
     })();
   }, []);
 

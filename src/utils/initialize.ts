@@ -8,6 +8,7 @@ import { API_KEY } from "./constants";
 
 const cache = window.localStorage;
 let secret: string;
+let maticClient: any;
 
 export const loadAddress = () => {
   return "0x";
@@ -88,21 +89,23 @@ const loadBiconomy = () => {
   return biconomy;
 };
 
-const loadMaticClient = async (address: string) => {
+export const loadMaticClient = async (address: string) => {
+  if (maticClient) return maticClient;
   if (!(address)) { return null; }
 
   const maticProvider = await loadMaticProvider();
   const ethProvider = await loadEthProvider();
 
-  return (
-    new MaticPOSClient({
+  maticClient = new MaticPOSClient({
       network: config.NETWORK,
       version: config.VERSION,
       maticProvider: maticProvider,
       parentProvider: ethProvider,
       parentDefaultOptions: { from: address },
       maticDefaultOptions: { from: address },
-    }));
+    });
+
+  return maticClient;
 };
 
 export const initialize = async () => {

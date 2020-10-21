@@ -16,7 +16,8 @@ import blockies from "ethereum-blockies";
 
 import { SendConfirm } from "./SendConfirm";
 import { WalletContext } from "../utils/walletContext";
-import { send }from '../utils/account';
+import { send, balance }from '../utils/account';
+import { loadMaticClient } from '../utils/initialize';
 
 const useStyles = makeStyles( theme => ({
   avatar: {
@@ -46,6 +47,16 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
   const [amountError, setAmountError] = useState({err: false, msg: "Amount (₹SA)"});
   const [block, setBlock] = useState(true);
   const [txHash, setTxHash] = useState();
+  const [maticClient, setMatiClient] = useState();
+
+  useEffect(() => {
+    (async () => {
+      if (wallet) {
+        const mClient = await loadMaticClient(wallet.address);
+        setMatiClient(mClient);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     if (Number(props.amount) > 0) {
@@ -66,11 +77,19 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
   }, [amountError, address]);
 
   const handleSendConfirm = async () => {
-    if (wallet) {
-      const res = await send(wallet, address, amount)
-      console.log(res)
-      if (res && res.txHash) {
-        setTxHash(res.txHash);
+    if (wallet && maticClient) {
+      const bal = await balance(
+        wallet.address,
+        maticClient
+      );
+
+      if (amount <= bal) {
+        const res = await send(wallet, address, amount)
+        if (res && res.txHash) {
+          setTxHash(res.txHash);
+        }
+      } else {
+        setAmountError({err: true, msg: "Insufficien balance! Please load up more."});
       }
     }
   };
