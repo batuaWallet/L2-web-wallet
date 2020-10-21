@@ -2,4 +2,4 @@
 
 mkdir -p .letsencrypt
 
-docker run -it --mount "$(pwd)/.certs:/etc/letsencrypt" --env-file .env batua_wallet_webserver:latest
+docker run -it --volume="$(pwd)/.certs:/etc/letsencrypt" --env-file .env batua_wallet_webserver:latest
