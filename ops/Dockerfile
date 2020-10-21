@@ -9,6 +9,6 @@ RUN curl https://raw.githubusercontent.com/vishnubob/wait-for-it/ed77b63706ea721
 
 COPY ops/nginx.conf /etc/nginx/nginx.conf
 COPY ops/entry.sh /root/entry.sh
-COPY build /var/www/html/client
+COPY build /var/www/html
 
 ENTRYPOINT ["bash", "/root/entry.sh"]
