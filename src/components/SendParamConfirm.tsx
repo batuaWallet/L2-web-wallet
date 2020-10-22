@@ -56,7 +56,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
         setMatiClient(mClient);
       }
     })();
-  }, []);
+  }, [wallet]);
 
   useEffect(() => {
     if (Number(props.amount) > 0) {

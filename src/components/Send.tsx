@@ -3,11 +3,8 @@ import { Link } from "react-router-dom";
 import {
   AppBar,
   IconButton,
-  Tab,
-  Tabs,
   makeStyles,
 } from "@material-ui/core";
-import { TabContext, TabPanel } from "@material-ui/lab";
 import {
   ArrowBackIos as BackIcon,
   CropFree as ScanIcon,
@@ -40,10 +37,6 @@ const useStyles = makeStyles( theme => ({
 export const Send = (props: any) => {
   const classes = useStyles();
   const [addressOpt, setAddressOpt] = useState("contacts");
-
-  const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: string) => {
-    setAddressOpt(selectedTab);
-  };
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React  from "react";
 import { Link } from "react-router-dom";
 import {
   AppBar,
@@ -12,19 +12,14 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
-import { TabContext, TabPanel } from "@material-ui/lab";
 import {
   ArrowBackIos as BackIcon,
   VpnKey as KeyIcon,
   EnhancedEncryption as LockIcon,
   Note as SaveIcon,
-  CropFree as ScanIcon,
-  ImportContacts as ContactsIcon,
 } from "@material-ui/icons";
 import { loadSecret } from "../utils/initialize";
 import { walletSecretFYI } from "../utils/constants";
-import { AddRcvrAddress } from "./AddRcvrAddress";
-import { ScanRcvrAddress } from "./ScanRcvrAddress";
 
 const useStyles = makeStyles( theme => ({
   appbar: {
@@ -55,12 +50,7 @@ const useStyles = makeStyles( theme => ({
 
 export const BackupSeed = (props: any) => {
   const classes = useStyles();
-  const [secret, setSecret] = useState(loadSecret());
-  const [addressOpt, setAddressOpt] = useState("contacts");
-
-  const updateSelection = (event: React.ChangeEvent<{}>, selectedTab: string) => {
-    setAddressOpt(selectedTab);
-  };
+  const secret = loadSecret();
 
   return (
     <>

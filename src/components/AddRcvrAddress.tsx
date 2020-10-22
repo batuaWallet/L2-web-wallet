@@ -75,7 +75,7 @@ export const AddRcvrAddress = () => {
           variant="outlined"
         />
 
-        <IconButton onClick={handleAddresConfirm}> <ConfirmIcon /> </IconButton>
+        <IconButton color="secondary" onClick={handleAddresConfirm}> <ConfirmIcon /> </IconButton>
       </Paper>
     );
   }

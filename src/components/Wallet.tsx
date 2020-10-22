@@ -53,7 +53,7 @@ export const Wallet = (props: any) => {
         setMatiClient(mClient);
       }
     })();
-  }, []);
+  }, [wallet]);
 
   useEffect(() => {
     (async () => {
@@ -86,6 +86,7 @@ export const Wallet = (props: any) => {
           ₹&nbsp;{INRBalance}
         </Typography>
         <IconButton
+          color="primary"
           className={classes.button}
           component={Link}
           to={"/send"}

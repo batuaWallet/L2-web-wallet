@@ -1,11 +1,8 @@
 import React, { useState, useContext } from "react";
 import {
   AppBar,
-  IconButton,
-  SwipeableDrawer,
   Tab,
   Tabs,
-  Toolbar,
   makeStyles,
 } from "@material-ui/core";
 import {
