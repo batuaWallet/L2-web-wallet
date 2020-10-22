@@ -4,8 +4,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start-prod": "bash ops/start.sh",
-    "build": "react-scripts build",
-    "build-image": "docker build --file ops/Dockerfile --tag batua_wallet_webserver .",
+    "build": "react-scripts build && docker build --file ops/Dockerfile --tag batua_wallet_webserver .",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
