@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Avatar,
+  Button,
   IconButton,
   TextField,
   Paper,
@@ -27,6 +28,10 @@ const useStyles = makeStyles( theme => ({
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4),
   },
+  button: {
+    background: 'linear-gradient(269.86deg, #636CC5 0.12%, #1AC3C4 98.96%)',
+    marginBottom: theme.spacing(3),
+  },
   card: {
     display: "flex",
     flexDirection: "column",
@@ -40,10 +45,10 @@ const useStyles = makeStyles( theme => ({
   },
 }));
 
-export const SendParamConfirm = (props: {address: string, amount?: string, reject?: () => void}) => {
+export const SendParamConfirm = (props: {address: string, amount?: string}) => {
   const wallet = useContext(WalletContext).wallet;
   const classes = useStyles();
-  const { address, reject } = props;
+  const { address } = props;
   const [amount, setAmount] = useState();
   const [amountError, setAmountError] = useState({err: false, msg: "Amount (₹SA)"});
   const [block, setBlock] = useState(true);
@@ -120,28 +125,33 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
         <div className={classes.card}>
         { processing ? <SendProcessing /> : txHash ? <SendConfirm txHash={txHash} amount={amount} />
           : <> 
-            <Avatar
-              alt={address}
-              className={classes.avatar}
-              src={blockies.create({
-                seed: address,
-              }).toDataURL()}
-            />
-            <Typography variant="caption" gutterBottom={true}> {address} </Typography>
-            <TextField
-              autoFocus={true}
-              id="amount-input"
-              error={amountError.err}
-              value={amount}
-              onChange={handleChange}
-              helperText={amountError.msg}
-              variant="outlined"
-            />
-            <IconButton disabled={block} onClick={handleSendConfirm}> <ConfirmIcon /> </IconButton>
-            { reject
-              ? <IconButton onClick={reject}> <RejectIcon /> </IconButton>
-              : <IconButton component={Link} to={`/`}> <RejectIcon /> </IconButton>
-            }
+              <Avatar
+                alt={address}
+                className={classes.avatar}
+                src={blockies.create({
+                  seed: address,
+                }).toDataURL()}
+              />
+              <Typography variant="caption" gutterBottom={true}> {address} </Typography>
+              <TextField
+                autoFocus={true}
+                id="amount-input"
+                error={amountError.err}
+                value={amount}
+                onChange={handleChange}
+                helperText={amountError.msg}
+                variant="outlined"
+              />
+              <Button
+                className={classes.button}
+                disabled={block}
+                onClick={handleSendConfirm}
+                startIcon={<ConfirmIcon />}
+                variant="contained"
+                size="large"
+              > 
+                Confirm
+              </Button>
             </>
         }
         </div>

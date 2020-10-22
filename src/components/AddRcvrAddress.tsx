@@ -45,7 +45,6 @@ export const AddRcvrAddress = () => {
   const [address, setAddress] = useState({ err: false, value: "", msg: "" });
   const [forward, setForward] = useState(false);
 
-  const handleReject = () => { setForward(false); };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAddress({
       err: false,
@@ -63,7 +62,7 @@ export const AddRcvrAddress = () => {
   };
 
   if (forward) {
-    return <SendParamConfirm address={address.value} reject={handleReject} />
+    return <SendParamConfirm address={address.value} />
   } else {
     return (
       <Paper className={classes.paper}>

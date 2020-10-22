@@ -39,7 +39,6 @@ export const ScanRcvrAddress = () => {
   const [forward, setForward] = useState(false);
 
   const toggleSnackBar = () => { setAddress({...address, err: false}); };
-  const handleReject = () => { setForward(false); };
   const handleScan = (data: any) => {
     if (data) {
       const add = data.match(/0x[a-fA-F0-9]{40}/g);
@@ -53,7 +52,7 @@ export const ScanRcvrAddress = () => {
   };
 
   if (forward) {
-    return <SendParamConfirm address={address.value} reject={handleReject} />
+    return <SendParamConfirm address={address.value} />
   } else {
     return (
       <Paper className={classes.paper}>
