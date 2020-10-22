@@ -15,6 +15,7 @@ import { TabContext, TabPanel } from "@material-ui/lab";
 import { WalletContext } from "../utils/walletContext";
 import { Wallet } from './Wallet';
 import { Account } from './Account';
+import { HamburgerMenu } from "./HamburgerMenu";
 
 const useStyles = makeStyles( theme => ({
   appbar: {
@@ -38,28 +39,31 @@ export const TabsBar = (props: any) => {
   const wallet = useContext(WalletContext).wallet;
 
   return (
-    <TabContext value={tab}>
-      <TabPanel value="account" className={classes.panel}>
-        <Account address={wallet ? wallet.address: ""} />
-      </TabPanel>
-      <TabPanel value="txns" className={classes.panel}> Txns </TabPanel>
-      <TabPanel value="wallet" className={classes.panel}> <Wallet /> </TabPanel>
+    <>
+      <HamburgerMenu />
+      <TabContext value={tab}>
+        <TabPanel value="account" className={classes.panel}>
+          <Account address={wallet ? wallet.address: ""} />
+        </TabPanel>
+        <TabPanel value="txns" className={classes.panel}> Txns </TabPanel>
+        <TabPanel value="wallet" className={classes.panel}> <Wallet /> </TabPanel>
 
-      <AppBar color="inherit" position="fixed" className={classes.appbar}>
-        <Tabs
-          value={tab}
-          onChange={updateSelection}
-          indicatorColor="primary"
-          textColor="secondary"
-          variant="fullWidth"
-        >
-          <Tab value="wallet" icon={<WalletIcon />} aria-label="wallet" />
-          <Tab value="account" icon={<AccountIcon />} aria-label="account" />
-          <Tab value="txns" icon={<TransactionIcon />} aria-label="txns" />
+        <AppBar color="inherit" position="fixed" className={classes.appbar}>
+          <Tabs
+            value={tab}
+            onChange={updateSelection}
+            indicatorColor="primary"
+            textColor="secondary"
+            variant="fullWidth"
+          >
+            <Tab value="wallet" icon={<WalletIcon />} aria-label="wallet" />
+            <Tab value="account" icon={<AccountIcon />} aria-label="account" />
+            <Tab value="txns" icon={<TransactionIcon />} aria-label="txns" />
 
-        </Tabs>
-      </AppBar>
-    </TabContext>
+          </Tabs>
+        </AppBar>
+      </TabContext>
+    </>
   )
 };
 

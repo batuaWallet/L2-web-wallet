@@ -11,7 +11,6 @@ import { TabsBar } from "./components/TabsBar";
 import { NewWallet } from "./components/NewWallet";
 import { Send } from "./components/Send";
 import { BackupSeed } from "./components/BackupSeed";
-import { HamburgerMenu } from "./components/HamburgerMenu";
 import { SendParamConfirm } from "./components/SendParamConfirm";
 
 import * as Themes from "./utils/theme";
@@ -21,7 +20,6 @@ function App() {
   const [theme, setTheme] = useState(Themes.light);
   const [secret, setSecret] = useState(loadSecret());
   const [wallet, setWallet] = useState(loadWallet());
-  const [title, setTitle] = useState("");
 
   useEffect(() => {
     const s = loadSecret();
@@ -32,34 +30,23 @@ function App() {
     <ThemeProvider theme={theme}>
       <WalletContext.Provider value={{wallet, setWallet: (wallet) => setWallet(wallet)}}>
         <CssBaseline />
-        <HamburgerMenu setTheme={setTheme} title={title} />
         { !secret ? <NewWallet /> :
           <Switch>
             <Route exact
               path="/"
-              render={() => {
-                setTitle("");
-                return <TabsBar />
-              }}
+              render={() => <TabsBar /> }
             />
             <Route exact
               path="/send"
-              render={() => {
-                setTitle("Send ₹SA");
-                return <Send />
-              }}
+              render={() => <Send /> }
             />
             <Route exact
               path="/backup"
-              render={() => {
-                setTitle("Wallet Backup");
-                return <BackupSeed />
-              }}
+              render={() => <BackupSeed /> }
             />
             <Route
               path="/send/:address/:amount?"
               render={({ match }) => {
-                setTitle("Send ₹SA");
                 const add = match.params.address;
                 const amt = match.params.amount;
                 return <SendParamConfirm address={add} amount={amt} />
