@@ -6,7 +6,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import {
-  ArrowBackIos as BackIcon,
+  ArrowBack as BackIcon,
   CropFree as ScanIcon,
   ImportContacts as ContactsIcon,
 } from "@material-ui/icons";
@@ -40,11 +40,9 @@ export const Send = (props: any) => {
 
   return (
     <>
-      <AppBar position="fixed" className={classes.appbar}>
-          <IconButton className={classes.back} component={Link} to={"/"}>
-            <BackIcon />
-          </IconButton>
-      </AppBar>
+      <IconButton className={classes.back} component={Link} to={"/"}>
+        <BackIcon />
+      </IconButton>
       <div className={classes.root}>
         <IconButton color="secondary" onClick={() => setAddressOpt("qrcode")} className={classes.qrCode}>
           <ScanIcon />
