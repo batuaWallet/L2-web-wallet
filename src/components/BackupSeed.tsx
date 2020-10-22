@@ -13,7 +13,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import {
-  ArrowBackIos as BackIcon,
+  ArrowBack as BackIcon,
   VpnKey as KeyIcon,
   EnhancedEncryption as LockIcon,
   Note as SaveIcon,
@@ -22,11 +22,6 @@ import { loadSecret } from "../utils/initialize";
 import { walletSecretFYI } from "../utils/constants";
 
 const useStyles = makeStyles( theme => ({
-  appbar: {
-    flex: 1,
-    bottom: 0,
-    top: 'auto',
-  },
   back: {
     marginRight: theme.spacing(2),
   },
@@ -34,7 +29,7 @@ const useStyles = makeStyles( theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    marginTop: theme.spacing(7),
+    marginTop: theme.spacing(1),
     marginBottom: theme.spacing(4),
   },
   textBox: {
@@ -54,11 +49,9 @@ export const BackupSeed = (props: any) => {
 
   return (
     <>
-      <AppBar position="fixed" className={classes.appbar}>
-          <IconButton className={classes.back} component={Link} to={"/"}>
-            <BackIcon />
-          </IconButton>
-      </AppBar>
+      <IconButton className={classes.back} component={Link} to={"/"}>
+        <BackIcon />
+      </IconButton>
       <Paper className={classes.paper}>
         <Typography variant="h5"> Your Magic Words</Typography>
         <Typography align="center" variant="caption" className={classes.typography}>
