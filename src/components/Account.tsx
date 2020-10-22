@@ -7,7 +7,7 @@ import {
   makeStyles,
   useTheme,
 } from "@material-ui/core";
-import { Share as ShareIcon } from "@material-ui/icons";
+import { FileCopy as CopyIcon } from "@material-ui/icons";
 
 import { Loading } from "./Loading";
 
@@ -28,8 +28,7 @@ const useStyles = makeStyles( theme => ({
   footer: {
     marginLeft: theme.spacing(5),
     marginRight: theme.spacing(5),
-    marginTop: theme.spacing(3),
-    bottom: theme.spacing(3),
+    marginTop: theme.spacing(2),
   },
   qrcode: {
     height: theme.spacing(7),
@@ -38,7 +37,7 @@ const useStyles = makeStyles( theme => ({
     marginBottom: theme.spacing(3),
   },
   root: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
   },
 }));
 
@@ -47,6 +46,13 @@ export const Account = (props: { address: string }) => {
   const theme = useTheme();
   const classes = useStyles();
   const { address } = props;
+  const handleCopy = async () => {
+    try {
+      navigator.clipboard.writeText(address)
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   if (address && theme) {
     return (
@@ -71,8 +77,8 @@ export const Account = (props: { address: string }) => {
             Use this unique QR Code to<br></br>receive ₹SA in your Batua wallet
           </Typography>
 
-          <IconButton color="primary" className={classes.button}>
-            <ShareIcon />
+          <IconButton onClick={handleCopy} color="primary" className={classes.button}>
+            <CopyIcon />
           </IconButton>
         </Paper>
       </>

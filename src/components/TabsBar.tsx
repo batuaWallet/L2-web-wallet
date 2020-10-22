@@ -45,7 +45,6 @@ export const TabsBar = (props: any) => {
         <TabPanel value="account" className={classes.panel}>
           <Account address={wallet ? wallet.address: ""} />
         </TabPanel>
-        <TabPanel value="txns" className={classes.panel}> Txns </TabPanel>
         <TabPanel value="wallet" className={classes.panel}> <Wallet /> </TabPanel>
 
         <AppBar color="inherit" position="fixed" className={classes.appbar}>
@@ -58,7 +57,6 @@ export const TabsBar = (props: any) => {
           >
             <Tab value="wallet" icon={<WalletIcon />} aria-label="wallet" />
             <Tab value="account" icon={<AccountIcon />} aria-label="account" />
-            <Tab value="txns" icon={<TransactionIcon />} aria-label="txns" />
 
           </Tabs>
         </AppBar>
