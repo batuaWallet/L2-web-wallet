@@ -15,6 +15,7 @@ import {
 import blockies from "ethereum-blockies";
 
 import { SendConfirm } from "./SendConfirm";
+import { SendProcessing } from "./SendProcessing";
 import { WalletContext } from "../utils/walletContext";
 import { send, balance }from '../utils/account';
 import { loadMaticClient } from '../utils/initialize';
@@ -46,6 +47,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
   const [amount, setAmount] = useState();
   const [amountError, setAmountError] = useState({err: false, msg: "Amount (₹SA)"});
   const [block, setBlock] = useState(true);
+  const [processing, setProcessing] = useState(false);
   const [txHash, setTxHash] = useState();
   const [maticClient, setMatiClient] = useState();
 
@@ -76,6 +78,10 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
     }
   }, [amountError, address]);
 
+  useEffect(() => {
+    if (txHash) setProcessing(false);
+  }, [txHash]);
+
   const handleSendConfirm = async () => {
     if (wallet && maticClient) {
       const bal = await balance(
@@ -85,6 +91,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
 
       console.log(bal, amount);
       if (amount <= bal) {
+        setProcessing(true);
         const res = await send(wallet, address, (amount*100).toFixed(0))
         if (res && res.txHash) {
           setTxHash(res.txHash);
@@ -111,7 +118,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string, rejec
     return (
       <Paper>
         <div className={classes.card}>
-        { txHash ? <SendConfirm txHash={txHash} amount={amount} />
+        { processing ? <SendProcessing /> : txHash ? <SendConfirm txHash={txHash} amount={amount} />
           : <> 
             <Avatar
               alt={address}
