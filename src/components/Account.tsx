@@ -68,7 +68,7 @@ export const Account = (props: { address: string }) => {
             gutterBottom={true}
             className={classes.footer}
           >
-            Use this unique QR Code to receive ₹SA in your Batua wallet
+            Use this unique QR Code to<br></br>receive ₹SA in your Batua wallet
           </Typography>
 
           <IconButton color="primary" className={classes.button}>
