@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import {
-  Paper,
-  CardMedia,
+  Button,
   CardHeader,
-  IconButton,
+  CardMedia,
+  Paper,
   Typography,
   makeStyles,
 } from "@material-ui/core";
@@ -17,6 +17,7 @@ import { WalletContext } from "../utils/walletContext";
 
 const useStyles = makeStyles( theme => ({
   button: {
+    background: 'linear-gradient(269.86deg, #636CC5 0.12%, #1AC3C4 98.96%)',
     marginTop: theme.spacing(10),
     marginBottom: theme.spacing(3),
   },
@@ -85,14 +86,17 @@ export const Wallet = (props: any) => {
         >
           ₹&nbsp;{INRBalance}
         </Typography>
-        <IconButton
-          color="primary"
+        <Button
           className={classes.button}
+          color="primary"
           component={Link}
+          startIcon={<SendIcon />}
           to={"/send"}
+          variant="contained"
+          size="large"
         >
-          <SendIcon />
-        </IconButton>
+          Send
+        </Button>
       </Paper>
     </>
   );
