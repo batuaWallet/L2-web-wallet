@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   Paper,
   TextField,
-  IconButton,
+  Button,
   makeStyles,
 } from "@material-ui/core";
 import {
@@ -17,6 +17,10 @@ const useStyles = makeStyles( theme => ({
     height: theme.spacing(7),
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4),
+  },
+  button: {
+    background: 'linear-gradient(269.86deg, #636CC5 0.12%, #1AC3C4 98.96%)',
+    marginBottom: theme.spacing(3),
   },
   paper: {
     display: "flex",
@@ -75,7 +79,15 @@ export const AddRcvrAddress = () => {
           variant="outlined"
         />
 
-        <IconButton color="primary" onClick={handleAddresConfirm}> <ConfirmIcon /> </IconButton>
+        <Button
+          className={classes.button}
+          onClick={handleAddresConfirm}
+          startIcon={<ConfirmIcon />}
+          variant="contained"
+          size="large"
+        >
+          Proceed
+        </Button>
       </Paper>
     );
   }

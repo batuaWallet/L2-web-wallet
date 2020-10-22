@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AppBar,
+  Button,
   IconButton,
   Toolbar,
   Typography,
@@ -24,9 +25,11 @@ const useStyles = makeStyles( theme => ({
   },
   qrCode: {
     marginTop: theme.spacing(8),
+    marginRight: theme.spacing(1),
   },
   contacts: {
     marginTop: theme.spacing(8),
+    marginLeft: theme.spacing(1),
   },
   root: {
     display: "flex",
@@ -51,12 +54,24 @@ export const Send = (props: any) => {
       
 
       <div className={classes.root}>
-        <IconButton color="primary" onClick={() => setAddressOpt("qrcode")} className={classes.qrCode}>
-          <ScanIcon />
-        </IconButton>
-        <IconButton color="primary" onClick={() => setAddressOpt("contacts")} className={classes.contacts}>
-          <ContactsIcon />
-        </IconButton>
+        <Button
+          color="primary"
+          variant="outlined"
+          onClick={() => setAddressOpt("qrcode")}
+          className={classes.qrCode}
+          startIcon={<ScanIcon />}
+        >
+          QR Code
+        </Button>
+        <Button
+          color="primary"
+          variant="outlined"
+          onClick={() => setAddressOpt("contacts")}
+          className={classes.contacts}
+          startIcon={<ContactsIcon />}
+        >
+          Address
+        </Button>
       </div>
       { addressOpt === "qrcode"
         ?<ScanRcvrAddress />
