@@ -13,7 +13,7 @@ const useStyles = makeStyles( theme => ({
     height: theme.spacing(30),
     width: theme.spacing(30),
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(3),
   },
   root: {
     display: "flex",

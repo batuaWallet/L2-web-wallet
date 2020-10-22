@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {
   Paper,
-  IconButton,
+  CardMedia,
   Typography,
   makeStyles,
   Link as MaterialLink
@@ -12,8 +12,15 @@ import {
 } from "@material-ui/icons";
 
 import { MUMBAI_EXPLORER } from "../utils/constants";
+import processing from "../assets/processing.png";
 
 const useStyles = makeStyles( theme => ({
+  processing: {
+    height: theme.spacing(30),
+    width: theme.spacing(30),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(3),
+  },
   root: {
     display: "flex",
     flexDirection: "column",
@@ -35,8 +42,6 @@ export const SendConfirm = (props: {txHash: string, amount: string}) => {
 
   return (
     <Paper>
-      <IconButton component={Link} to={`/`}> <CloseIcon /> </IconButton>
-
       <Typography className={classes.typography} variant="h6" gutterBottom={true}>
         Your transaction for {amount} ₹SA is successful!
       </Typography>
@@ -47,6 +52,7 @@ export const SendConfirm = (props: {txHash: string, amount: string}) => {
         </MaterialLink>
       </Typography>
       
+      <CardMedia image={processing} className={classes.processing} />
     </Paper>
   );
 };
