@@ -123,7 +123,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string}) => {
     return (
       <Paper>
         <div className={classes.card}>
-        { processing ? <SendProcessing /> : txHash ? <SendConfirm txHash={txHash} amount={amount} />
+        { processing ? <SendProcessing amount={amount} /> : txHash ? <SendConfirm txHash={txHash} amount={amount} />
           : <> 
               <Avatar
                 alt={address}
