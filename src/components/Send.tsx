@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import {
   AppBar,
   IconButton,
+  Toolbar,
+  Typography,
   makeStyles,
 } from "@material-ui/core";
 import {
@@ -16,8 +18,6 @@ import { ScanRcvrAddress } from "./ScanRcvrAddress";
 const useStyles = makeStyles( theme => ({
   appbar: {
     flex: 1,
-    bottom: 0,
-    top: 'auto',
   },
   back: {
     marginRight: theme.spacing(2),
@@ -40,14 +40,21 @@ export const Send = (props: any) => {
 
   return (
     <>
-      <IconButton className={classes.back} component={Link} to={"/"}>
-        <BackIcon />
-      </IconButton>
+      <AppBar color="transparent" position="fixed" className={classes.appbar}>
+        <Toolbar>
+          <IconButton className={classes.back} component={Link} to={"/"}>
+            <BackIcon />
+          </IconButton>
+          <Typography variant="h6" > Send ₹SA </Typography>
+        </Toolbar>
+      </AppBar>
+      
+
       <div className={classes.root}>
-        <IconButton color="secondary" onClick={() => setAddressOpt("qrcode")} className={classes.qrCode}>
+        <IconButton color="primary" onClick={() => setAddressOpt("qrcode")} className={classes.qrCode}>
           <ScanIcon />
         </IconButton>
-        <IconButton color="secondary" onClick={() => setAddressOpt("contacts")} className={classes.contacts}>
+        <IconButton color="primary" onClick={() => setAddressOpt("contacts")} className={classes.contacts}>
           <ContactsIcon />
         </IconButton>
       </div>
