@@ -2,11 +2,13 @@
   "name": "l2-web-wallet",
   "version": "0.1.0",
   "scripts": {
+    "build": "npm run build-bundle && npm run build-image",
+    "build-bundle": "react-scripts build",
+    "build-image": "docker build --file ops/Dockerfile --tag batua_wallet_webserver .",
+    "eject": "react-scripts eject",
     "start": "react-scripts start",
     "start-prod": "bash ops/start.sh",
-    "build": "react-scripts build && docker build --file ops/Dockerfile --tag batua_wallet_webserver .",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test"
   },
   "dependencies": {
     "@biconomy/mexa": "^1.5.13",
