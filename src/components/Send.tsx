@@ -36,7 +36,7 @@ const useStyles = makeStyles( theme => ({
 
 export const Send = (props: any) => {
   const classes = useStyles();
-  const [addressOpt, setAddressOpt] = useState("contacts");
+  const [addressOpt, setAddressOpt] = useState("qrcode");
 
   return (
     <>

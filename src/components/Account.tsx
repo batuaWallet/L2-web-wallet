@@ -71,7 +71,7 @@ export const Account = (props: { address: string }) => {
             Use this unique QR Code to receive ₹SA in your Batua wallet
           </Typography>
 
-          <IconButton className={classes.button}>
+          <IconButton color="primary" className={classes.button}>
             <ShareIcon />
           </IconButton>
         </Paper>
