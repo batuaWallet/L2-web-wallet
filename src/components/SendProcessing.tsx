@@ -37,7 +37,7 @@ export const SendProcessing = (props: {amount: string}) => {
   return (
     <Paper className={classes.root}>
       <Typography variant="h6" align="center">
-        Your transaction for ${amount} ₹SA is being processed...
+        Your transaction for {amount} ₹SA is being processed...
       </Typography>
       <CardMedia image={processing} className={classes.processing} />
     </Paper>
