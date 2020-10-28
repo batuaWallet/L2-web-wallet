@@ -3,7 +3,7 @@ import WalletConnectProvider from "@maticnetwork/walletconnect-provider";
 import { MaticPOSClient } from "@maticnetwork/maticjs";
 import * as config from "../config.json";
 import { Mnemonic } from "@ethersproject/hdnode";
-import ethers from "ethers";
+import { Wallet, providers } from "ethers";
 import { API_KEY } from "./constants";
 
 const cache = window.localStorage;
@@ -35,6 +35,16 @@ export const loadSecret = () => {
 };
 
 const loadEthProvider = async () => {
+  const provider = new providers.JsonRpcProvider(config.ETHEREUM_RPC);
+  /*
+  let w = loadWallet()
+  if (w) {
+    w = w.connect(provider);
+    return w;
+  }
+  */
+  return provider;
+    /*
   return (
     new WalletConnectProvider({
       host: config.ETHEREUM_RPC,
@@ -43,9 +53,20 @@ const loadEthProvider = async () => {
         onDisconnect: console.log("mainchain disconnected"),
       },
     }));
+    */
 };
 
 const loadMaticProvider = async () => {
+  const provider = new providers.JsonRpcProvider(config.MATIC_RPC);
+  /*
+  let w = loadWallet()
+  if (w) {
+    w = w.connect(provider);
+    return w;
+  }
+  */
+  return provider;
+  /*
   return (
     new WalletConnectProvider({
       host: config.MATIC_RPC,
@@ -54,21 +75,22 @@ const loadMaticProvider = async () => {
         onDisconnect: console.log("matic disconnected!"),
       },
     }));
+    */
 };
 
 export const createWallet = () => {
-  const wallet = ethers.Wallet.createRandom();
+  const wallet = Wallet.createRandom();
   saveSecret(wallet.mnemonic);
   return wallet; 
 };
 
 export const loadWallet = (secret? : string | null) => {
   if (secret) {
-    return ethers.Wallet.fromMnemonic(secret);
+    return Wallet.fromMnemonic(secret);
   } else {
     let phrase = loadSecret();
     if (phrase)
-      return ethers.Wallet.fromMnemonic(phrase);
+      return Wallet.fromMnemonic(phrase);
   }
 
   return null;
@@ -99,8 +121,9 @@ export const loadMaticClient = async (address: string) => {
   maticClient = new MaticPOSClient({
       network: config.NETWORK,
       version: config.VERSION,
-      maticProvider: maticProvider,
-      parentProvider: ethProvider,
+      maticProvider: config.MATIC_RPC,
+      parentProvider: config.ETHEREUM_RPC,
+      posRootChainManager: config.posRootChainManager,
       parentDefaultOptions: { from: address },
       maticDefaultOptions: { from: address },
     });

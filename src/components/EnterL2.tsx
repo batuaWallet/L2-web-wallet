@@ -17,7 +17,7 @@ import { AddRcvrAddress } from "./AddRcvrAddress";
 import { ScanRcvrAddress } from "./ScanRcvrAddress";
 import { loadMaticClient } from '../utils/initialize';
 import { WalletContext } from "../utils/walletContext";
-import { getRSABalance, approveForDeposit, }from '../utils/account';
+import { getRSABalance, approveForDeposit, depositERC20toMatic }from '../utils/account';
 
 const useStyles = makeStyles( theme => ({
   appbar: {
@@ -41,26 +41,6 @@ export const EnterL2 = (props: any) => {
   const wallet = useContext(WalletContext).wallet;
 
   const [RSABalance, setRSABalance] = useState(0);
-  const [maticClient, setMatiClient] = useState();
-
-  const handleSwitch = async () => {
-    if (wallet) {
-      console.log("Depositing to L2");
-      console.log(maticClient);
-      const approvalRes = approveForDeposit(wallet);
-    }
-
-  };
-
-  useEffect(() => {
-    (async () => {
-      if (wallet) {
-        const mClient = await loadMaticClient(wallet.address);
-        setMatiClient(mClient);
-        console.log(mClient)
-      }
-    })();
-  }, [wallet]);
 
   useEffect(() => {
     (async () => {
@@ -71,6 +51,18 @@ export const EnterL2 = (props: any) => {
       }
     })();
   }, [wallet]);
+
+  const handleSwitch = async () => {
+    if (wallet) {
+      console.log("Depositing to L2");
+      const approvalRes = await approveForDeposit(wallet);
+      if (approvalRes) {
+        const depositRes = depositERC20toMatic(wallet);
+        console.log(depositRes);
+      }
+    }
+
+  };
 
   return (
     <>
