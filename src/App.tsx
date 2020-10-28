@@ -11,6 +11,7 @@ import { TabsBar } from "./components/TabsBar";
 import { NewWallet } from "./components/NewWallet";
 import { Send } from "./components/Send";
 import { BackupSeed } from "./components/BackupSeed";
+import { EnterL2 } from "./components/EnterL2";
 import { SendParamConfirm } from "./components/SendParamConfirm";
 
 import * as Themes from "./utils/theme";
@@ -39,6 +40,10 @@ function App() {
             <Route exact
               path="/send"
               render={() => <Send /> }
+            />
+            <Route exact
+              path="/invest"
+              render={() => <EnterL2 /> }
             />
             <Route exact
               path="/backup"
