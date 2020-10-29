@@ -1,3 +1,5 @@
+import { AddressZero } from "@ethersproject/constants";
+import { formatEther } from "@ethersproject/units";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -18,7 +20,7 @@ import {
 } from "@material-ui/icons";
 import { WalletContext } from "../utils/walletContext";
 import { getRSABalance, getETHBalance, approveForDeposit, depositERC20toMatic }from '../utils/account';
-import { lockInCDP, mintRSA } from "../utils/cdpUtils";
+import { getCDP, lockInCDP, mintRSA } from "../utils/cdpUtils";
 
 const useStyles = makeStyles( theme => ({
   appbar: {
@@ -66,8 +68,13 @@ export const EnterL2 = (props: any) => {
       if (wallet) {
         setRSABalance(await getRSABalance(wallet.address));
         setETHBalance(Math.round((await getETHBalance(wallet.address)) * 1000) / 1000);
-        setDebt(380);
-        setCollateral(0.2);
+        const cdp = await getCDP(wallet.address);
+        if (cdp.lad === AddressZero) {
+          setCollateral(0);
+          setDebt(0);
+        }
+        setCollateral(parseFloat(formatEther(cdp.ink)));
+        setDebt(parseFloat(formatEther(cdp.art)));
       }
     })();
   }, [wallet]);
@@ -159,7 +166,7 @@ export const EnterL2 = (props: any) => {
           <IconButton className={classes.back} component={Link} to={"/"}>
             <BackIcon />
           </IconButton>
-          <Typography variant="h6" > Invest with MakerCOW </Typography>
+          <Typography variant="h6" > Layer 1: Goerli </Typography>
         </Toolbar>
       </AppBar>
       

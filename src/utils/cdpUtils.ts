@@ -1,4 +1,5 @@
-import { Wallet, utils, constants, Contract, providers } from "ethers";
+import { AddressZero, HashZero, Zero } from "@ethersproject/constants";
+import { BigNumber, Wallet, utils, constants, Contract, providers } from "ethers";
 
 import {
   ADDRESS_WETH,
@@ -17,6 +18,30 @@ const DSTokenAbi = require("../contracts/DSToken.json").abi;
 const weth = new Contract(ADDRESS_WETH, wethAbi, providerRoot);
 const skr = new Contract(ADDRESS_SKR, DSTokenAbi, providerRoot);
 const tub = new Contract(ADDRESS_TUB, tubAbi, providerRoot);
+
+type CDP = {
+  lad: string;
+  ink: BigNumber;
+  art: BigNumber;
+  ire: BigNumber;
+}
+
+export const getCDP = async (address: string): Promise<CDP> => {
+  const cdpi = await findCDP(address);
+  if (cdpi === HashZero) {
+    console.log(`No CDP found for ${address}`);
+    return { lad: AddressZero, ink: Zero, art: Zero, ire: Zero };
+  }
+  const cdpArray = await tub.cups(cdpi);
+  const cdp = {
+    lad: cdpArray[0],
+    ink: cdpArray[1],
+    art: cdpArray[2],
+    ire: cdpArray[3],
+  };
+  console.log(`Got info for cdp ${cdpi}: ${JSON.stringify(cdp, null, 2)}`);
+  return cdp;
+}
 
 const ethToWeth = async (amt: string, wallet: Wallet) => {
   console.log(`depositing ${amt} weth`);
@@ -56,30 +81,31 @@ const wethToSkr = async (amt: string, wallet: Wallet) => {
   return null;
 };
 
-
-const findCDP = async (address: string) => {
+const findCDP = async (address: string): Promise<string> => {
+  let myCdp = HashZero;
   try {
     let cdp = cache.getItem("cdp");
-    if (cdp) return cdp;
-
+    if (cdp) { return cdp; }
     const cdpi = (await tub.cupi()).toNumber();
-    for (let i = 1; i <= cdpi; i++){
+    for (let i = cdpi; i >= 0; i--){
+      if (i === 0) return myCdp;
       cdp = utils.hexZeroPad(utils.hexValue(i), 32);
       let owner = (await tub.cups(cdp)).lad;
+      console.log(`Checking owner of cdp ${i}: ${owner}`);
       if (owner.toLowerCase() === address.toLowerCase()) {
+        myCdp = cdp;
         break;
       }
     }
-
-    if (cdp)
-      cache.setItem("cdp", cdp);
-
-    return cdp;
+    if (myCdp !== HashZero) {
+      cache.setItem("cdp", myCdp);
+    }
+    return myCdp;
   }
   catch (e) {
     console.log(e)
   }
-  
+  return myCdp;
 };
 
 const lockSkr = async (amt: string, wallet: Wallet, cup: string) => {
@@ -152,13 +178,14 @@ export const lockInCDP = async (wallet: Wallet) => {
     }
 
     let cdp = await findCDP(wallet.address);
-    if (!cdp){
+    if (cdp === HashZero){
       await openCDP(w);
       cdp = await findCDP(wallet.address);
     }
 
     if (cdp) {
-      const receipt = await lockSkr("0.1", w, cdp);
+      const tx = await lockSkr("0.1", w, cdp);
+      console.log(`Sent tx ${tx.hash}`);
     }
   }
   catch (e) {
