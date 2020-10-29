@@ -83,7 +83,7 @@ export const EnterL2 = (props: any) => {
         setDebt(parseFloat(formatEther(cdp.art)));
       }
     })();
-  }, [wallet]);
+  }, [wallet, processing]);
 
   useEffect(() => {
     const rsaPerEth = 28500 // get from pip?
