@@ -12,7 +12,9 @@ import {
 } from "@material-ui/core";
 import {
   ArrowBack as BackIcon,
-  ImportContacts as ZapIcon,
+  Lock as LockIcon,
+  GetApp as BorrowIcon,
+  SwapHoriz as BridgeIcon,
 } from "@material-ui/icons";
 import { WalletContext } from "../utils/walletContext";
 import { getRSABalance, getETHBalance, approveForDeposit, depositERC20toMatic }from '../utils/account';
@@ -46,13 +48,17 @@ export const EnterL2 = (props: any) => {
   const [ETHBalance, setETHBalance] = useState(0);
   const [RSABalance, setRSABalance] = useState(0);
 
-  const [bridgeAmount, setBridgeAmount] = useState();
+  const [collateral, setCollateral] = useState(0);
+  const [debt, setDebt] = useState(0);
+  const [credit, setCredit] = useState(0);
+
+  const [bridgeAmount, setBridgeAmount] = useState("");
   const [bridgeAmountError, setBridgeAmountError] = useState({err: false, msg: "Amount (₹SA)"});
 
-  const [lockAmount, setLockAmount] = useState();
+  const [lockAmount, setLockAmount] = useState("");
   const [lockAmountError, setLockAmountError] = useState({err: false, msg: "Amount (ETH)"});
 
-  const [borrowAmount, setBorrowAmount] = useState();
+  const [borrowAmount, setBorrowAmount] = useState("");
   const [borrowAmountError, setBorrowAmountError] = useState({err: false, msg: "Amount (₹SA)"});
 
   useEffect(() => {
@@ -60,9 +66,22 @@ export const EnterL2 = (props: any) => {
       if (wallet) {
         setRSABalance(await getRSABalance(wallet.address));
         setETHBalance(Math.round((await getETHBalance(wallet.address)) * 1000) / 1000);
+        setDebt(380);
+        setCollateral(0.2);
       }
     })();
   }, [wallet]);
+
+  useEffect(() => {
+    const rsaPerEth = 28500 // get from pip?
+    const collateralizationRatio = 1.5;
+    const collateralValue = collateral * rsaPerEth;
+    const maxLoan = collateralValue / collateralizationRatio;
+    console.log(`Max loan: ${maxLoan}`);
+    console.log(`Current loan: ${debt}`);
+    const remaining = maxLoan - debt;
+    setCredit(Math.round(remaining * 100) / 100);
+  }, [debt, collateral]);
 
   const handleSwitch = async () => {
     if (wallet) {
@@ -90,8 +109,12 @@ export const EnterL2 = (props: any) => {
   const handleBridgeAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBridgeAmount(event.target.value);
     let amt = Number(event.target.value);
-    if (!amt || amt === 0) {
-      setBridgeAmountError({err: true, msg: "Amount must be a non-zero number"});
+    if (event.target.value === "") {
+      setBridgeAmountError({err: false, msg: "Amount (₹SA)"});
+    } else if (amt <= 0) {
+      setBridgeAmountError({err: true, msg: "Amount must be greater than zero"});
+    } else if (amt > RSABalance) {
+      setBridgeAmountError({err: true, msg: "Amount must be less than your balance"});
     } else {
       setBridgeAmountError({err: false, msg: "Amount (₹SA)"});
     }
@@ -100,8 +123,12 @@ export const EnterL2 = (props: any) => {
   const handleLockAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLockAmount(event.target.value);
     let amt = Number(event.target.value);
-    if (!amt || amt === 0) {
-      setLockAmountError({err: true, msg: "Amount must be a non-zero number"});
+    if (event.target.value === "") {
+      setLockAmountError({err: false, msg: "Amount (ETH)"});
+    } else if (amt <= 0) {
+      setLockAmountError({err: true, msg: "Amount must be greater than zero"});
+    } else if (amt > ETHBalance) {
+      setLockAmountError({err: true, msg: "Amount must be less than your balance"});
     } else {
       setLockAmountError({err: false, msg: "Amount (ETH)"});
     }
@@ -110,8 +137,12 @@ export const EnterL2 = (props: any) => {
   const handleBorrowAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBorrowAmount(event.target.value);
     let amt = Number(event.target.value);
-    if (!amt || amt === 0) {
-      setBorrowAmountError({err: true, msg: "Amount must be a non-zero number"});
+    if (event.target.value === "") {
+      setBorrowAmountError({err: false, msg: "Amount (₹SA)"});
+    } else if (amt <= 0) {
+      setBorrowAmountError({err: true, msg: "Amount must be greater than zero"});
+    } else if (amt > credit) {
+      setBorrowAmountError({err: true, msg: "Amount must less than is available"});
     } else {
       setBorrowAmountError({err: false, msg: "Amount (₹SA)"});
     }
@@ -149,16 +180,16 @@ export const EnterL2 = (props: any) => {
           variant="outlined"
           onClick={() => handleLock()}
           className={classes.zap}
-          startIcon={<ZapIcon />}
+          startIcon={<LockIcon />}
         >
           Lock ETH
         </Button>
 
         <Divider />
 
-        <Typography variant="h6" > Collateral: 0.00 ETH </Typography>
-        <Typography variant="h6" > Debt: 0.00 ₹SA </Typography>
-        <Typography variant="h6" > Safety Ratio: 0 % </Typography>
+        <Typography variant="h6" > Collateral: {collateral} ETH </Typography>
+        <Typography variant="h6" > Debt: {debt} ₹SA </Typography>
+        <Typography variant="h6" > Available: {credit} ₹SA </Typography>
 
         <TextField
           autoFocus={true}
@@ -175,7 +206,7 @@ export const EnterL2 = (props: any) => {
           variant="outlined"
           onClick={() => handleMint()}
           className={classes.zap}
-          startIcon={<ZapIcon />}
+          startIcon={<BorrowIcon />}
         >
           Borrow RSA
         </Button>
@@ -200,7 +231,7 @@ export const EnterL2 = (props: any) => {
           disabled={bridgeAmountError.err}
           onClick={() => handleSwitch()}
           className={classes.zap}
-          startIcon={<ZapIcon />}
+          startIcon={<BridgeIcon />}
         >
           Kaboot-It to L2
         </Button>
