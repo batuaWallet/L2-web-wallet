@@ -84,7 +84,7 @@ export const EnterL2 = (props: any) => {
   }, [debt, collateral]);
 
   const handleSwitch = async () => {
-    if (wallet) {
+    if (wallet && bridgeAmount) {
       console.log("Depositing to L2");
       const approvalRes = await approveForDeposit(wallet);
       if (approvalRes) {
