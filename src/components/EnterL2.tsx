@@ -4,9 +4,10 @@ import {
   AppBar,
   Button,
   IconButton,
+  makeStyles,
+  TextField,
   Toolbar,
   Typography,
-  makeStyles,
 } from "@material-ui/core";
 import {
   ArrowBack as BackIcon,
@@ -40,7 +41,19 @@ export const EnterL2 = (props: any) => {
   const classes = useStyles();
   const wallet = useContext(WalletContext).wallet;
 
+  const [amount, setAmount] = useState();
+  const [block, setBlock] = useState(true);
+  const [amountError, setAmountError] = useState({err: false, msg: "Amount (₹SA)"});
+
   const [RSABalance, setRSABalance] = useState(0);
+
+  useEffect(() => {
+    if (Number(props.amount) > 0) {
+      setAmount(props.amount);
+    } else {
+      setAmountError({err: true, msg: "Amount must be a non-zero number"});
+    }
+  }, [props]);
 
   useEffect(() => {
     (async () => {
@@ -75,6 +88,18 @@ export const EnterL2 = (props: any) => {
     console.log("Minting RSA");
   };
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(event.target.value);
+    let amt = Number(event.target.value);
+    if (!amt || amt === 0) {
+      setAmountError({err: true, msg: "Amount must be a non-zero number"});
+      setBlock(true);
+    } else {
+      setAmountError({err: false, msg: "Amount (₹SA)"});
+      setBlock(false);
+    }
+  };
+
   return (
     <>
       <AppBar color="transparent" position="fixed" className={classes.appbar}>
@@ -106,15 +131,28 @@ export const EnterL2 = (props: any) => {
           Doob-It for RSA
         </Button>
         <p> Balance: {RSABalance} </p>
+
+        <TextField
+          autoFocus={true}
+          id="amount-input"
+          error={amountError.err}
+          value={amount}
+          onChange={handleChange}
+          helperText={amountError.msg}
+          variant="outlined"
+        />
+
         <Button
           color="primary"
           variant="outlined"
+          disabled={block}
           onClick={() => handleSwitch()}
           className={classes.zap}
           startIcon={<ZapIcon />}
         >
           Kaboob-It to L2
         </Button>
+
       </div>
     </>
   )

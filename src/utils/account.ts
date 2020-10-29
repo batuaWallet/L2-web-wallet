@@ -90,16 +90,14 @@ export const send = async (wallet: Wallet, to: string, amt: string) => {
   if (!wallet) throw new Error("wallet required");
 
   const functionSignature = IChildRSA.encodeFunctionData('transfer', [to, utils.parseEther(amt)]);
-  console.log(`Got function sig: ${functionSignature}`);
   const nonce = (await ChildRSAcontract.getNonce(wallet.address)).toNumber();
-  console.log(`Got nonce: ${nonce}`);
 
   const metaTransaction = {
     nonce,
     from: wallet.address,
     functionSignature
   };
-  console.log(`Got metaTransaction: ${JSON.stringify(metaTransaction, null, 2)}`);
+  console.log(`Sending metaTransaction: ${JSON.stringify(metaTransaction, null, 2)}`);
 
   const dataToSign = {
     types: { EIP712Domain, MetaTransaction },
@@ -107,19 +105,13 @@ export const send = async (wallet: Wallet, to: string, amt: string) => {
     primaryType: 'MetaTransaction' as const,
     message: metaTransaction
   };
-  console.log(`Got dataToSign: ${JSON.stringify(dataToSign, null, 2)}`);
 
   const signedMsg = sigUtil.signTypedData_v4(Buffer.from(wallet.privateKey.slice(2,66), 'hex'), { data: dataToSign});
-  console.log(`Got signedMsg: ${signedMsg}`);
 
   const sigParams = utils.splitSignature(signedMsg);
-  console.log(`Got signedParams: ${JSON.stringify(sigParams, null, 2)}`);
 
-  const recovered = sigUtil.recoverTypedSignature_v4({
-    data: dataToSign,
-    sig: signedMsg
-  });
-  console.log(`Recovered ${recovered}`);
+  // const recovered = sigUtil.recoverTypedSignature_v4({ data: dataToSign, sig: signedMsg });
+  // console.log(`Recovered ${recovered}`);
 
   return postToBcnmy(wallet, functionSignature, sigParams);
 };
