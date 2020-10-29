@@ -18,6 +18,9 @@ import {
   GetApp as BorrowIcon,
   SwapHoriz as BridgeIcon,
 } from "@material-ui/icons";
+import { ProcessingInvest } from "./ProcessingInvest";
+
+
 import { WalletContext } from "../utils/walletContext";
 import { getRSABalance, getETHBalance, approveForDeposit, depositERC20toMatic }from '../utils/account';
 import { getCDP, lockInCDP, mintRSA } from "../utils/cdpUtils";
@@ -46,6 +49,9 @@ const useStyles = makeStyles( theme => ({
 export const EnterL2 = (props: any) => {
   const classes = useStyles();
   const wallet = useContext(WalletContext).wallet;
+
+  const [processing, setProcessing] = useState(false);
+  const [processingProps, setProcessingProps] = useState({ amt: "", action: "", asset: ""});
 
   const [ETHBalance, setETHBalance] = useState(0);
   const [RSABalance, setRSABalance] = useState(0);
@@ -103,9 +109,14 @@ export const EnterL2 = (props: any) => {
 
   const handleLock = async () => {
     console.log("Locking Eth in CDP");
-    if (wallet){
+    if (wallet && lockAmount){
+      setProcessing(true);
+      setProcessingProps({ amt: lockAmount, action: "FoobIT", asset: "ETH"});
       const res = await lockInCDP(wallet);
       console.log(res);
+      if (res) {
+        setProcessing(false);
+      }
     }
   };
 
@@ -170,84 +181,92 @@ export const EnterL2 = (props: any) => {
         </Toolbar>
       </AppBar>
       
-      <div className={classes.root}>
+      { processing
+        ? <ProcessingInvest
+            amt={processingProps.amt}
+            action={processingProps.action}
+            asset={processingProps.asset}
+          />
+        :
+        <div className={classes.root}>
 
-        <Divider />
+          <Divider />
 
-        <Typography variant="h6" > Balance: {ETHBalance} ETH </Typography>
+          <Typography variant="h6" > Balance: {ETHBalance} ETH </Typography>
 
-        <TextField
-          autoFocus={true}
-          id="lock-amount-input"
-          error={lockAmountError.err}
-          value={lockAmount}
-          onChange={handleLockAmountChange}
-          helperText={lockAmountError.msg}
-          variant="outlined"
-        />
+          <TextField
+            autoFocus={true}
+            id="lock-amount-input"
+            error={lockAmountError.err}
+            value={lockAmount}
+            onChange={handleLockAmountChange}
+            helperText={lockAmountError.msg}
+            variant="outlined"
+          />
 
-        <Button
-          color="primary"
-          variant="outlined"
-          onClick={() => handleLock()}
-          className={classes.zap}
-          startIcon={<LockIcon />}
-        >
-          Lock ETH
-        </Button>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={() => handleLock()}
+            className={classes.zap}
+            startIcon={<LockIcon />}
+          >
+            Lock ETH
+          </Button>
 
-        <Divider />
+          <Divider />
 
-        <Typography variant="h6" > Collateral: {collateral} ETH </Typography>
-        <Typography variant="h6" > Debt: {debt} ₹SA </Typography>
-        <Typography variant="h6" > Available: {credit} ₹SA </Typography>
+          <Typography variant="h6" > Collateral: {collateral} ETH </Typography>
+          <Typography variant="h6" > Debt: {debt} ₹SA </Typography>
+          <Typography variant="h6" > Available: {credit} ₹SA </Typography>
 
-        <TextField
-          autoFocus={true}
-          id="borrow-amount-input"
-          error={borrowAmountError.err}
-          value={borrowAmount}
-          onChange={handleBorrowAmountChange}
-          helperText={borrowAmountError.msg}
-          variant="outlined"
-        />
+          <TextField
+            autoFocus={true}
+            id="borrow-amount-input"
+            error={borrowAmountError.err}
+            value={borrowAmount}
+            onChange={handleBorrowAmountChange}
+            helperText={borrowAmountError.msg}
+            variant="outlined"
+          />
 
-        <Button
-          color="primary"
-          variant="outlined"
-          onClick={() => handleMint()}
-          className={classes.zap}
-          startIcon={<BorrowIcon />}
-        >
-          Borrow RSA
-        </Button>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={() => handleMint()}
+            className={classes.zap}
+            startIcon={<BorrowIcon />}
+          >
+            Borrow RSA
+          </Button>
 
-        <Divider />
+          <Divider />
 
-        <Typography variant="h6" > Balance: {RSABalance} ₹SA </Typography>
+          <Typography variant="h6" > Balance: {RSABalance} ₹SA </Typography>
 
-        <TextField
-          autoFocus={true}
-          id="bridge-amount-input"
-          error={bridgeAmountError.err}
-          value={bridgeAmount}
-          onChange={handleBridgeAmountChange}
-          helperText={bridgeAmountError.msg}
-          variant="outlined"
-        />
+          <TextField
+            autoFocus={true}
+            id="bridge-amount-input"
+            error={bridgeAmountError.err}
+            value={bridgeAmount}
+            onChange={handleBridgeAmountChange}
+            helperText={bridgeAmountError.msg}
+            variant="outlined"
+          />
 
-        <Button
-          color="primary"
-          variant="outlined"
-          disabled={bridgeAmountError.err}
-          onClick={() => handleSwitch()}
-          className={classes.zap}
-          startIcon={<BridgeIcon />}
-        >
-          Kaboot-It to L2
-        </Button>
+          <Button
+            color="primary"
+            variant="outlined"
+            disabled={bridgeAmountError.err}
+            onClick={() => handleSwitch()}
+            className={classes.zap}
+            startIcon={<BridgeIcon />}
+          >
+            Kaboot-It to L2
+          </Button>
 
-      </div>
+        </div>
+      }
     </>
   )
 };
