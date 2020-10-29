@@ -8,7 +8,7 @@
     "eject": "react-scripts eject",
     "publish": "bash ops/publish.sh",
     "start": "react-scripts start",
-    "start-prod": "bash ops/start.sh",
+    "restart": "bash ops/start.sh",
     "test": "react-scripts test"
   },
   "dependencies": {
