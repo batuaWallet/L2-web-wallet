@@ -1,10 +1,15 @@
 import Biconomy from "@biconomy/mexa";
-import WalletConnectProvider from "@maticnetwork/walletconnect-provider";
 import { MaticPOSClient } from "@maticnetwork/maticjs";
-import * as config from "../config.json";
 import { Mnemonic } from "@ethersproject/hdnode";
-import ethers from "ethers";
-import { API_KEY } from "./constants";
+import { Wallet } from "ethers";
+import {
+  API_KEY,
+  ETHEREUM_RPC,
+  MATIC_RPC,
+  NETWORK,
+  VERSION,
+  posRootChainManager,
+} from "./constants";
 
 const cache = window.localStorage;
 let secret: string;
@@ -34,48 +39,26 @@ export const loadSecret = () => {
   return secret;
 };
 
-const loadEthProvider = async () => {
-  return (
-    new WalletConnectProvider({
-      host: config.ETHEREUM_RPC,
-      callbacks: {
-        onConnect: console.log("mainchain connected"),
-        onDisconnect: console.log("mainchain disconnected"),
-      },
-    }));
-};
-
-const loadMaticProvider = async () => {
-  return (
-    new WalletConnectProvider({
-      host: config.MATIC_RPC,
-      callbacks: {
-        onConnect: console.log("matic connected"),
-        onDisconnect: console.log("matic disconnected!"),
-      },
-    }));
-};
-
 export const createWallet = () => {
-  const wallet = ethers.Wallet.createRandom();
+  const wallet = Wallet.createRandom();
   saveSecret(wallet.mnemonic);
   return wallet; 
 };
 
 export const loadWallet = (secret? : string | null) => {
   if (secret) {
-    return ethers.Wallet.fromMnemonic(secret);
+    return Wallet.fromMnemonic(secret);
   } else {
     let phrase = loadSecret();
     if (phrase)
-      return ethers.Wallet.fromMnemonic(phrase);
+      return Wallet.fromMnemonic(phrase);
   }
 
   return null;
 };
 
 const loadBiconomy = () => {
-  const biconomy = new Biconomy(config.MATIC_RPC, { apiKey: API_KEY });
+  const biconomy = new Biconomy(MATIC_RPC, { apiKey: API_KEY });
   biconomy
     .onEvent(
       biconomy.READY, () => {
@@ -93,14 +76,12 @@ export const loadMaticClient = async (address: string) => {
   if (maticClient) return maticClient;
   if (!(address)) { return null; }
 
-  const maticProvider = await loadMaticProvider();
-  const ethProvider = await loadEthProvider();
-
   maticClient = new MaticPOSClient({
-      network: config.NETWORK,
-      version: config.VERSION,
-      maticProvider: maticProvider,
-      parentProvider: ethProvider,
+      network: NETWORK,
+      version: VERSION,
+      maticProvider: MATIC_RPC,
+      parentProvider: ETHEREUM_RPC,
+      posRootChainManager: posRootChainManager,
       parentDefaultOptions: { from: address },
       maticDefaultOptions: { from: address },
     });

@@ -8,7 +8,6 @@ import {
 import {
   AccountBalanceWallet as WalletIcon,
   AccountCircle as AccountIcon,
-  Receipt as TransactionIcon,
 } from "@material-ui/icons";
 import { TabContext, TabPanel } from "@material-ui/lab";
 

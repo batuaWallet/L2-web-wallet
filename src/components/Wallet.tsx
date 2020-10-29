@@ -44,8 +44,8 @@ export const Wallet = (props: any) => {
   const wallet = useContext(WalletContext).wallet;
   const classes = useStyles();
   const [maticClient, setMatiClient] = useState();
-  const [INRBalance, setINRBalance] = useState(0);
-  const [RSABalance, setRSABalance] = useState(0);
+  const [INRBalance, setINRBalance] = useState("0");
+  const [RSABalance, setRSABalance] = useState("0");
 
   useEffect(() => {
     (async () => {
@@ -63,8 +63,8 @@ export const Wallet = (props: any) => {
           wallet.address,
           maticClient
         );
-        setINRBalance(Number((bal * 1.01).toFixed(2)));
-        setRSABalance(bal);
+        setINRBalance((bal * 1.01).toFixed(2));
+        setRSABalance(bal.toFixed(2));
       }
     })();
   }, [maticClient, wallet]);

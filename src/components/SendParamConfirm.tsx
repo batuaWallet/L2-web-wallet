@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Avatar,
   Button,
-  IconButton,
   TextField,
   Paper,
   Typography,
@@ -11,7 +9,6 @@ import {
 } from "@material-ui/core";
 import {
   Check as ConfirmIcon,
-  Clear as RejectIcon,
 } from "@material-ui/icons";
 import blockies from "ethereum-blockies";
 
@@ -97,7 +94,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string}) => {
       console.log(bal, amount);
       if (amount <= bal) {
         setProcessing(true);
-        const res = await send(wallet, address, (amount*100).toFixed(0))
+        const res = await send(wallet, address, amount)
         if (res && res.txHash) {
           setTxHash(res.txHash);
         }
