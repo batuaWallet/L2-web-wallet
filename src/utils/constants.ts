@@ -21,3 +21,23 @@ export const walletSecretFYI = [
   "This key should be kept private since anyone with this key would be able to access your wallet",
   "To save this key, write it on a peice of paper and keep it safely or use tools like “LastPass” or “1Password”"
 ];
+
+export const domainType = [
+    { name: "name", type: "string" },
+    { name: "version", type: "string" },
+    { name: "chainId", type: "uint256" },
+    { name: "verifyingContract", type: "address" }
+  ];
+
+export const metaTransactionType = [
+  { name: "nonce", type: "uint256" },
+  { name: "from", type: "address" },
+  { name: "functionSignature", type: "bytes" }
+];
+
+export const domainData = {
+  name: "DAI",
+  version: "1",
+  chainId: 80001,
+  verifyingContract: "0xa360146B76D95D7911b415018Cce125ad50AEF7C"
+};

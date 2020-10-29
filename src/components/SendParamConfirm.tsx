@@ -97,7 +97,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string}) => {
       console.log(bal, amount);
       if (amount <= bal) {
         setProcessing(true);
-        const res = await send(wallet, address, (amount*100).toFixed(0))
+        const res = await send(wallet, address, amount)
         if (res && res.txHash) {
           setTxHash(res.txHash);
         }

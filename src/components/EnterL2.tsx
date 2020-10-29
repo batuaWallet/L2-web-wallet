@@ -57,7 +57,7 @@ export const EnterL2 = (props: any) => {
       console.log("Depositing to L2");
       const approvalRes = await approveForDeposit(wallet);
       if (approvalRes) {
-        const depositRes = depositERC20toMatic(wallet);
+        const depositRes = depositERC20toMatic(wallet, '1.32');
         console.log(depositRes);
       }
     }

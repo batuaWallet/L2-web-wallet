@@ -1,15 +1,17 @@
 import { Wallet, utils, Contract, BigNumber, providers, constants } from 'ethers';
 import * as sigUtil from 'eth-sig-util';
 
-import { domainData, domainType, metaTransactionType } from '../types';
 import {
   API_ID,
   API_KEY,
   BICONOMY_API_URI,
-  MATIC_RPC,
-  ETHEREUM_RPC,
   ChildRSA,
+  ETHEREUM_RPC,
+  MATIC_RPC,
   RSA,
+  domainData,
+  domainType,
+  metaTransactionType,
   posERC20Predicate,
   posRootChainManager
 } from './constants';
@@ -17,14 +19,14 @@ import {
 const provider = new providers.JsonRpcProvider(MATIC_RPC);
 const providerRoot = new providers.JsonRpcProvider(ETHEREUM_RPC);
 
+const ChildRSAabi = require('../contracts/ChildRSA.json').abi;
 const RootChainManagerAbi = require("../contracts/RootChainManager").abi;
-
 const RSAabi = require("../contracts/DSToken").abi;
-const RSAcontract = new Contract(RSA, RSAabi, providerRoot);
 
-const abi = require('../contracts/Rocket.json').abi;
-const IRocketContract = new utils.Interface(abi);
-const RocketContract = new Contract(ChildRSA, abi, provider);
+const RSAcontract = new Contract(RSA, RSAabi, providerRoot);
+const ChildRSAcontract = new Contract(ChildRSA, ChildRSAabi, provider);
+
+const IChildRSA = new utils.Interface(ChildRSAabi);
 
 export const approveForDeposit = async (wallet: Wallet) => {
   const approved = Number(utils.formatUnits(
@@ -42,7 +44,7 @@ export const approveForDeposit = async (wallet: Wallet) => {
   return approved;
 };
 
-export const depositERC20toMatic = async (wallet: Wallet) => {
+export const depositERC20toMatic = async (wallet: Wallet, amount: string) => {
   try {
     let w = wallet.connect(providerRoot)
     const RootChainManager = new Contract(
@@ -54,7 +56,7 @@ export const depositERC20toMatic = async (wallet: Wallet) => {
     const res = await RootChainManager.depositFor(
       wallet.address,
       RSA,
-      utils.defaultAbiCoder.encode(['uint256'], [1])
+      utils.defaultAbiCoder.encode(['uint256'], [utils.parseEther(amount)])
     );
     console.log(res);
   } catch (e) {
@@ -76,10 +78,7 @@ export const getRSABalance = async (address: string) => {
 export const balance = async (address: string, client: any) => {
   if (address && client) {
     try {
-      return Number(utils.formatUnits(
-        await client.balanceOfERC20(address, ChildRSA, {}),
-        2) || 0
-      );
+      return Number(utils.formatUnits(await client.balanceOfERC20(address, ChildRSA, {}), 18) || 0);
     } catch (e) {
       console.log(e);
     }
@@ -90,11 +89,12 @@ export const balance = async (address: string, client: any) => {
 export const send = async (wallet: Wallet, to: string, amt: string) => {
   if (!(wallet)) return Error;
 
-  const functionSignature = IRocketContract.encodeFunctionData('transfer', [to, BigNumber.from(amt)]);
+  
+  const functionSignature = IChildRSA.encodeFunctionData('transfer', [to, utils.parseEther(amt)]);
   console.log(`Set function sig: ${functionSignature}`);
 
   console.log(`Fetching nonce`);
-  const nonce = (await RocketContract.getNonce(wallet.address)).toNumber();
+  const nonce = (await ChildRSAcontract.getNonce(wallet.address)).toNumber();
   console.log(`Got nonce: ${nonce}`);
 
   const message = {
