@@ -22,15 +22,11 @@ fi
 certs_dir="$(pwd)/.certs"
 mkdir -p "$certs_dir"
 
-echo "Running $name container"
-
+echo "Running $name container in the background"
 docker run \
-  --detach \
   --name="$name" \
   --volume="$certs_dir:/etc/letsencrypt" \
   --env-file=.env \
   --publish="80:80" \
   --publish="443:443" \
   "$name:$commit" &
-
-echo
