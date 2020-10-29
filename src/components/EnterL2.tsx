@@ -107,7 +107,7 @@ export const EnterL2 = (props: any) => {
           <IconButton className={classes.back} component={Link} to={"/"}>
             <BackIcon />
           </IconButton>
-          <Typography variant="h6" > Invest in MakerCOW </Typography>
+          <Typography variant="h6" > Invest with MakerCOW </Typography>
         </Toolbar>
       </AppBar>
       
