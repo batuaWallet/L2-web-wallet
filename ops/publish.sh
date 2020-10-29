@@ -4,8 +4,7 @@ name="batua_wallet_webserver"
 commit=$(git rev-parse HEAD | head -c 8)
 registry="${DOCKER_REGISTRY:-$(whoami)}"
 
-#npm run build
-
+npm run build
 echo "Tagging $name:$commit"
 docker tag "$name:latest" "$name:$commit"
 echo "Tagging $registry/$name:$commit"

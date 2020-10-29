@@ -22,6 +22,8 @@ fi
 certs_dir="$(pwd)/.certs"
 mkdir -p "$certs_dir"
 
+echo "Running $name container"
+
 docker run \
   --detach \
   --name="$name" \
@@ -30,3 +32,5 @@ docker run \
   --publish="80:80" \
   --publish="443:443" \
   "$name:$commit" &
+
+echo
