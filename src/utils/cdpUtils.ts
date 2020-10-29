@@ -1,4 +1,5 @@
 import { AddressZero, HashZero, Zero } from "@ethersproject/constants";
+import { formatEther, parseEther } from "@ethersproject/units";
 import { BigNumber, Wallet, utils, constants, Contract, providers } from "ethers";
 
 import {
@@ -43,44 +44,6 @@ export const getCDP = async (address: string): Promise<CDP> => {
   return cdp;
 }
 
-const ethToWeth = async (amt: string, wallet: Wallet) => {
-  console.log(`depositing ${amt} weth`);
-  const wethWithSigner = weth.connect(wallet);
-  const tx =  await wethWithSigner.deposit({ value: utils.parseEther(amt) });
-  const rct = tx.wait();
-  return rct;
-}
-
-
-const wethToSkr = async (amt: string, wallet: Wallet) => {
-  try {
-    const approved = utils.formatUnits(
-      await weth.allowance(wallet.address, ADDRESS_TUB),
-      18
-    );
-
-    if (approved === "0.0") {
-      console.log("Approving");
-      const wethWithSigner = weth.connect(wallet);
-      const tx = await wethWithSigner.approve(ADDRESS_TUB, constants.MaxUint256);
-      const rct = await tx.wait();
-      console.log(rct);
-    }
-
-    console.log("Minting skr");
-    const tubWithSigner = tub.connect(wallet);
-    const tx = await tubWithSigner.join(utils.parseEther(amt));
-    const rct = await tx.wait();
-    console.log(rct);
-    return rct;
-  }
-  catch (e) {
-    console.log(e)
-  }
-  
-  return null;
-};
-
 const findCDP = async (address: string): Promise<string> => {
   let myCdp = HashZero;
   try {
@@ -108,72 +71,91 @@ const findCDP = async (address: string): Promise<string> => {
   return myCdp;
 };
 
-const lockSkr = async (amt: string, wallet: Wallet, cup: string) => {
-  if (!cup) return null;
+const ethToWeth = async (amt: BigNumber, wallet: Wallet): Promise<boolean> => {
+  const wethWithSigner = weth.connect(wallet);
+  const tx =  await wethWithSigner.deposit({ value: amt });
+  console.log(`Wrapping ${formatEther(amt)} ETH to WETH via tx ${tx.hash}`);
+  await tx.wait();
+  console.log(`WETH wrap tx was confirmed!`);
+  return true;
+}
+
+const wethToSkr = async (amt: BigNumber, wallet: Wallet): Promise<boolean> => {
   try {
-    const approved = utils.formatUnits(
-      await skr.allowance(wallet.address, ADDRESS_TUB),
-      18
-    );
-
-    console.log(approved);
-    if (approved === "0.0") {
-      console.log("Approving");
-      const skrWithSigner = skr.connect(wallet);
-      const tx = await skrWithSigner["approve(address)"](ADDRESS_TUB);
-      const rct = await tx.wait();
-      console.log(rct);
+    const approved = await weth.allowance(wallet.address, ADDRESS_TUB);
+    if (approved.eq(Zero)) {
+      const wethWithSigner = weth.connect(wallet);
+      const tx = await wethWithSigner.approve(ADDRESS_TUB, constants.MaxUint256);
+      console.log(`Approving a bunch of WETH via tx ${tx.hash}`);
+      await tx.wait();
+      console.log(`WETH approval tx was confirmed!`);
     }
-
-    console.log("Locking skr");
     const tubWithSigner = tub.connect(wallet);
-    const tx = await tubWithSigner.lock(cup, utils.parseEther(amt));
-    const rct = await tx.wait();
-    console.log(rct);
-    return rct;
-
+    const tx = await tubWithSigner.join(amt);
+    console.log(`Joining ${formatEther(amt)} WETH to SKR via tx ${tx.hash}`);
+    await tx.wait();
+    console.log(`SKR join tx was confirmed!`);
+    return true;
   }
   catch (e) {
     console.log(e)
   }
+  return false;
+};
 
+const lockSkr = async (amt: BigNumber, wallet: Wallet, cup: string): Promise<boolean> => {
+  if (!cup) return false;
+  try {
+    const approved = await skr.allowance(wallet.address, ADDRESS_TUB);
+    if (approved.eq(Zero)) {
+      const skrWithSigner = skr.connect(wallet);
+      const tx = await skrWithSigner["approve(address)"](ADDRESS_TUB);
+      console.log(`Approving a bunch of SKR via tx ${tx.hash}`);
+      await tx.wait();
+      console.log(`SKR approval tx was confirmed!`);
+    }
+    const tubWithSigner = tub.connect(wallet);
+    const tx = await tubWithSigner.lock(cup, amt);
+    console.log(`Locking ${formatEther(amt)} SKR via tx ${tx.hash}`);
+    await tx.wait();
+    console.log(`ETH lock tx was confirmed!`);
+    return true;
+  } catch (e) {
+    console.log(e)
+  }
+  return false;
 };
 
 const openCDP = async (wallet: Wallet) => {
-  /*
-  (await tub.open()).wait();
-  */
-    console.log("Opening CDP");
-    const tubWithSigner = tub.connect(wallet);
-    const tx = await tubWithSigner.open();
-    const rct = await tx.wait();
-
-    tub.on("LogNewCup", (res) => {
-      console.log(res);
-    });
-    console.log(rct);
+  const tubWithSigner = tub.connect(wallet);
+  const tx = await tubWithSigner.open();
+  console.log(`Opening a new CDP for ${wallet.address} via tx ${tx.hash}`);
+  console.log(tx);
+  const receipt = await tx.wait();
+  tub.on("LogNewCup", (res) => {
+    console.log(res);
+  });
+  console.log(receipt);
 };
 
-export const lockInCDP = async (wallet: Wallet) => {
+export const lockInCDP = async (wallet: Wallet, amountStr: string) => {
+  const amount = parseEther(amountStr);
   if (!wallet) return false;
   let w = wallet.connect(providerRoot);
   try {
-    const skrBalance = utils.formatUnits( await skr.balanceOf(wallet.address), 18);
-    console.log(skrBalance);
+    const skrBalance = await skr.balanceOf(wallet.address);
+    if (skrBalance.lt(amount)) {
 
-    if (skrBalance === "0.0") {
-      const wethBalance = utils.formatUnits( await weth.balanceOf(wallet.address), 18);
+      const wethBalance = await weth.balanceOf(wallet.address);
+      if (wethBalance.lt(amount)) {
 
-      if (wethBalance === "0.0") {
-        const ethBalance = utils.formatUnits( await providerRoot.getBalance(wallet.address), 18);
-        if (ethBalance === "0.0") { return false };
-        const receipt = await ethToWeth("0.1", w);
+        const ethBalance = await providerRoot.getBalance(wallet.address);
+        if (ethBalance.lt(amount)) { return false };
+        const receipt = await ethToWeth(amount.sub(wethBalance), w);
         if (!receipt){ return false; }
       }
 
-      const receipt = await wethToSkr("0.1", w);
-      console.log(receipt);
-
+      const receipt = await wethToSkr(amount.sub(skrBalance), w);
       if (!receipt){ return false; }
     }
 
@@ -182,10 +164,9 @@ export const lockInCDP = async (wallet: Wallet) => {
       await openCDP(w);
       cdp = await findCDP(wallet.address);
     }
-
     if (cdp) {
-      const tx = await lockSkr("0.1", w, cdp);
-      console.log(`Sent tx ${tx.hash}`);
+      const receipt = await lockSkr(amount, w, cdp);
+      if (!receipt){ return false; }
     }
   }
   catch (e) {
@@ -195,7 +176,8 @@ export const lockInCDP = async (wallet: Wallet) => {
 };
 
 
-export const mintRSA = async (wallet: Wallet, amt: string) => {
+export const mintRSA = async (wallet: Wallet, amtStr: string): Promise<boolean> => {
+  const amt = parseEther(amtStr);
   if (!wallet) return false;
 
   let w = wallet.connect(providerRoot);
@@ -205,15 +187,17 @@ export const mintRSA = async (wallet: Wallet, amt: string) => {
       const tubWithSigner = tub.connect(w);
       const tx = await tubWithSigner.draw(
         cup,
-        utils.parseEther(amt),
+        amt,
         { gasLimit: utils.parseUnits("7", 6) }
       );
-      const rct = await tx.wait();
-      console.log(rct);
-      return rct;
+      console.log(`Minting ${formatEther(amt)} RSA via tx ${tx.hash}`);
+      await tx.wait();
+      console.log(`RSA mint tx was confirmed!`);
+      return true;
     }
   }
   catch (e) {
     console.log(e)
   }
+  return false
 };

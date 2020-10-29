@@ -108,11 +108,10 @@ export const EnterL2 = (props: any) => {
   };
 
   const handleLock = async () => {
-    console.log("Locking Eth in CDP");
     if (wallet && lockAmount){
       setProcessing(true);
       setProcessingProps({ amt: lockAmount, action: "FoobIT", asset: "ETH"});
-      const res = await lockInCDP(wallet);
+      const res = await lockInCDP(wallet, lockAmount);
       console.log(res);
       if (res) {
         setProcessing(false);
@@ -122,7 +121,6 @@ export const EnterL2 = (props: any) => {
 
   const handleMint = async () => {
     if (wallet && borrowAmount) {
-      console.log("Minting RSA");
       const res = await mintRSA(wallet, borrowAmount);
       console.log(res);
     }
