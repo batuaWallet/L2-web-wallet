@@ -75,6 +75,17 @@ export const getRSABalance = async (address: string) => {
   return 0;
 };
 
+export const getETHBalance = async (address: string) => {
+  if (address) {
+    try {
+      return Number(utils.formatUnits( await providerRoot.getBalance(address), 18) || 0);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return 0;
+};
+
 export const balance = async (address: string, client: any) => {
   if (address && client) {
     try {

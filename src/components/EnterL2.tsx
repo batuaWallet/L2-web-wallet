@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AppBar,
+  Divider,
   Button,
   IconButton,
   makeStyles,
@@ -14,7 +15,7 @@ import {
   ImportContacts as ZapIcon,
 } from "@material-ui/icons";
 import { WalletContext } from "../utils/walletContext";
-import { getRSABalance, approveForDeposit, depositERC20toMatic }from '../utils/account';
+import { getRSABalance, getETHBalance, approveForDeposit, depositERC20toMatic }from '../utils/account';
 import { lockInCDP } from "../utils/cdpUtils";
 
 const useStyles = makeStyles( theme => ({
@@ -45,6 +46,7 @@ export const EnterL2 = (props: any) => {
   const [block, setBlock] = useState(true);
   const [amountError, setAmountError] = useState({err: false, msg: "Amount (₹SA)"});
 
+  const [ETHBalance, setETHBalance] = useState(0);
   const [RSABalance, setRSABalance] = useState(0);
 
   useEffect(() => {
@@ -65,12 +67,22 @@ export const EnterL2 = (props: any) => {
     })();
   }, [wallet]);
 
+  useEffect(() => {
+    (async () => {
+      if (wallet) {
+        const bal = await getETHBalance(wallet.address);
+        console.log(bal)
+        setETHBalance(bal);
+      }
+    })();
+  }, [wallet]);
+
   const handleSwitch = async () => {
     if (wallet) {
       console.log("Depositing to L2");
       const approvalRes = await approveForDeposit(wallet);
       if (approvalRes) {
-        const depositRes = depositERC20toMatic(wallet, '1.32');
+        const depositRes = depositERC20toMatic(wallet, amount);
         console.log(depositRes);
       }
     }
@@ -107,11 +119,14 @@ export const EnterL2 = (props: any) => {
           <IconButton className={classes.back} component={Link} to={"/"}>
             <BackIcon />
           </IconButton>
-          <Typography variant="h6" > Invest in MakerCOW </Typography>
+          <Typography variant="h6" > Invest with MakerCOW </Typography>
         </Toolbar>
       </AppBar>
       
       <div className={classes.root}>
+
+        <Divider />
+
         <Button
           color="primary"
           variant="outlined"
@@ -119,8 +134,13 @@ export const EnterL2 = (props: any) => {
           className={classes.zap}
           startIcon={<ZapIcon />}
         >
-          Foob-It for CDP
+          Lock ETH
         </Button>
+
+        <p> Balance: {ETHBalance} ETH </p>
+
+        <Divider />
+
         <Button
           color="primary"
           variant="outlined"
@@ -128,9 +148,12 @@ export const EnterL2 = (props: any) => {
           className={classes.zap}
           startIcon={<ZapIcon />}
         >
-          Doob-It for RSA
+          Borrow RSA
         </Button>
-        <p> Balance: {RSABalance} </p>
+
+        <p> Balance: {RSABalance} ₹SA </p>
+
+        <Divider />
 
         <TextField
           autoFocus={true}
