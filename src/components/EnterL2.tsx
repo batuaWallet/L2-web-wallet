@@ -136,6 +136,7 @@ export const EnterL2 = (props: any) => {
 
   const handleBridgeAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBridgeAmount(event.target.value);
+    console.log(`Set bridge amount to ${event.target.value}`);
     let amt = Number(event.target.value);
     if (event.target.value === "") {
       setBridgeAmountError({err: false, msg: "Amount (₹SA)"});
@@ -150,6 +151,7 @@ export const EnterL2 = (props: any) => {
 
   const handleLockAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLockAmount(event.target.value);
+    console.log(`Set lock amount to ${event.target.value}`);
     let amt = Number(event.target.value);
     if (event.target.value === "") {
       setLockAmountError({err: false, msg: "Amount (ETH)"});
@@ -164,6 +166,7 @@ export const EnterL2 = (props: any) => {
 
   const handleBorrowAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBorrowAmount(event.target.value);
+    console.log(`Set borrow amount to ${event.target.value}`);
     let amt = Number(event.target.value);
     if (event.target.value === "") {
       setBorrowAmountError({err: false, msg: "Amount (₹SA)"});
