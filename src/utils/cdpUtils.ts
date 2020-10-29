@@ -168,9 +168,25 @@ export const lockInCDP = async (wallet: Wallet) => {
 };
 
 
-const mintRSA = async () => {
-  /*
-    const drawAmt = BigNumber.from(inrPerEth).mul(depositAmount).div(Two);
-    await (await tub.draw(cup, drawAmt, { gasLimit: parseUnits("50", 6) })).wait();
-  */
+export const mintRSA = async (wallet: Wallet, amt: string) => {
+  if (!wallet) return false;
+
+  let w = wallet.connect(providerRoot);
+  let cup = await findCDP(wallet.address);
+  try {
+    if (cup) {
+      const tubWithSigner = tub.connect(w);
+      const tx = await tubWithSigner.draw(
+        cup,
+        utils.parseEther(amt),
+        { gasLimit: utils.parseUnits("7", 6) }
+      );
+      const rct = await tx.wait();
+      console.log(rct);
+      return rct;
+    }
+  }
+  catch (e) {
+    console.log(e)
+  }
 };

@@ -18,7 +18,7 @@ import {
 } from "@material-ui/icons";
 import { WalletContext } from "../utils/walletContext";
 import { getRSABalance, getETHBalance, approveForDeposit, depositERC20toMatic }from '../utils/account';
-import { lockInCDP } from "../utils/cdpUtils";
+import { lockInCDP, mintRSA } from "../utils/cdpUtils";
 
 const useStyles = makeStyles( theme => ({
   appbar: {
@@ -103,7 +103,11 @@ export const EnterL2 = (props: any) => {
   };
 
   const handleMint = async () => {
-    console.log("Minting RSA");
+    if (wallet && borrowAmount) {
+      console.log("Minting RSA");
+      const res = await mintRSA(wallet, borrowAmount);
+      console.log(res);
+    }
   };
 
   const handleBridgeAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
