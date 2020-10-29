@@ -4,7 +4,7 @@ name="batua_wallet_webserver"
 commit=$(git rev-parse HEAD | head -c 8)
 registry="${DOCKER_REGISTRY:-$(whoami)}"
 
-if ! grep "$commit" <<<"$(docker image ls | grep "$name")"
+if ! grep -qs "$commit" <<<"$(docker image ls | grep "$name")"
 then
   echo "Pulling $registry/$name:$commit"
   docker pull "$registry/$name:$commit"
@@ -12,7 +12,7 @@ then
   docker tag "$name:$commit" "$name:latest"
 fi
 
-if grep "$name" <<<"$(docker container ls --filter 'status=running' --format '{{.Names}}')"
+if grep -qs "$name" <<<"$(docker container ls --filter 'status=running' --format '{{.Names}}')"
 then
   echo "Stopping container $name"
   docker container stop $name
@@ -23,6 +23,7 @@ certs_dir="$(pwd)/.certs"
 mkdir -p "$certs_dir"
 
 docker run \
+  --detach \
   --name="$name" \
   --volume="$certs_dir:/etc/letsencrypt" \
   --env-file=.env \
