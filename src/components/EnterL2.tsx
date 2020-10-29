@@ -26,14 +26,15 @@ const useStyles = makeStyles( theme => ({
     marginRight: theme.spacing(2),
   },
   zap: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     marginLeft: theme.spacing(1),
   },
   root: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(10),
     bottom: theme.spacing(2),
   },
 }));
@@ -42,37 +43,23 @@ export const EnterL2 = (props: any) => {
   const classes = useStyles();
   const wallet = useContext(WalletContext).wallet;
 
-  const [amount, setAmount] = useState();
-  const [block, setBlock] = useState(true);
-  const [amountError, setAmountError] = useState({err: false, msg: "Amount (₹SA)"});
-
   const [ETHBalance, setETHBalance] = useState(0);
   const [RSABalance, setRSABalance] = useState(0);
 
-  useEffect(() => {
-    if (Number(props.amount) > 0) {
-      setAmount(props.amount);
-    } else {
-      setAmountError({err: true, msg: "Amount must be a non-zero number"});
-    }
-  }, [props]);
+  const [bridgeAmount, setBridgeAmount] = useState();
+  const [bridgeAmountError, setBridgeAmountError] = useState({err: false, msg: "Amount (₹SA)"});
+
+  const [lockAmount, setLockAmount] = useState();
+  const [lockAmountError, setLockAmountError] = useState({err: false, msg: "Amount (ETH)"});
+
+  const [borrowAmount, setBorrowAmount] = useState();
+  const [borrowAmountError, setBorrowAmountError] = useState({err: false, msg: "Amount (₹SA)"});
 
   useEffect(() => {
     (async () => {
       if (wallet) {
-        const bal = await getRSABalance(wallet.address);
-        console.log(bal)
-        setRSABalance(bal);
-      }
-    })();
-  }, [wallet]);
-
-  useEffect(() => {
-    (async () => {
-      if (wallet) {
-        const bal = await getETHBalance(wallet.address);
-        console.log(bal)
-        setETHBalance(bal);
+        setRSABalance(await getRSABalance(wallet.address));
+        setETHBalance(Math.round((await getETHBalance(wallet.address)) * 1000) / 1000);
       }
     })();
   }, [wallet]);
@@ -82,7 +69,7 @@ export const EnterL2 = (props: any) => {
       console.log("Depositing to L2");
       const approvalRes = await approveForDeposit(wallet);
       if (approvalRes) {
-        const depositRes = depositERC20toMatic(wallet, amount);
+        const depositRes = depositERC20toMatic(wallet, bridgeAmount);
         console.log(depositRes);
       }
     }
@@ -100,15 +87,33 @@ export const EnterL2 = (props: any) => {
     console.log("Minting RSA");
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(event.target.value);
+  const handleBridgeAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBridgeAmount(event.target.value);
     let amt = Number(event.target.value);
     if (!amt || amt === 0) {
-      setAmountError({err: true, msg: "Amount must be a non-zero number"});
-      setBlock(true);
+      setBridgeAmountError({err: true, msg: "Amount must be a non-zero number"});
     } else {
-      setAmountError({err: false, msg: "Amount (₹SA)"});
-      setBlock(false);
+      setBridgeAmountError({err: false, msg: "Amount (₹SA)"});
+    }
+  };
+
+  const handleLockAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLockAmount(event.target.value);
+    let amt = Number(event.target.value);
+    if (!amt || amt === 0) {
+      setLockAmountError({err: true, msg: "Amount must be a non-zero number"});
+    } else {
+      setLockAmountError({err: false, msg: "Amount (ETH)"});
+    }
+  };
+
+  const handleBorrowAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBorrowAmount(event.target.value);
+    let amt = Number(event.target.value);
+    if (!amt || amt === 0) {
+      setBorrowAmountError({err: true, msg: "Amount must be a non-zero number"});
+    } else {
+      setBorrowAmountError({err: false, msg: "Amount (₹SA)"});
     }
   };
 
@@ -127,6 +132,18 @@ export const EnterL2 = (props: any) => {
 
         <Divider />
 
+        <Typography variant="h6" > Balance: {ETHBalance} ETH </Typography>
+
+        <TextField
+          autoFocus={true}
+          id="lock-amount-input"
+          error={lockAmountError.err}
+          value={lockAmount}
+          onChange={handleLockAmountChange}
+          helperText={lockAmountError.msg}
+          variant="outlined"
+        />
+
         <Button
           color="primary"
           variant="outlined"
@@ -137,9 +154,21 @@ export const EnterL2 = (props: any) => {
           Lock ETH
         </Button>
 
-        <p> Balance: {ETHBalance} ETH </p>
-
         <Divider />
+
+        <Typography variant="h6" > Collateral: 0.00 ETH </Typography>
+        <Typography variant="h6" > Debt: 0.00 ₹SA </Typography>
+        <Typography variant="h6" > Safety Ratio: 0 % </Typography>
+
+        <TextField
+          autoFocus={true}
+          id="borrow-amount-input"
+          error={borrowAmountError.err}
+          value={borrowAmount}
+          onChange={handleBorrowAmountChange}
+          helperText={borrowAmountError.msg}
+          variant="outlined"
+        />
 
         <Button
           color="primary"
@@ -151,29 +180,29 @@ export const EnterL2 = (props: any) => {
           Borrow RSA
         </Button>
 
-        <p> Balance: {RSABalance} ₹SA </p>
-
         <Divider />
+
+        <Typography variant="h6" > Balance: {RSABalance} ₹SA </Typography>
 
         <TextField
           autoFocus={true}
-          id="amount-input"
-          error={amountError.err}
-          value={amount}
-          onChange={handleChange}
-          helperText={amountError.msg}
+          id="bridge-amount-input"
+          error={bridgeAmountError.err}
+          value={bridgeAmount}
+          onChange={handleBridgeAmountChange}
+          helperText={bridgeAmountError.msg}
           variant="outlined"
         />
 
         <Button
           color="primary"
           variant="outlined"
-          disabled={block}
+          disabled={bridgeAmountError.err}
           onClick={() => handleSwitch()}
           className={classes.zap}
           startIcon={<ZapIcon />}
         >
-          Kaboob-It to L2
+          Kaboot-It to L2
         </Button>
 
       </div>
