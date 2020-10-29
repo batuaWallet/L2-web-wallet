@@ -2,18 +2,22 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AppBar,
+  Divider,
   Button,
   IconButton,
+  makeStyles,
+  TextField,
   Toolbar,
   Typography,
-  makeStyles,
 } from "@material-ui/core";
 import {
   ArrowBack as BackIcon,
-  ImportContacts as ZapIcon,
+  Lock as LockIcon,
+  GetApp as BorrowIcon,
+  SwapHoriz as BridgeIcon,
 } from "@material-ui/icons";
 import { WalletContext } from "../utils/walletContext";
-import { getRSABalance, approveForDeposit, depositERC20toMatic }from '../utils/account';
+import { getRSABalance, getETHBalance, approveForDeposit, depositERC20toMatic }from '../utils/account';
 import { lockInCDP } from "../utils/cdpUtils";
 
 const useStyles = makeStyles( theme => ({
@@ -24,14 +28,15 @@ const useStyles = makeStyles( theme => ({
     marginRight: theme.spacing(2),
   },
   zap: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     marginLeft: theme.spacing(1),
   },
   root: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(10),
     bottom: theme.spacing(2),
   },
 }));
@@ -40,24 +45,50 @@ export const EnterL2 = (props: any) => {
   const classes = useStyles();
   const wallet = useContext(WalletContext).wallet;
 
+  const [ETHBalance, setETHBalance] = useState(0);
   const [RSABalance, setRSABalance] = useState(0);
+
+  const [collateral, setCollateral] = useState(0);
+  const [debt, setDebt] = useState(0);
+  const [credit, setCredit] = useState(0);
+
+  const [bridgeAmount, setBridgeAmount] = useState("");
+  const [bridgeAmountError, setBridgeAmountError] = useState({err: false, msg: "Amount (₹SA)"});
+
+  const [lockAmount, setLockAmount] = useState("");
+  const [lockAmountError, setLockAmountError] = useState({err: false, msg: "Amount (ETH)"});
+
+  const [borrowAmount, setBorrowAmount] = useState("");
+  const [borrowAmountError, setBorrowAmountError] = useState({err: false, msg: "Amount (₹SA)"});
 
   useEffect(() => {
     (async () => {
       if (wallet) {
-        const bal = await getRSABalance(wallet.address);
-        console.log(bal)
-        setRSABalance(bal);
+        setRSABalance(await getRSABalance(wallet.address));
+        setETHBalance(Math.round((await getETHBalance(wallet.address)) * 1000) / 1000);
+        setDebt(380);
+        setCollateral(0.2);
       }
     })();
   }, [wallet]);
+
+  useEffect(() => {
+    const rsaPerEth = 28500 // get from pip?
+    const collateralizationRatio = 1.5;
+    const collateralValue = collateral * rsaPerEth;
+    const maxLoan = collateralValue / collateralizationRatio;
+    console.log(`Max loan: ${maxLoan}`);
+    console.log(`Current loan: ${debt}`);
+    const remaining = maxLoan - debt;
+    setCredit(Math.round(remaining * 100) / 100);
+  }, [debt, collateral]);
 
   const handleSwitch = async () => {
     if (wallet) {
       console.log("Depositing to L2");
       const approvalRes = await approveForDeposit(wallet);
       if (approvalRes) {
-        const depositRes = depositERC20toMatic(wallet, '1.32');
+        const depositRes = depositERC20toMatic(wallet, bridgeAmount);
         console.log(depositRes);
       }
     }
@@ -75,6 +106,48 @@ export const EnterL2 = (props: any) => {
     console.log("Minting RSA");
   };
 
+  const handleBridgeAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBridgeAmount(event.target.value);
+    let amt = Number(event.target.value);
+    if (event.target.value === "") {
+      setBridgeAmountError({err: false, msg: "Amount (₹SA)"});
+    } else if (amt <= 0) {
+      setBridgeAmountError({err: true, msg: "Amount must be greater than zero"});
+    } else if (amt > RSABalance) {
+      setBridgeAmountError({err: true, msg: "Amount must be less than your balance"});
+    } else {
+      setBridgeAmountError({err: false, msg: "Amount (₹SA)"});
+    }
+  };
+
+  const handleLockAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLockAmount(event.target.value);
+    let amt = Number(event.target.value);
+    if (event.target.value === "") {
+      setLockAmountError({err: false, msg: "Amount (ETH)"});
+    } else if (amt <= 0) {
+      setLockAmountError({err: true, msg: "Amount must be greater than zero"});
+    } else if (amt > ETHBalance) {
+      setLockAmountError({err: true, msg: "Amount must be less than your balance"});
+    } else {
+      setLockAmountError({err: false, msg: "Amount (ETH)"});
+    }
+  };
+
+  const handleBorrowAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBorrowAmount(event.target.value);
+    let amt = Number(event.target.value);
+    if (event.target.value === "") {
+      setBorrowAmountError({err: false, msg: "Amount (₹SA)"});
+    } else if (amt <= 0) {
+      setBorrowAmountError({err: true, msg: "Amount must be greater than zero"});
+    } else if (amt > credit) {
+      setBorrowAmountError({err: true, msg: "Amount must less than is available"});
+    } else {
+      setBorrowAmountError({err: false, msg: "Amount (₹SA)"});
+    }
+  };
+
   return (
     <>
       <AppBar color="transparent" position="fixed" className={classes.appbar}>
@@ -82,39 +155,87 @@ export const EnterL2 = (props: any) => {
           <IconButton className={classes.back} component={Link} to={"/"}>
             <BackIcon />
           </IconButton>
-          <Typography variant="h6" > Invest in MakerCOW </Typography>
+          <Typography variant="h6" > Invest with MakerCOW </Typography>
         </Toolbar>
       </AppBar>
       
       <div className={classes.root}>
+
+        <Divider />
+
+        <Typography variant="h6" > Balance: {ETHBalance} ETH </Typography>
+
+        <TextField
+          autoFocus={true}
+          id="lock-amount-input"
+          error={lockAmountError.err}
+          value={lockAmount}
+          onChange={handleLockAmountChange}
+          helperText={lockAmountError.msg}
+          variant="outlined"
+        />
+
         <Button
           color="primary"
           variant="outlined"
           onClick={() => handleLock()}
           className={classes.zap}
-          startIcon={<ZapIcon />}
+          startIcon={<LockIcon />}
         >
-          Foob-It for CDP
+          Lock ETH
         </Button>
+
+        <Divider />
+
+        <Typography variant="h6" > Collateral: {collateral} ETH </Typography>
+        <Typography variant="h6" > Debt: {debt} ₹SA </Typography>
+        <Typography variant="h6" > Available: {credit} ₹SA </Typography>
+
+        <TextField
+          autoFocus={true}
+          id="borrow-amount-input"
+          error={borrowAmountError.err}
+          value={borrowAmount}
+          onChange={handleBorrowAmountChange}
+          helperText={borrowAmountError.msg}
+          variant="outlined"
+        />
+
         <Button
           color="primary"
           variant="outlined"
           onClick={() => handleMint()}
           className={classes.zap}
-          startIcon={<ZapIcon />}
+          startIcon={<BorrowIcon />}
         >
-          Doob-It for RSA
+          Borrow RSA
         </Button>
-        <p> Balance: {RSABalance} </p>
+
+        <Divider />
+
+        <Typography variant="h6" > Balance: {RSABalance} ₹SA </Typography>
+
+        <TextField
+          autoFocus={true}
+          id="bridge-amount-input"
+          error={bridgeAmountError.err}
+          value={bridgeAmount}
+          onChange={handleBridgeAmountChange}
+          helperText={bridgeAmountError.msg}
+          variant="outlined"
+        />
+
         <Button
           color="primary"
           variant="outlined"
+          disabled={bridgeAmountError.err}
           onClick={() => handleSwitch()}
           className={classes.zap}
-          startIcon={<ZapIcon />}
+          startIcon={<BridgeIcon />}
         >
-          Kaboob-It to L2
+          Kaboot-It to L2
         </Button>
+
       </div>
     </>
   )

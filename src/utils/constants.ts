@@ -1,3 +1,5 @@
+import { hexValue, hexZeroPad } from "@ethersproject/bytes";
+
 export const MUMBAI_EXPLORER = "https://mumbai-explorer.matic.today";
 
 export const BICONOMY_API_URI = "https://api.biconomy.io/api/v2/meta-tx/native";
@@ -25,22 +27,22 @@ export const walletSecretFYI = [
   "To save this key, write it on a peice of paper and keep it safely or use tools like “LastPass” or “1Password”"
 ];
 
-export const domainType = [
-    { name: "name", type: "string" },
-    { name: "version", type: "string" },
-    { name: "chainId", type: "uint256" },
-    { name: "verifyingContract", type: "address" }
-  ];
-
-export const metaTransactionType = [
+export const MetaTransaction = [
   { name: "nonce", type: "uint256" },
   { name: "from", type: "address" },
   { name: "functionSignature", type: "bytes" }
 ];
 
-export const domainData = {
+export const EIP712Domain = [
+  { name: 'name', type: 'string' },
+  { name: 'version', type: 'string' },
+  { name: 'verifyingContract', type: 'address' },
+  { name: 'salt', type: 'bytes32' },
+];
+
+export const eip712Domain = {
   name: "Sai Stablecoin v1.0 (PoS)",
   version: "1",
-  chainId: 80001,
-  verifyingContract: "0xa360146B76D95D7911b415018Cce125ad50AEF7C"
+  verifyingContract: "0xa360146B76D95D7911b415018Cce125ad50AEF7C",
+  salt: hexZeroPad(hexValue(80001), 32),
 };
