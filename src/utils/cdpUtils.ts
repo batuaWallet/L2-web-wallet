@@ -1,6 +1,6 @@
-import { AddressZero, HashZero, Zero } from "@ethersproject/constants";
-import { formatEther, parseEther } from "@ethersproject/units";
-import { BigNumber, Wallet, utils, constants, Contract, providers } from "ethers";
+import { AddressZero, HashZero, MaxUint256, Two, Zero } from "@ethersproject/constants";
+import { formatEther, parseEther, parseUnits } from "@ethersproject/units";
+import { BigNumber, Wallet, utils, Contract, providers } from "ethers";
 
 import {
   ADDRESS_WETH,
@@ -19,6 +19,11 @@ const DSTokenAbi = require("../contracts/DSToken.json").abi;
 const weth = new Contract(ADDRESS_WETH, wethAbi, providerRoot);
 const skr = new Contract(ADDRESS_SKR, DSTokenAbi, providerRoot);
 const tub = new Contract(ADDRESS_TUB, tubAbi, providerRoot);
+
+const getOverrides = async () => ({
+  gasPrice: (await providerRoot.getGasPrice()).mul(Two),
+  gasLimit: parseUnits("5", 6),
+});
 
 type CDP = {
   lad: string;
@@ -73,7 +78,7 @@ const findCDP = async (address: string): Promise<string> => {
 
 const ethToWeth = async (amt: BigNumber, wallet: Wallet): Promise<boolean> => {
   const wethWithSigner = weth.connect(wallet);
-  const tx =  await wethWithSigner.deposit({ value: amt });
+  const tx =  await wethWithSigner.deposit({ value: amt, ...(await getOverrides()) });
   console.log(`Wrapping ${formatEther(amt)} ETH to WETH via tx ${tx.hash}`);
   await tx.wait();
   console.log(`WETH wrap tx was confirmed!`);
@@ -85,13 +90,13 @@ const wethToSkr = async (amt: BigNumber, wallet: Wallet): Promise<boolean> => {
     const approved = await weth.allowance(wallet.address, ADDRESS_TUB);
     if (approved.eq(Zero)) {
       const wethWithSigner = weth.connect(wallet);
-      const tx = await wethWithSigner.approve(ADDRESS_TUB, constants.MaxUint256);
+      const tx = await wethWithSigner.approve(ADDRESS_TUB, MaxUint256, await getOverrides());
       console.log(`Approving a bunch of WETH via tx ${tx.hash}`);
       await tx.wait();
       console.log(`WETH approval tx was confirmed!`);
     }
     const tubWithSigner = tub.connect(wallet);
-    const tx = await tubWithSigner.join(amt);
+    const tx = await tubWithSigner.join(amt, await getOverrides());
     console.log(`Joining ${formatEther(amt)} WETH to SKR via tx ${tx.hash}`);
     await tx.wait();
     console.log(`SKR join tx was confirmed!`);
@@ -109,13 +114,13 @@ const lockSkr = async (amt: BigNumber, wallet: Wallet, cup: string): Promise<boo
     const approved = await skr.allowance(wallet.address, ADDRESS_TUB);
     if (approved.eq(Zero)) {
       const skrWithSigner = skr.connect(wallet);
-      const tx = await skrWithSigner["approve(address)"](ADDRESS_TUB);
+      const tx = await skrWithSigner["approve(address)"](ADDRESS_TUB, await getOverrides());
       console.log(`Approving a bunch of SKR via tx ${tx.hash}`);
       await tx.wait();
       console.log(`SKR approval tx was confirmed!`);
     }
     const tubWithSigner = tub.connect(wallet);
-    const tx = await tubWithSigner.lock(cup, amt);
+    const tx = await tubWithSigner.lock(cup, amt, await getOverrides());
     console.log(`Locking ${formatEther(amt)} SKR via tx ${tx.hash}`);
     await tx.wait();
     console.log(`ETH lock tx was confirmed!`);
@@ -128,7 +133,7 @@ const lockSkr = async (amt: BigNumber, wallet: Wallet, cup: string): Promise<boo
 
 const openCDP = async (wallet: Wallet) => {
   const tubWithSigner = tub.connect(wallet);
-  const tx = await tubWithSigner.open();
+  const tx = await tubWithSigner.open(await getOverrides());
   console.log(`Opening a new CDP for ${wallet.address} via tx ${tx.hash}`);
   console.log(tx);
   const receipt = await tx.wait();
@@ -185,11 +190,7 @@ export const mintRSA = async (wallet: Wallet, amtStr: string): Promise<boolean> 
   try {
     if (cup) {
       const tubWithSigner = tub.connect(w);
-      const tx = await tubWithSigner.draw(
-        cup,
-        amt,
-        { gasLimit: utils.parseUnits("7", 6) }
-      );
+      const tx = await tubWithSigner.draw(cup, amt, await getOverrides());
       console.log(`Minting ${formatEther(amt)} RSA via tx ${tx.hash}`);
       await tx.wait();
       console.log(`RSA mint tx was confirmed!`);
