@@ -98,11 +98,14 @@ export const EnterL2 = (props: any) => {
 
   const handleSwitch = async () => {
     if (wallet && bridgeAmount) {
-      console.log("Depositing to L2");
+      setProcessing(true);
+      setProcessingProps({ amt: bridgeAmount, action: "KaboobIT", asset: "₹SA"});
       const approvalRes = await approveForDeposit(wallet);
       if (approvalRes) {
         const depositRes = depositERC20toMatic(wallet, bridgeAmount);
-        console.log(depositRes);
+        if (depositRes) {
+          setProcessing(false);
+        }
       }
     }
   };
@@ -121,8 +124,13 @@ export const EnterL2 = (props: any) => {
 
   const handleMint = async () => {
     if (wallet && borrowAmount) {
+      setProcessing(true);
+      setProcessingProps({ amt: borrowAmount, action: "DoobIT", asset: "₹SA"});
       const res = await mintRSA(wallet, borrowAmount);
       console.log(res);
+      if (res) {
+        setProcessing(false);
+      }
     }
   };
 
