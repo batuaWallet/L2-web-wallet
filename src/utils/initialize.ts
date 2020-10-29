@@ -1,8 +1,7 @@
 import Biconomy from "@biconomy/mexa";
-import WalletConnectProvider from "@maticnetwork/walletconnect-provider";
 import { MaticPOSClient } from "@maticnetwork/maticjs";
 import { Mnemonic } from "@ethersproject/hdnode";
-import { Wallet, providers } from "ethers";
+import { Wallet } from "ethers";
 import {
   API_KEY,
   ETHEREUM_RPC,

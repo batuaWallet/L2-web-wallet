@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Avatar,
   Button,
-  IconButton,
   TextField,
   Paper,
   Typography,
@@ -11,7 +9,6 @@ import {
 } from "@material-ui/core";
 import {
   Check as ConfirmIcon,
-  Clear as RejectIcon,
 } from "@material-ui/icons";
 import blockies from "ethereum-blockies";
 

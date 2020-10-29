@@ -1,15 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import {
   Paper,
   CardMedia,
   Typography,
   makeStyles,
-  Link as MaterialLink
+  Link,
 } from "@material-ui/core";
-import {
-  Clear as CloseIcon,
-} from "@material-ui/icons";
 
 import { MUMBAI_EXPLORER } from "../utils/constants";
 import processing from "../assets/processing.png";
@@ -37,7 +33,6 @@ const useStyles = makeStyles( theme => ({
 
 export const SendConfirm = (props: {txHash: string, amount: string}) => {
   const classes = useStyles();
-  const preventDefault = (event: React.SyntheticEvent) => event.preventDefault();
   const { txHash, amount } = props;
 
   return (
@@ -47,9 +42,9 @@ export const SendConfirm = (props: {txHash: string, amount: string}) => {
       </Typography>
       
       <Typography className={classes.typography} gutterBottom={true}>
-        <MaterialLink onClick={preventDefault} href={`${MUMBAI_EXPLORER}/tx/${txHash}`}>
+        <Link href={`${MUMBAI_EXPLORER}/tx/${txHash}`}>
             View Transaction
-        </MaterialLink>
+        </Link>
       </Typography>
       
       <CardMedia image={processing} className={classes.processing} />

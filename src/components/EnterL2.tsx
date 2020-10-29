@@ -10,12 +10,8 @@ import {
 } from "@material-ui/core";
 import {
   ArrowBack as BackIcon,
-  CropFree as ScanIcon,
   ImportContacts as ZapIcon,
 } from "@material-ui/icons";
-import { AddRcvrAddress } from "./AddRcvrAddress";
-import { ScanRcvrAddress } from "./ScanRcvrAddress";
-import { loadMaticClient } from '../utils/initialize';
 import { WalletContext } from "../utils/walletContext";
 import { getRSABalance, approveForDeposit, depositERC20toMatic }from '../utils/account';
 

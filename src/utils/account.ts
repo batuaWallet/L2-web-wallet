@@ -1,4 +1,4 @@
-import { Wallet, utils, Contract, BigNumber, providers, constants } from 'ethers';
+import { Wallet, utils, Contract, providers } from 'ethers';
 import * as sigUtil from 'eth-sig-util';
 
 import {
