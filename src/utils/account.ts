@@ -1,33 +1,42 @@
 import { Wallet, utils, Contract, BigNumber, providers, constants } from 'ethers';
 import * as sigUtil from 'eth-sig-util';
 
-import * as config from '../config.json';
 import { domainData, domainType, metaTransactionType } from '../types';
-import { API_ID, API_KEY, BICONOMY_API_URI } from './constants';
+import {
+  API_ID,
+  API_KEY,
+  BICONOMY_API_URI,
+  MATIC_RPC,
+  ETHEREUM_RPC,
+  ChildRSA,
+  RSA,
+  posERC20Predicate,
+  posRootChainManager
+} from './constants';
 
-const provider = new providers.JsonRpcProvider(config.MATIC_RPC);
-const providerRoot = new providers.JsonRpcProvider(config.ETHEREUM_RPC);
+const provider = new providers.JsonRpcProvider(MATIC_RPC);
+const providerRoot = new providers.JsonRpcProvider(ETHEREUM_RPC);
 
 const RootChainManagerAbi = require("../contracts/RootChainManager").abi;
 
 const RSAabi = require("../contracts/DSToken").abi;
-const RSA = new Contract(config.RSA, RSAabi, providerRoot);
+const RSAcontract = new Contract(RSA, RSAabi, providerRoot);
 
 const abi = require('../contracts/Rocket.json').abi;
 const IRocketContract = new utils.Interface(abi);
-const RocketContract = new Contract(config.ChildRSA, abi, provider);
+const RocketContract = new Contract(ChildRSA, abi, provider);
 
 export const approveForDeposit = async (wallet: Wallet) => {
   const approved = Number(utils.formatUnits(
-    await RSA.allowance(wallet.address, config.posERC20Predicate),
+    await RSAcontract.allowance(wallet.address, posERC20Predicate),
     18
   ))
   console.log(approved);
   if (approved === 0) {
     console.log("Approving");
     const w = wallet.connect(providerRoot)
-    const RSAsigner = new Contract(config.RSA, RSAabi, w);
-    const res = await RSAsigner["approve(address)"](config.posERC20Predicate);
+    const RSAsigner = new Contract(RSA, RSAabi, w);
+    const res = await RSAsigner["approve(address)"](posERC20Predicate);
     console.log(res);
   }
   return approved;
@@ -37,14 +46,14 @@ export const depositERC20toMatic = async (wallet: Wallet) => {
   try {
     let w = wallet.connect(providerRoot)
     const RootChainManager = new Contract(
-      config.posRootChainManager,
+      posRootChainManager,
       RootChainManagerAbi,
       w
     );
     
     const res = await RootChainManager.depositFor(
       wallet.address,
-      config.RSA,
+      RSA,
       utils.defaultAbiCoder.encode(['uint256'], [1])
     );
     console.log(res);
@@ -54,10 +63,9 @@ export const depositERC20toMatic = async (wallet: Wallet) => {
 };
 
 export const getRSABalance = async (address: string) => {
-  console.log(RSA);
   if (address) {
     try {
-      return Number(utils.formatUnits( await RSA.balanceOf(address), 18) || 0);
+      return Number(utils.formatUnits( await RSAcontract.balanceOf(address), 18) || 0);
     } catch (e) {
       console.log(e);
     }
@@ -69,7 +77,7 @@ export const balance = async (address: string, client: any) => {
   if (address && client) {
     try {
       return Number(utils.formatUnits(
-        await client.balanceOfERC20(address, config.ChildRSA, {}),
+        await client.balanceOfERC20(address, ChildRSA, {}),
         2) || 0
       );
     } catch (e) {
@@ -129,7 +137,7 @@ const postToBcnmy = async (wallet: Wallet, functionSignature: string, sigParams:
         'Content-Type': 'application/json;charset=utf-8'
       },
       body: JSON.stringify({
-        "to": config.ChildRSA,
+        "to": ChildRSA,
         "apiId": API_ID,
         "params": [
           wallet.address, functionSignature, sigParams.r, sigParams.s, sigParams.v
