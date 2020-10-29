@@ -1,5 +1,5 @@
-import { Wallet, utils, Contract, providers } from 'ethers';
-import * as sigUtil from 'eth-sig-util';
+import { Wallet, utils, Contract, providers } from "ethers";
+import * as sigUtil from "eth-sig-util";
 
 import {
   API_ID,
@@ -14,12 +14,12 @@ import {
   metaTransactionType,
   posERC20Predicate,
   posRootChainManager
-} from './constants';
+} from "./constants";
 
 const provider = new providers.JsonRpcProvider(MATIC_RPC);
 const providerRoot = new providers.JsonRpcProvider(ETHEREUM_RPC);
 
-const ChildRSAabi = require('../contracts/ChildRSA.json').abi;
+const ChildRSAabi = require("../contracts/ChildRSA.json").abi;
 const RootChainManagerAbi = require("../contracts/RootChainManager").abi;
 const RSAabi = require("../contracts/DSToken").abi;
 

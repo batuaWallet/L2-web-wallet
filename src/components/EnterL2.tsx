@@ -14,6 +14,7 @@ import {
 } from "@material-ui/icons";
 import { WalletContext } from "../utils/walletContext";
 import { getRSABalance, approveForDeposit, depositERC20toMatic }from '../utils/account';
+import { lockInCDP } from "../utils/cdpUtils";
 
 const useStyles = makeStyles( theme => ({
   appbar: {
@@ -28,7 +29,10 @@ const useStyles = makeStyles( theme => ({
   },
   root: {
     display: "flex",
-    justifyContent: "center",
+    flexDirection: "column",
+    alignItems: "center",
+    marginTop: theme.spacing(3),
+    bottom: theme.spacing(2),
   },
 }));
 
@@ -57,7 +61,18 @@ export const EnterL2 = (props: any) => {
         console.log(depositRes);
       }
     }
+  };
 
+  const handleLock = async () => {
+    console.log("Locking Eth in CDP");
+    if (wallet){
+      const res = await lockInCDP(wallet);
+      console.log(res);
+    }
+  };
+
+  const handleMint = async () => {
+    console.log("Minting RSA");
   };
 
   return (
@@ -71,8 +86,26 @@ export const EnterL2 = (props: any) => {
         </Toolbar>
       </AppBar>
       
-
       <div className={classes.root}>
+        <Button
+          color="primary"
+          variant="outlined"
+          onClick={() => handleLock()}
+          className={classes.zap}
+          startIcon={<ZapIcon />}
+        >
+          Foob-It for CDP
+        </Button>
+        <Button
+          color="primary"
+          variant="outlined"
+          onClick={() => handleMint()}
+          className={classes.zap}
+          startIcon={<ZapIcon />}
+        >
+          Doob-It for RSA
+        </Button>
+        <p> Balance: {RSABalance} </p>
         <Button
           color="primary"
           variant="outlined"
@@ -80,10 +113,9 @@ export const EnterL2 = (props: any) => {
           className={classes.zap}
           startIcon={<ZapIcon />}
         >
-          Switch to L2
+          Kaboob-It to L2
         </Button>
       </div>
-      <p> Balance: {RSABalance} </p>
     </>
   )
 };

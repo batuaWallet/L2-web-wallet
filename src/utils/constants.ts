@@ -6,6 +6,7 @@ export const API_KEY = process.env.REACT_APP_API_KEY ? process.env.REACT_APP_API
 
 export const API_ID = process.env.REACT_APP_API_ID ? process.env.REACT_APP_API_ID : "";
 
+export const ADDRESS_WETH = "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6";
 export const ChildRSA = "0xa360146B76D95D7911b415018Cce125ad50AEF7C";
 export const RSA = "0xB8587429a235dc366bF83Eb171AE90775Eb60f26";
 export const MATIC_RPC = "https://rpc-mumbai.matic.today";
