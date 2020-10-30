@@ -3,19 +3,22 @@ import { formatEther, parseEther, parseUnits } from "@ethersproject/units";
 import { BigNumber, Wallet, utils, Contract, providers } from "ethers";
 
 import {
-  ADDRESS_WETH,
+  ADDRESS_PIP,
   ADDRESS_SKR,
   ADDRESS_TUB,
+  ADDRESS_WETH,
   ETHEREUM_RPC,
 } from "./constants";
 const cache = window.localStorage;
 
 const providerRoot = new providers.JsonRpcProvider(ETHEREUM_RPC);
 
+const pipAbi = require("../contracts/pip.json").abi;
 const wethAbi = require("../contracts/weth.json").abi;
 const tubAbi = require("../contracts/Tub.json").abi;
 const DSTokenAbi = require("../contracts/DSToken.json").abi;
 
+const pip = new Contract(ADDRESS_PIP, pipAbi, providerRoot);
 const weth = new Contract(ADDRESS_WETH, wethAbi, providerRoot);
 const skr = new Contract(ADDRESS_SKR, DSTokenAbi, providerRoot);
 const tub = new Contract(ADDRESS_TUB, tubAbi, providerRoot);
@@ -24,6 +27,12 @@ const getOverrides = async () => ({
   gasPrice: (await providerRoot.getGasPrice()).mul(Two),
   gasLimit: parseUnits("5", 6),
 });
+
+export const getPrice = async (): Promise<number> => {
+  const price = parseFloat(BigNumber.from(await pip.currentPrice()).toString()) / 100;
+  console.log(`Pip price: ${price}`);
+  return price
+};
 
 type CDP = {
   lad: string;

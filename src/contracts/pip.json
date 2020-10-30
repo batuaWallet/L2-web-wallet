@@ -1,0 +1,26 @@
+{
+  "abi": [
+    "constructor(address linkTokenAddress, uint256 initialPrice)",
+    "event ChainlinkCancelled(bytes32 indexed id)",
+    "event ChainlinkFulfilled(bytes32 indexed id)",
+    "event ChainlinkRequested(bytes32 indexed id)",
+    "event LogNote(bytes4 indexed sig, address indexed guy, bytes32 indexed foo, bytes32 indexed bar, uint256 wad, bytes fax) anonymous",
+    "event LogSetAuthority(address indexed authority)",
+    "event LogSetOwner(address indexed owner)",
+    "event RequestPriceFulfilled(bytes32 indexed requestId, uint256 indexed price)",
+    "function authority() view returns (address)",
+    "function cancelRequest(bytes32 _requestId, uint256 _payment, bytes4 _callbackFunctionId, uint256 _expiration)",
+    "function currentPrice() view returns (uint256)",
+    "function fulfillPrice(bytes32 _requestId, uint256 _price)",
+    "function jobId() view returns (string)",
+    "function oracle() view returns (address)",
+    "function owner() view returns (address)",
+    "function peek() view returns (bytes32, bool)",
+    "function poke()",
+    "function read() view returns (bytes32)",
+    "function setAuthority(address authority_)",
+    "function setOracle(address _oracle, string _jobId)",
+    "function setOwner(address owner_)",
+    "function withdrawLink()"
+  ]
+}

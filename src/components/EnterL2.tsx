@@ -20,10 +20,9 @@ import {
 } from "@material-ui/icons";
 import { ProcessingInvest } from "./ProcessingInvest";
 
-
 import { WalletContext } from "../utils/walletContext";
 import { getRSABalance, getETHBalance, depositERC20toMatic }from '../utils/account';
-import { getCDP, lockInCDP, mintRSA } from "../utils/cdpUtils";
+import { getCDP, getPrice, lockInCDP, mintRSA } from "../utils/cdpUtils";
 
 const useStyles = makeStyles( theme => ({
   appbar: {
@@ -59,6 +58,7 @@ export const EnterL2 = (props: any) => {
   const [collateral, setCollateral] = useState(0);
   const [debt, setDebt] = useState(0);
   const [credit, setCredit] = useState(0);
+  const [price, setPrice] = useState(0);
 
   const [bridgeAmount, setBridgeAmount] = useState("");
   const [bridgeAmountError, setBridgeAmountError] = useState({err: false, msg: "Amount (₹SA)"});
@@ -72,6 +72,7 @@ export const EnterL2 = (props: any) => {
   useEffect(() => {
     (async () => {
       if (wallet) {
+        setPrice(await getPrice());
         setRSABalance(await getRSABalance(wallet.address));
         setETHBalance(Math.round((await getETHBalance(wallet.address)) * 1000) / 1000);
         const cdp = await getCDP(wallet.address);
@@ -86,15 +87,14 @@ export const EnterL2 = (props: any) => {
   }, [wallet, processing]);
 
   useEffect(() => {
-    const rsaPerEth = 28500 // get from pip?
     const collateralizationRatio = 1.5;
-    const collateralValue = collateral * rsaPerEth;
+    const collateralValue = collateral * price;
     const maxLoan = collateralValue / collateralizationRatio;
     console.log(`Max loan: ${maxLoan}`);
     console.log(`Current loan: ${debt}`);
     const remaining = maxLoan - debt;
     setCredit(Math.round(remaining * 100) / 100);
-  }, [debt, collateral]);
+  }, [debt, collateral, price]);
 
   const handleSwitch = async () => {
     if (wallet && bridgeAmount) {

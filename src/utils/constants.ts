@@ -11,6 +11,7 @@ export const API_ID = process.env.REACT_APP_API_ID ? process.env.REACT_APP_API_I
 export const ADDRESS_WETH = "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6";
 export const ADDRESS_SKR = "0x17CFc6c1413D10B58682cc45220585e50A3341ba";
 export const ADDRESS_TUB = "0x53E354c5bf343487009bD007f0E111abeEcE5b81";
+export const ADDRESS_PIP = "0x2E7245BCa4e9cDfbcee4ab521b20097b40bba78B";
 export const ChildRSA = "0xa360146B76D95D7911b415018Cce125ad50AEF7C";
 export const RSA = "0xB8587429a235dc366bF83Eb171AE90775Eb60f26";
 export const MATIC_RPC = "https://rpc-mumbai.matic.today";
