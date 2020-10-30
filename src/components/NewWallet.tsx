@@ -71,9 +71,11 @@ export const NewWallet = () => {
         Batua provides you a safe and secure wallet for easy
         and hassle-free digital payments through the ₹SA
       </Typography>
+
       <IconButton onClick={handleCreate} className={classes.button} >
         <CreateIcon />
       </IconButton>
+
     </Paper>
   );
 };

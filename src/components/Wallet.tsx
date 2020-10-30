@@ -18,6 +18,7 @@ import { WalletContext } from "../utils/walletContext";
 const useStyles = makeStyles( theme => ({
   button: {
     background: 'linear-gradient(269.86deg, #636CC5 0.12%, #1AC3C4 98.96%)',
+    color: "white",
     marginTop: theme.spacing(10),
     marginBottom: theme.spacing(3),
   },

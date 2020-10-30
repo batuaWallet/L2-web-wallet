@@ -51,7 +51,6 @@ export const TabsBar = (props: any) => {
             value={tab}
             onChange={updateSelection}
             indicatorColor="primary"
-            textColor="secondary"
             variant="fullWidth"
           >
             <Tab value="wallet" icon={<WalletIcon />} aria-label="wallet" />

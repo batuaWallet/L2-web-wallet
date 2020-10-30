@@ -20,6 +20,7 @@ const useStyles = makeStyles( theme => ({
   },
   button: {
     background: 'linear-gradient(269.86deg, #636CC5 0.12%, #1AC3C4 98.96%)',
+    color: "white",
     marginBottom: theme.spacing(3),
   },
   paper: {

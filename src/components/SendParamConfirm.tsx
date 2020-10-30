@@ -27,6 +27,7 @@ const useStyles = makeStyles( theme => ({
   },
   button: {
     background: 'linear-gradient(269.86deg, #636CC5 0.12%, #1AC3C4 98.96%)',
+    color: "white",
     marginBottom: theme.spacing(3),
   },
   card: {
@@ -46,7 +47,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string}) => {
   const wallet = useContext(WalletContext).wallet;
   const classes = useStyles();
   const { address } = props;
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState("");
   const [amountError, setAmountError] = useState({err: false, msg: "Amount (₹SA)"});
   const [block, setBlock] = useState(true);
   const [processing, setProcessing] = useState(false);
@@ -64,7 +65,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string}) => {
 
   useEffect(() => {
     if (Number(props.amount) > 0) {
-      setAmount(props.amount);
+      setAmount(props.amount || "");
     } else {
       setAmountError({err: true, msg: "Amount must be a non-zero number"});
     }
@@ -92,7 +93,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string}) => {
       );
 
       console.log(bal, amount);
-      if (amount <= bal) {
+      if (Number(amount) <= bal) {
         setProcessing(true);
         const res = await send(wallet, address, amount)
         if (res && res.txHash) {
@@ -105,7 +106,7 @@ export const SendParamConfirm = (props: {address: string, amount?: string}) => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(event.target.value);
+    setAmount(event.target.value || "");
 
     let amt = Number(event.target.value);
     if (!amt || amt === 0) {
