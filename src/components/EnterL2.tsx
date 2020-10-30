@@ -185,7 +185,7 @@ export const EnterL2 = (props: any) => {
           <IconButton className={classes.back} component={Link} to={"/"}>
             <BackIcon />
           </IconButton>
-          <Typography variant="h6" > Layer 1: Goerli </Typography>
+          <Typography variant="h6" > Layer 1: MakerCOW on Goerli </Typography>
         </Toolbar>
       </AppBar>
       
