@@ -99,7 +99,7 @@ export const EnterL2 = (props: any) => {
   const handleSwitch = async () => {
     if (wallet && bridgeAmount) {
       setProcessing(true);
-      setProcessingProps({ amt: bridgeAmount, action: "KaboobIT", asset: "₹SA"});
+      setProcessingProps({ amt: bridgeAmount, action: "Zapping", asset: "₹SA"});
       const res = await depositERC20toMatic(wallet, bridgeAmount);
       if (!res) {
         console.error(`Something went wrong`);
@@ -111,7 +111,7 @@ export const EnterL2 = (props: any) => {
   const handleLock = async () => {
     if (wallet && lockAmount){
       setProcessing(true);
-      setProcessingProps({ amt: lockAmount, action: "FoobIT", asset: "ETH"});
+      setProcessingProps({ amt: lockAmount, action: "Locking", asset: "ETH"});
       const res = await lockInCDP(wallet, lockAmount);
       if (!res) {
         console.error(`Something went wrong`);
@@ -123,7 +123,7 @@ export const EnterL2 = (props: any) => {
   const handleMint = async () => {
     if (wallet && borrowAmount) {
       setProcessing(true);
-      setProcessingProps({ amt: borrowAmount, action: "DoobIT", asset: "₹SA"});
+      setProcessingProps({ amt: borrowAmount, action: "Borrowing", asset: "₹SA"});
       const res = await mintRSA(wallet, borrowAmount);
       console.log(res);
       if (!res) {
@@ -245,7 +245,7 @@ export const EnterL2 = (props: any) => {
             className={classes.zap}
             startIcon={<BorrowIcon />}
           >
-            Borrow RSA
+            Borrow ₹SA
           </Button>
 
           <Divider />
@@ -270,7 +270,7 @@ export const EnterL2 = (props: any) => {
             className={classes.zap}
             startIcon={<BridgeIcon />}
           >
-            Kaboot-It to L2
+            Zap ₹SA to L2
           </Button>
 
         </div>

@@ -37,7 +37,7 @@ export const ProcessingInvest = (props: {amt: string, action: string, asset: str
   return (
     <Paper className={classes.root}>
       <Typography variant="h6" align="center">
-        {action}-ing {amt} {asset} .... Please Wait!
+        {action} {amt} {asset} .... Please Wait!
       </Typography>
       <CardMedia image={processing} className={classes.processing} />
     </Paper>
