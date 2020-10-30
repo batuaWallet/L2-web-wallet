@@ -1,3 +1,4 @@
+import { Zero } from "@ethersproject/constants";
 import { Wallet, utils, Contract, providers } from "ethers";
 import * as sigUtil from "eth-sig-util";
 
@@ -28,40 +29,33 @@ const ChildRSAcontract = new Contract(ChildRSA, ChildRSAabi, provider);
 
 const IChildRSA = new utils.Interface(ChildRSAabi);
 
-export const approveForDeposit = async (wallet: Wallet) => {
-  const approved = Number(utils.formatUnits(
-    await RSAcontract.allowance(wallet.address, posERC20Predicate),
-    18
-  ))
-  console.log(approved);
-  if (approved === 0) {
-    console.log("Approving");
-    const w = wallet.connect(providerRoot)
-    const RSAsigner = new Contract(RSA, RSAabi, w);
-    const res = await RSAsigner["approve(address)"](posERC20Predicate);
-    console.log(res);
-  }
-  return approved;
-};
-
-export const depositERC20toMatic = async (wallet: Wallet, amount: string) => {
+export const depositERC20toMatic = async (wallet: Wallet, amount: string): Promise<boolean> => {
   try {
     let w = wallet.connect(providerRoot)
-    const RootChainManager = new Contract(
-      posRootChainManager,
-      RootChainManagerAbi,
-      w
-    );
-    
-    const res = await RootChainManager.depositFor(
+    const approved = await RSAcontract.allowance(wallet.address, posERC20Predicate);
+    if (approved.eq(Zero)) {
+      const RSAsigner = new Contract(RSA, RSAabi, w);
+      const tx = await RSAsigner["approve(address)"](posERC20Predicate);
+      console.log(`Approving a bunch of RSA for deposit via tx ${tx.hash}`);
+      await tx.wait();
+      console.log(`RSA approval tx was confirmed!`);
+    } else {
+      console.log(`RSA has already been approved`);
+    }
+    const RootChainManager = new Contract(posRootChainManager, RootChainManagerAbi, w);
+    const tx = await RootChainManager.depositFor(
       wallet.address,
       RSA,
       utils.defaultAbiCoder.encode(['uint256'], [utils.parseEther(amount)])
     );
-    console.log(res);
+    console.log(`Depositing ${amount} RSA to L2 via tx ${tx.hash}`);
+    await tx.wait()
+    console.log(`Deposit tx has been confirmed!`);
+    return true
   } catch (e) {
     console.log(e);
   }
+  return false
 };
 
 export const getRSABalance = async (address: string) => {

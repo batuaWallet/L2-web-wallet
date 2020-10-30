@@ -22,7 +22,7 @@ import { ProcessingInvest } from "./ProcessingInvest";
 
 
 import { WalletContext } from "../utils/walletContext";
-import { getRSABalance, getETHBalance, approveForDeposit, depositERC20toMatic }from '../utils/account';
+import { getRSABalance, getETHBalance, depositERC20toMatic }from '../utils/account';
 import { getCDP, lockInCDP, mintRSA } from "../utils/cdpUtils";
 
 const useStyles = makeStyles( theme => ({
@@ -100,13 +100,11 @@ export const EnterL2 = (props: any) => {
     if (wallet && bridgeAmount) {
       setProcessing(true);
       setProcessingProps({ amt: bridgeAmount, action: "KaboobIT", asset: "₹SA"});
-      const approvalRes = await approveForDeposit(wallet);
-      if (approvalRes) {
-        const depositRes = depositERC20toMatic(wallet, bridgeAmount);
-        if (depositRes) {
-          setProcessing(false);
-        }
+      const res = await depositERC20toMatic(wallet, bridgeAmount);
+      if (!res) {
+        console.error(`Something went wrong`);
       }
+      setProcessing(false);
     }
   };
 
@@ -115,10 +113,10 @@ export const EnterL2 = (props: any) => {
       setProcessing(true);
       setProcessingProps({ amt: lockAmount, action: "FoobIT", asset: "ETH"});
       const res = await lockInCDP(wallet, lockAmount);
-      console.log(res);
-      if (res) {
-        setProcessing(false);
+      if (!res) {
+        console.error(`Something went wrong`);
       }
+      setProcessing(false);
     }
   };
 
@@ -128,9 +126,10 @@ export const EnterL2 = (props: any) => {
       setProcessingProps({ amt: borrowAmount, action: "DoobIT", asset: "₹SA"});
       const res = await mintRSA(wallet, borrowAmount);
       console.log(res);
-      if (res) {
-        setProcessing(false);
+      if (!res) {
+        console.error(`Something went wrong`);
       }
+      setProcessing(false);
     }
   };
 
