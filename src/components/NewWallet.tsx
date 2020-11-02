@@ -72,9 +72,14 @@ export const NewWallet = () => {
         and hassle-free digital payments through the ₹SA
       </Typography>
 
-      <IconButton onClick={handleCreate} className={classes.button} >
-        <CreateIcon />
-      </IconButton>
+      <Button
+          className={classes.button}
+          color="primary"
+          onClick={handleCreate}
+          variant="contained"
+        >
+          Open My Wallet
+        </Button>
 
     </Paper>
   );
