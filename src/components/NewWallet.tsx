@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import {
   Paper,
   CardMedia,
-  IconButton,
+  Button,
   Typography,
   makeStyles,
 } from "@material-ui/core";
@@ -10,7 +10,6 @@ import {
 import brand from "../assets/brand.png";
 import onboarding from "../assets/onboarding.png";
 import { WalletContext } from "../utils/walletContext";
-import { AddCircle as CreateIcon } from "@material-ui/icons";
 import { createWallet } from "../utils/initialize";
 
 const useStyles = makeStyles( theme => ({
